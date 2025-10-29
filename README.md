@@ -5,7 +5,6 @@
 ## Table of contents
 
 - [Project's goals](#projects-goals)
-- [Project's plan](./documentation/project-plan.md)
 - [Additional features](#additional-features)
 - [Technical Specifications](#technical-specifications)
 
@@ -14,3 +13,5 @@
 ## Additional features
 
 ## Technical specifications
+
+[Plan for technical specification and features](./documentation/project-plan.md)
