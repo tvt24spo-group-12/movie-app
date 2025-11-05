@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS public."Movies"
     media_type character varying(255)[],
     "moviePicture" pg_snapshot,
     vote_count integer,
+    vote_average integer,
     PRIMARY KEY (movie_id)
 );
 
