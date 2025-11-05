@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS public."Movies"
     name character varying(255)[] NOT NULL,
     media_type character varying(255)[],
     "moviePicture" pg_snapshot,
+    vote_count integer,
     PRIMARY KEY (movie_id)
 );
 
