@@ -3,63 +3,80 @@
 BEGIN;
 
 
-CREATE TABLE IF NOT EXISTS public."User"
-(
-    user_id serial NOT NULL,
-    username character varying(255)[] NOT NULL,
-    password_hash character varying(255)[] NOT NULL,
-    email character varying(255)[] NOT NULL,
-    "profilePicture" pg_snapshot,
-    "joinedGroups" integer[],
-    PRIMARY KEY (user_id)
-);
-
 CREATE TABLE IF NOT EXISTS public."Groups"
 (
-    user_id serial NOT NULL,
-    "groupName" character varying(255)[] NOT NULL,
-    owner_id serial NOT NULL,
-    users character varying(512)[] NOT NULL,
-    "userAmount" integer
-);
-
-CREATE TABLE IF NOT EXISTS public."favoriteMovies"
-(
-    user_id serial NOT NULL,
-    favorite_id serial,
-    movie_id serial
+    "groupName" character varying(255)[] COLLATE pg_catalog."default" NOT NULL,
+    owner_id integer NOT NULL,
+    users character varying(512)[] COLLATE pg_catalog."default" NOT NULL,
+    "userAmount" integer,
+    group_id serial NOT NULL,
+    CONSTRAINT "Groups_pkey" PRIMARY KEY (group_id)
 );
 
 CREATE TABLE IF NOT EXISTS public."Movies"
 (
     movie_id serial NOT NULL,
-    name character varying(255)[] NOT NULL,
-    media_type character varying(255)[],
+    name character varying(255)[] COLLATE pg_catalog."default" NOT NULL,
+    media_type character varying(255)[] COLLATE pg_catalog."default",
     "moviePicture" pg_snapshot,
     vote_count integer,
     vote_average integer,
-    PRIMARY KEY (movie_id)
+    CONSTRAINT "Movies_pkey" PRIMARY KEY (movie_id)
 );
 
-ALTER TABLE IF EXISTS public."Groups"
-    ADD CONSTRAINT user_id FOREIGN KEY (user_id)
-    REFERENCES public."User" (user_id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;
+CREATE TABLE IF NOT EXISTS public."User"
+(
+    user_id serial NOT NULL,
+    username character varying(255)[] COLLATE pg_catalog."default" NOT NULL,
+    password_hash character varying(255)[] COLLATE pg_catalog."default" NOT NULL,
+    email character varying(255)[] COLLATE pg_catalog."default" NOT NULL,
+    "profilePicture" pg_snapshot,
+    "joinedGroups" integer[],
+    CONSTRAINT "User_pkey" PRIMARY KEY (user_id)
+);
 
+CREATE TABLE IF NOT EXISTS public."favoriteMovies"
+(
+    user_id integer NOT NULL,
+    favorite_id serial NOT NULL,
+    movie_id integer NOT NULL
+);
 
-ALTER TABLE IF EXISTS public."favoriteMovies"
-    ADD CONSTRAINT user_id FOREIGN KEY (user_id)
-    REFERENCES public."User" (user_id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;
-
+CREATE TABLE IF NOT EXISTS public.group_members
+(
+    group_id integer NOT NULL,
+    user_id integer NOT NULL,
+    group_invitation enum_invitationstatus NOT NULL,
+    member_id serial NOT NULL
+);
 
 ALTER TABLE IF EXISTS public."favoriteMovies"
     ADD CONSTRAINT movie_id FOREIGN KEY (movie_id)
     REFERENCES public."Movies" (movie_id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public."favoriteMovies"
+    ADD CONSTRAINT user_id FOREIGN KEY (user_id)
+    REFERENCES public."User" (user_id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public.group_members
+    ADD CONSTRAINT group_members_group_id_fkey FOREIGN KEY (group_id)
+    REFERENCES public."Groups" (group_id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public.group_members
+    ADD CONSTRAINT group_members_user_id_fkey FOREIGN KEY (user_id)
+    REFERENCES public."User" (user_id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
