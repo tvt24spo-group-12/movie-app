@@ -1,4 +1,5 @@
 import { getAll } from "../models/movie_model.js";
+import { getMovieDetailsByID } from "../models/tmdb_model.js";
 
 export async function getMovies(req, res, next) {
   try {
@@ -9,3 +10,11 @@ export async function getMovies(req, res, next) {
   }
 }
 
+export async function getTMDBDetailsById(req, res, next) {
+  try {
+    const movie = await getMovieDetailsByID(req.params.id);
+    res.json(movie);
+  } catch (err) {
+    next(err);
+  }
+}

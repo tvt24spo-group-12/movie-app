@@ -1,8 +1,21 @@
-import { getAll, getByName } from "../models/movie_model.js";
+import { getByName } from "../models/movie_model.js";
+import { searchTMDBByName } from "../models/tmdb_model.js";
 
 export async function searchMoviesByName(req, res, next) {
   try {
-    const movies = await getByName(req.params.name);
+    const dbRes = await getByName(req.params.name);
+    const tmdbRes = await searchTMDBByName(req.params.name);
+    const movies = [
+      ...(dbRes || []),
+      ...(tmdbRes || []).map((movie) => ({
+        movie_id: movie.id,
+        name: movie.title,
+        // release_date: movie.release_date,
+        moviePicture: movie.poster_path
+          ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+          : null,
+      })),
+    ];
     if (!movies || movies.length === 0) {
       return res.status(404).json({ error: "Movie not found" });
     }
