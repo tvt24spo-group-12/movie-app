@@ -1,0 +1,89 @@
+/* global.css - teema valikoimat ja defaultit */
+
+/* Light (default) */
+:root{
+    --bg: #ffffff;              /*päätaustan väri koko sivulle*/
+    --surface: #f7fafc;         /*korttien, tai paneelien tausta*/
+    --text: #0f172a;            /*pääteksti, normaalit rivit ja otsikot*/
+    --muted: #6b7280;           /*himmennetty teksti, esim.placeholderit*/
+    --primary: #2563eb;         /*pääväri, esim. painikkeiden, linkkien korostus*/
+    --primary-600: #1d4ed8;     /*tummempi pääväri, hover/active tilaan*/
+    --accent: #06b6d4;          /*korostusväri, esim. ikonit, linkit,*/
+    --border: #e6eef8;          /*rajat, reunat, erottelut*/
+    --shadow: 0 1px 2px
+     rgba(16,24,40,0.05);       /*varjot laatikoille ja korteille*/
+    --success: #16a34a;         /*vihreä, kun joku onnistuu tms*/
+    --error: #dc2626;           /*punainen, virheille tms*/
+
+
+    --radius: 8px;               /*pyöristetyt reunat napeille tms*/
+    --max-width: 1200px;         /*sivun maksimileveys*/
+    --transition: 200ms 
+    cubic-bezier(.4,0,.2,1);     /*transitioden ajoitus*/
+}
+
+
+/* Käyttöjärjestelmän vakio värin valitseminen */
+@media (prefers-color-scheme: dark) {
+    :root{
+        --bg: #0b1220;
+        --surface: #0f1724;
+        --text: #e6eef8;
+        --muted: #9ca3af;
+        --primary: #3b82f6;
+        --primary-600: #60a5fa;
+        --accent: #2dd4bf;
+        --border: rgba(255,255,255,0.06);
+        --shadow: 0 6px 18px rgba(2,6,23,0.6);
+        --success: #4ade80;
+        --error: #fb7185;
+    }
+}
+
+/* Erikseen valittu dark mode */
+html[data-theme="dark"]{
+    --bg: #0b1220;
+    --surface: #0f1724;
+    --text: #e6eef8;
+    --muted: #9ca3af;
+    --primary: #3b82f6;
+    --primary-600: #60a5fa;
+    --accent: #2dd4bf;
+    --border: rgba(255,255,255,0.06);
+    --shadow: 0 6px 18px rgba(2,6,23,0.6);
+    --success: #4ade80;
+    --error: #fb7185;
+}
+
+html,body{
+    height:100%;
+}
+body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    transition: background var(--transition), color var(--transition);
+}
+
+.container{
+    max-width:var(--max-width);
+    margin:0 auto;
+    padding:1rem;
+}
+.card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:1rem;
+}
+.btn-primary{
+    background:var(--primary);
+    color:#fff;
+    border-radius:6px;
+    padding:.5rem .75rem;
+    border:none;
+    cursor:pointer;
+    transition:transform 120ms ease;
+}
+.btn-primary:hover{ transform:translateY(-1px); }
