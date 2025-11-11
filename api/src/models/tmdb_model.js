@@ -43,24 +43,5 @@ export async function getMovieDetailsByID(movie_id) {
     );
   }
 
-  const data = await response.json();
-
-  return {
-    movie_id: data.id,
-    title: data.title,
-    original_title: data.original_title,
-    overview: data.overview,
-    release_date: data.release_date,
-    runtime: data.runtime,
-    genres: (data.genres || []).map((g) => g.name),
-    vote_average: data.vote_average,
-    vote_count: data.vote_count,
-    poster_path: data.poster_path
-      ? `https://image.tmdb.org/t/p/w500${data.poster_path}`
-      : null,
-    backdrop_path: data.backdrop_path
-      ? `https://image.tmdb.org/t/p/original${data.backdrop_path}`
-      : null,
-    raw: data,
-  };
+  return await response.json();
 }
