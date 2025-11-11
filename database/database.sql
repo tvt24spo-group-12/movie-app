@@ -3,15 +3,37 @@
 BEGIN;
 
 
+ALTER TABLE IF EXISTS public."favoriteMovies" DROP CONSTRAINT IF EXISTS movie_id;
+
+ALTER TABLE IF EXISTS public."favoriteMovies" DROP CONSTRAINT IF EXISTS user_id;
+
+ALTER TABLE IF EXISTS public.group_members DROP CONSTRAINT IF EXISTS fkey_group_id;
+
+ALTER TABLE IF EXISTS public.group_members DROP CONSTRAINT IF EXISTS fkey_user_id;
+
+ALTER TABLE IF EXISTS public.group_movie_suggestions DROP CONSTRAINT IF EXISTS fkey_group_id;
+
+ALTER TABLE IF EXISTS public.group_movie_suggestions DROP CONSTRAINT IF EXISTS fkey_movie_id;
+
+ALTER TABLE IF EXISTS public.movie_votes DROP CONSTRAINT IF EXISTS fkey_user_id;
+
+ALTER TABLE IF EXISTS public.movie_votes DROP CONSTRAINT IF EXISTS fkey_movie_id;
+
+
+
+DROP TABLE IF EXISTS public."Groups";
+
 CREATE TABLE IF NOT EXISTS public."Groups"
 (
+    group_id serial NOT NULL,
     "groupName" character varying(255)[] COLLATE pg_catalog."default" NOT NULL,
     owner_id integer NOT NULL,
     users character varying(512)[] COLLATE pg_catalog."default" NOT NULL,
     "userAmount" integer,
-    group_id serial NOT NULL,
     CONSTRAINT "Groups_pkey" PRIMARY KEY (group_id)
 );
+
+DROP TABLE IF EXISTS public."Movies";
 
 CREATE TABLE IF NOT EXISTS public."Movies"
 (
@@ -21,8 +43,11 @@ CREATE TABLE IF NOT EXISTS public."Movies"
     "moviePicture" pg_snapshot,
     vote_count integer,
     vote_average integer,
+    in_theaters boolean NOT NULL DEFAULT FALSE,
     CONSTRAINT "Movies_pkey" PRIMARY KEY (movie_id)
 );
+
+DROP TABLE IF EXISTS public."User";
 
 CREATE TABLE IF NOT EXISTS public."User"
 (
@@ -35,19 +60,55 @@ CREATE TABLE IF NOT EXISTS public."User"
     CONSTRAINT "User_pkey" PRIMARY KEY (user_id)
 );
 
+DROP TABLE IF EXISTS public."favoriteMovies";
+
 CREATE TABLE IF NOT EXISTS public."favoriteMovies"
 (
-    user_id integer NOT NULL,
     favorite_id serial NOT NULL,
-    movie_id integer NOT NULL
+    user_id integer NOT NULL,
+    movie_id integer NOT NULL,
+    PRIMARY KEY (favorite_id)
 );
+
+DROP TABLE IF EXISTS public.group_members;
 
 CREATE TABLE IF NOT EXISTS public.group_members
 (
+    member_id serial NOT NULL,
     group_id integer NOT NULL,
     user_id integer NOT NULL,
-    group_invitation enum_invitationstatus NOT NULL,
-    member_id serial NOT NULL
+    group_invitation enum_invitationstatus NOT NULL DEFAULT pending,
+    PRIMARY KEY (member_id)
+);
+
+DROP TABLE IF EXISTS public.group_movie_suggestions;
+
+CREATE TABLE IF NOT EXISTS public.group_movie_suggestions
+(
+    suggestion_id serial NOT NULL,
+    group_id integer NOT NULL,
+    movie_id integer NOT NULL,
+    suggested_by integer DEFAULT NULL,
+    score numeric(6, 4),
+    is_active boolean,
+    created_at timestamp with time zone DEFAULT NOW(),
+    expires_at timestamp with time zone DEFAULT NULL,
+    PRIMARY KEY (suggestion_id)
+);
+
+DROP TABLE IF EXISTS public.movie_votes;
+
+CREATE TABLE IF NOT EXISTS public.movie_votes
+(
+    vote_id serial NOT NULL,
+    user_id integer NOT NULL,
+    movie_id integer NOT NULL,
+    score smallint NOT NULL,
+    created_at timestamp with time zone DEFAULT NOW(),
+    updated_at timestamp with time zone DEFAULT NOW(),
+    review text,
+    PRIMARY KEY (vote_id),
+    CONSTRAINT "One per movie per user" UNIQUE (movie_id, user_id)
 );
 
 ALTER TABLE IF EXISTS public."favoriteMovies"
@@ -67,7 +128,7 @@ ALTER TABLE IF EXISTS public."favoriteMovies"
 
 
 ALTER TABLE IF EXISTS public.group_members
-    ADD CONSTRAINT group_members_group_id_fkey FOREIGN KEY (group_id)
+    ADD CONSTRAINT fkey_group_id FOREIGN KEY (group_id)
     REFERENCES public."Groups" (group_id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
@@ -75,8 +136,40 @@ ALTER TABLE IF EXISTS public.group_members
 
 
 ALTER TABLE IF EXISTS public.group_members
-    ADD CONSTRAINT group_members_user_id_fkey FOREIGN KEY (user_id)
+    ADD CONSTRAINT fkey_user_id FOREIGN KEY (user_id)
     REFERENCES public."User" (user_id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public.group_movie_suggestions
+    ADD CONSTRAINT fkey_group_id FOREIGN KEY (group_id)
+    REFERENCES public."Groups" (group_id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public.group_movie_suggestions
+    ADD CONSTRAINT fkey_movie_id FOREIGN KEY (movie_id)
+    REFERENCES public."Movies" (movie_id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public.movie_votes
+    ADD CONSTRAINT fkey_user_id FOREIGN KEY (user_id)
+    REFERENCES public."User" (user_id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public.movie_votes
+    ADD CONSTRAINT fkey_movie_id FOREIGN KEY (movie_id)
+    REFERENCES public."Movies" (movie_id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
