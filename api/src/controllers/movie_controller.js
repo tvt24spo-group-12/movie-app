@@ -1,6 +1,12 @@
-import { getAll, getOne, addOne, updateOne, deleteOne } from "../models/book_model.js";
+import {
+  getAll,
+  getOne,
+  addOne,
+  updateOne,
+  deleteOne,
+} from "../models/movie_model.js";
 
-export async function getBooks(req, res, next) {
+export async function getMovies(req, res, next) {
   try {
     const books = await getAll();
     res.json(books);
@@ -9,11 +15,11 @@ export async function getBooks(req, res, next) {
   }
 }
 
-export async function getBook(req, res, next) {
+export async function getMovie(req, res, next) {
   try {
     const book = await getOne(req.params.id);
     if (!book) {
-      return res.status(404).json({ error: "Book not found" });
+      return res.status(404).json({ error: "Movie not found" });
     }
     res.json(book);
   } catch (err) {
@@ -21,7 +27,7 @@ export async function getBook(req, res, next) {
   }
 }
 
-export async function addBook(req, res, next) {
+export async function addMovie(req, res, next) {
   console.log("add called");
   try {
     console.log(req.body);
@@ -32,7 +38,7 @@ export async function addBook(req, res, next) {
   }
 }
 
-export async function updateBook(req, res, next) {
+export async function updateMovie(req, res, next) {
   try {
     const response = await updateOne(req.params.id, req.body);
     res.json(response);
@@ -41,7 +47,7 @@ export async function updateBook(req, res, next) {
   }
 }
 
-export async function deleteBook(req, res, next) {
+export async function deleteMovie(req, res, next) {
   try {
     const book = await deleteOne(req.params.id);
     if (!book) {
@@ -52,3 +58,4 @@ export async function deleteBook(req, res, next) {
     next(err);
   }
 }
+
