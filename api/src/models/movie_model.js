@@ -6,14 +6,9 @@ export async function getAll() {
 }
 
 export async function getByName(name) {
-  try {
-    const result = await pool.query(
-      "SELECT * FROM movies WHERE name = $1",
-      [name], // $1 is replaced safely with 'name'
-    );
-    return result.rows;
-  } catch (err) {
-    console.error("Error fetching movie by name:", err);
-    throw err;
-  }
+  const searchPattern = `%${name.trim()}%`;
+  const result = await pool.query("SELECT * FROM movies WHERE name ILIKE $1", [
+    searchPattern,
+  ]);
+  return result.rows;
 }
