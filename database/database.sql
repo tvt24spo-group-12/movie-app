@@ -45,8 +45,8 @@ DROP TABLE IF EXISTS public.movies;
 CREATE TABLE IF NOT EXISTS public.movies
 (
     movie_id serial NOT NULL,
-    name character varying(255)[] COLLATE pg_catalog."default" NOT NULL,
-    media_type character varying(255)[] COLLATE pg_catalog."default",
+    name text COLLATE pg_catalog."default" NOT NULL,
+    media_type text COLLATE pg_catalog."default",
     "moviePicture" pg_snapshot,
     vote_count integer,
     vote_average integer,
