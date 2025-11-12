@@ -1,7 +1,7 @@
   :root {
     font-family: "Segoe UI", Arial, sans-serif;
-    background: #f5f6fb;
-    color: #1f2532;
+    background: var(--bg);
+    color: var(--text);
   }
   
   body {
@@ -24,10 +24,10 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    background: #ffffff;
+    background: var(--surface);
     border-radius: 999px;
     padding: 0.85rem 1.2rem;
-    box-shadow: 0 18px 40px rgba(20, 25, 41, 0.12);
+    box-shadow: var(--shadow);
     margin-bottom: 2.5rem;
   }
   
@@ -36,7 +36,7 @@
     border: none;
     background: transparent;
     font-size: 1rem;
-    color: #1f2532;
+   color: var(--text);
   }
   
   .search-bar input:focus {
@@ -54,23 +54,23 @@
   .results__empty {
     margin: 0;
     font-size: 0.95rem;
-    color: #586175;
+    color: var(--muted);
     grid-column: 1 / -1;
   }
   
   .results__error {
-    color: #c9404d;
+    color: var(--error);
   }
 
   .movie-card {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    background: #ffffff;
-    border-radius: 12px;
+    background: var(--surface);
+    border-radius: var(--radius);
     padding: 1.5rem;
-    box-shadow: 0 18px 40px rgba(20, 25, 41, 0.12);
-    transition: transform 0.2s ease-in-out;
+    box-shadow: var(--shadow);
+    transition: transform var(--transition);
   }
 
   .movie-card__poster {
@@ -95,7 +95,7 @@
   .movie-card__genres {
     margin: 0;
     font-size: 0.9rem;
-    color: #000000;
+    color: var(--muted);
     display: inline-flex;
     flex-wrap: wrap;
     gap: 0.5rem;
