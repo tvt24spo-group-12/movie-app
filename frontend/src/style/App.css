@@ -1,0 +1,102 @@
+  :root {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #f5f6fb;
+    color: #1f2532;
+  }
+  
+  body {
+    margin: 0;
+  }
+  
+  .page {
+    max-width: 1080px;
+    margin: 3rem auto;
+    padding: 0 1.75rem 4rem;
+  }
+  
+  .page__title {
+    font-size: 2rem;
+    margin: 0 0 1.75rem;
+    font-weight: 700;
+  }
+  
+  .search-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: #ffffff;
+    border-radius: 999px;
+    padding: 0.85rem 1.2rem;
+    box-shadow: 0 18px 40px rgba(20, 25, 41, 0.12);
+    margin-bottom: 2.5rem;
+  }
+  
+  .search-bar input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 1rem;
+    color: #1f2532;
+  }
+  
+  .search-bar input:focus {
+    outline: none;
+  }
+  
+  .results {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.75rem;
+  }
+
+  .results__hint,
+  .results__error,
+  .results__empty {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #586175;
+    grid-column: 1 / -1;
+  }
+  
+  .results__error {
+    color: #c9404d;
+  }
+
+  .movie-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 18px 40px rgba(20, 25, 41, 0.12);
+    transition: transform 0.2s ease-in-out;
+  }
+
+  .movie-card__poster {
+    position: relative;
+    aspect-ratio: 2 / 3;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .movie-card__poster img {
+    width: 100%;
+    height: auto;
+    max-height: 420px;
+    border: 1px solid rgba(0, 0, 0, 0.45);
+    border-radius: 18px;
+  }
+
+  .movie-card__title {
+    margin: 0.5rem 0 0 0;
+  }
+
+  .movie-card__genres {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #000000;
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
