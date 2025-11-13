@@ -9,9 +9,14 @@ export async function searchMoviesByName(req, res, next) {
       ...(dbRes || []),
       ...(tmdbRes || []).map((movie) => ({
         movie_id: movie.id,
-        name: movie.title,
-        // release_date: movie.release_date,
-        moviePicture: movie.poster_path
+        title: movie.title,
+        release_date: movie.release_date,
+        overview: movie.overview,
+        genres: movie.genres,
+        rating: movie.rating,
+        votes: movie.rating,
+        runtime: movie.runtime,
+        poster_path: movie.poster_path
           ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
           : null,
       })),
