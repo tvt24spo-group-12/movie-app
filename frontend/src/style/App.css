@@ -108,11 +108,11 @@ body {
   line-height: 1.2;
   font-weight: 600;
   display: -webkit-box;
-  -webkit-line-clamp: 1; /* show up to 2 lines */
+  -webkit-line-clamp: 1; /* show only 1 line */
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  height: calc(1.2em * 2); /* match line-clamp lines */
+  height: calc(1.2em * 1); /* match line-clap line(s) */
 }
 
 .movie-card__genres {
@@ -123,4 +123,3 @@ body {
   flex-wrap: wrap;
   gap: 0.5rem;
 }
-
