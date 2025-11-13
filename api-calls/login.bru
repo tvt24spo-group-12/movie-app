@@ -1,0 +1,25 @@
+meta {
+  name: login
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:3001/user/signin
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "user": {
+      "identifier": "testing1@miika.com",
+      "password": "abc123"
+    }
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
