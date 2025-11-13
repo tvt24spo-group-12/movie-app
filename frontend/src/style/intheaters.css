@@ -18,22 +18,31 @@
 }
 
 .nowPlayingh1 {
-  text-align: bottom;
   margin-left: 2em;
   color: var(--primary-600);
 }
+
 .movieContainer {
   background-color: transparent;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: left;
   flex-direction: row;
-  row-gap: 50px;
-  column-gap: 5em;
-  height: 50vh;
+  column-gap: 20px;
+  height: auto;
 }
 
 .nowinmoveiscard {
   align-items: center;
 }
 
+.movie-card.movieContainer {
+  overflow: hidden;
+  width: 100%;
+}
+
+.movie-slider {
+  display: flex;
+  gap: 20px;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
