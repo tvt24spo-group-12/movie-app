@@ -40,7 +40,7 @@ export async function login(req, res, next) {
     const accessToken = jwt.sign(
       { user_id: dbUser.user_id },
       process.env.JWT_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: "15min" }
     );
 
     //Luodaan refresh token joka voimassa 7 päivää
