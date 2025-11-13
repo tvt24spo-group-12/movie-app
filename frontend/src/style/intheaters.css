@@ -1,0 +1,38 @@
+
+.nowPlaying > * {
+  padding: 10px;
+}
+
+.image{
+   position: relative;
+   top: 10vh;
+left: 10vh;
+}
+.movieTitle{
+   font-size: 20px;
+ text-align: center;
+}
+
+.smallposter{
+width: 250px;
+ overflow: visible;
+}
+
+.nowPlayingh1{
+  text-align: top;
+  color: var(--primary-600);
+}
+.movieContainer{
+  background-color: transparent;
+   display: flex;
+    align-items: center;
+    justify-content: center;
+      flex-direction: row;
+      row-gap: 50px;
+  column-gap: 5em;
+height: 50vh;
+}
+
+.nowinmoveiscard{
+  align-items: center;
+}
