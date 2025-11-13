@@ -1,4 +1,4 @@
-import { fetchNowPlaying } from "../models/nowPlaying_model.js";
+import { fetchNowPlaying } from "../models/tmdb_model.js";
 
 export async function getNowPlaying(req, res) {
   try {
