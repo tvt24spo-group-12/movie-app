@@ -18,8 +18,8 @@ useEffect(() =>{
         console.log(posters)
         console.log(movieTitles)
 
-        setTitle( movieTitles.slice(0,6))
-        setUrls(posters.slice(0,6))
+        setTitle( movieTitles.slice(0,7))
+        setUrls(posters.slice(0,7))
     }
     showNowPlaying()
 },[]);

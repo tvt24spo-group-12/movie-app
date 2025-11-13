@@ -25,7 +25,4 @@ const res = await fetch(url+'/movie/nowplaying');
    
 }
 
-  export {getNowPlaying, getNowPlayingPoster}
- 
- 
-
+export {getNowPlaying, getNowPlayingPoster}
