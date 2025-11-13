@@ -1,38 +1,39 @@
-
 .nowPlaying > * {
   padding: 10px;
 }
 
-.image{
-   position: relative;
-   top: 10vh;
-left: 10vh;
+.image {
+  position: relative;
+  top: 10vh;
+  left: 10vh;
 }
-.movieTitle{
-   font-size: 20px;
- text-align: center;
-}
-
-.smallposter{
-width: 250px;
- overflow: visible;
+.movieTitle {
+  font-size: 20px;
+  text-align: center;
 }
 
-.nowPlayingh1{
-  text-align: top;
+.smallposter {
+  width: 250px;
+  overflow: visible;
+}
+
+.nowPlayingh1 {
+  text-align: bottom;
+  margin-left: 2em;
   color: var(--primary-600);
 }
-.movieContainer{
+.movieContainer {
   background-color: transparent;
-   display: flex;
-    align-items: center;
-    justify-content: center;
-      flex-direction: row;
-      row-gap: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  row-gap: 50px;
   column-gap: 5em;
-height: 50vh;
+  height: 50vh;
 }
 
-.nowinmoveiscard{
+.nowinmoveiscard {
   align-items: center;
 }
+

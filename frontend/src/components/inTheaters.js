@@ -1,44 +1,59 @@
+import { useEffect, useMemo, useState } from "react";
+import { getNowPlaying, getNowPlayingPoster } from "../api/moviesInTheaters";
+import MovieCardMin from "./MovieCardMin";
+import "../style/intheaters.css";
 
-import { useEffect, useState } from "react"
-import {getNowPlaying, getNowPlayingPoster} from "../api/moviesInTheaters"
-import '../style/intheaters.css'
+export default function InTheaters() {
+  const [title, setTitle] = useState([]);
+  const [movies, setMovies] = useState([]);
+  const [startIndex, setStartIndex] = useState(0);
+  const moviesPerPage = 6;
 
-export default function InTheaters() 
-{
-
-const imgurl = 'https://image.tmdb.org/t/p/w300'
-
-const [urls, setUrls] = useState('')
-const [title, setTitle] = useState([])
-
-useEffect(() =>{
-   const showNowPlaying = async () =>{
-        const posters = await getNowPlayingPoster();
-        const movieTitles = await getNowPlaying();
-        console.log(posters)
-        console.log(movieTitles)
-
-        setTitle( movieTitles.slice(0,6))
-        setUrls(posters.slice(0,6))
+  useEffect(() => {
+    async function fetchNowPlaying() {
+      try {
+        const nowPlaying = await getNowPlaying(); // returns normalized + enriched data
+        setMovies(nowPlaying);
+      } catch (err) {
+        console.error("Failed to fetch now playing movies:", err);
+      }
     }
-    showNowPlaying()
-},[]);
+    fetchNowPlaying();
+  }, []);
 
-    return ( 
-        <>
-    <h1 className="nowPlayingh1">Now Playing</h1>
-        <article className="movie-card movieContainer">
-        
-           {title.map((titles,index)=>(
-          <div className="movie-card__poster smallposter"><div className="movie-card__poster-placeholder">
-                <img  src={imgurl+urls[index]}></img>
-         </div>
-         <div className="movie-card__content ">
-                <h3 key={index}  className="movie-card__title movieTitle">{titles}</h3>
-        </div>
-        </div>
-           ))}
-        </article>
-       </>
-    )
+  const results = useMemo(() => movies ?? [], [movies]);
+  const endIndex = startIndex + moviesPerPage;
+  const visibleMovies = results.slice(startIndex, endIndex);
+
+  const handleNext = () => {
+    if (endIndex < results.length) {
+      setStartIndex((prev) => prev + moviesPerPage);
+    }
+  };
+
+  const handlePrev = () => {
+    if (startIndex > 0) {
+      setStartIndex((prev) => prev - moviesPerPage);
+    }
+  };
+
+  return (
+    <>
+      <h1 className="nowPlayingh1">Now Playing</h1>
+      <div className="movie-nav">
+        <button onClick={handlePrev} disabled={startIndex === 0}>
+          ◀ Prev
+        </button>
+        <button onClick={handleNext} disabled={endIndex >= results.length}>
+          Next ▶
+        </button>
+      </div>
+      <article className="movie-card movieContainer">
+        {results.slice(startIndex, endIndex).map((movie) => (
+          <MovieCardMin key={movie.id} movie={movie} />
+        ))}
+      </article>
+    </>
+  );
 }
+
