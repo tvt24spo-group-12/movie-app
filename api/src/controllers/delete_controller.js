@@ -2,9 +2,6 @@ import pool from "../database.js";
 
 /**
  * Poistaa käyttäjätilin ja kaikki liittyvät tiedot.
- * @param {Object} req - Express request object
- * @param {string} req.params.user_id - Käyttäjän ID (voi olla myös req.body.user_id)
- * @param {string} req.body.user_id - Vaihtoehtoinen tapa välittää user_id
  * @note Frontend voi tallentaa user_id:n kirjautumisen jälkeen ja käyttää sitä tässä endpointissa
  * @todo Lisää JWT-autentikointi, että käyttäjä voi poistaa vain oman tilinsä
  */
