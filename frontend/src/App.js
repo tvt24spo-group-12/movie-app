@@ -1,4 +1,3 @@
-
 import MovieList from "./components/MovieList";
 import './style/App.css';
 import './style/intheaters.css';
@@ -7,8 +6,8 @@ import { useEffect, useState } from "react";
 import InTheaters from "./components/inTheaters";
 import SideBar from "./components/sidebar";
 
-function App() {
 
+function App() {
   return (
     
     
@@ -19,9 +18,11 @@ function App() {
       <MovieList />
       <InTheaters/>
       
+    
     </>
    
   );
 }
 
 export default App;
+

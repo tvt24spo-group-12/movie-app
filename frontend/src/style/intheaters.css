@@ -1,49 +1,78 @@
-.movieContainer{
-  position: relative;
-
-  overflow-x: hidden;
-}
-
-
 .nowPlaying > * {
   padding: 10px;
 }
 
-.image{
-   position: relative;
-   top: 10vh;
-left: 10vh;
-}
-.movieTitle{
-   font-size: 20px;
- text-align: center;
-}
-
-.smallposter{
-width: 150px;
- overflow: visible;
- left: 7vw;
-}
-
-.nowPlayingh1{
-  z-index: 3;
+.image {
   position: relative;
-  width: 10vw;
-  left: 15vw;
-  text-align: top;
+  top: 10vh;
+  left: 10vh;
+}
+.movieTitle {
+  font-size: 20px;
+  text-align: center;
+}
+
+.smallposter {
+  width: 250px;
+  overflow: visible;
+}
+
+.nowPlayingh1 {
+  margin-left: 2em;
   color: var(--primary-600);
 }
-.movieContainer{
+
+.movieContainer {
   background-color: transparent;
-   display: flex;
-    align-items: center;
-    justify-content: center;
-      flex-direction: row;
-      row-gap: 50px;
-  column-gap: 5em;
-height: 50vh;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  flex-direction: row;
+  column-gap: 20px;
+  height: auto;
+  overflow: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
 }
 
-.nowinmoveiscard{
-  align-items: center;
+.movieContainer.mobile-scroll {
+  overflow-x: auto !important;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+}
+
+.movie-card.movieContainer:not(.mobile-scroll) {
+  overflow: hidden;
+}
+
+.movie-slider {
+  display: flex;
+  gap: 20px;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  scroll-snap-type: x mandatory;
+  will-change: transform;
+}
+
+.movie-slider > * {
+  flex: 0 0 248px; /* fixed card width */
+  box-sizing: border-box;
+  scroll-snap-align: start;
+  touch-action: pan-x;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.movieContainer.mobile-scroll .movie-slider {
+  transform: none !important;
+  transition: none !important;
+}
+
+.movieContainer.mobile-scroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.movieContainer.mobile-scroll::-webkit-scrollbar {
+  display: none;
 }

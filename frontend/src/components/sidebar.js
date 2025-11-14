@@ -48,7 +48,7 @@ export default function SideBar(){
         <button onClick={() =>{
             setRegisterPage(true)
             setLoginOpenForm(false)
-        }} className='goToRegister'>Got an account? Register Here!</button>
+        }} className='goToRegister'>Don't have an account? Register Here!</button>
         </form>
     )  
     }

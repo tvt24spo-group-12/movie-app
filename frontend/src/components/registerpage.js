@@ -8,9 +8,17 @@ export default function RegisterPage(){
  const[Email, setEmail] = useState('')
     const[Password, setPassword] = useState('')
     const[Username, setUsername] = useState('')
-    const handleSubmit= (e) =>{
+    const handleSubmit= async (e) =>{
         e.preventDefault();
-signUp(Email,Password,Username)
+
+    
+        const res = signUp(Email,Password,Username)
+        if(!res === 201 | !res === "201" ){
+            alert("something went wrong :/");
+        }
+        else{
+            
+        }
     }
     return(
             <div className='page registerContainer'>
