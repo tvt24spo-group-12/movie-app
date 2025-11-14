@@ -1,0 +1,44 @@
+meta {
+  name: search
+  type: http
+  seq: 4
+}
+
+get {
+  url: http://localhost:3001/movie/search/Mission?genre=action,adventure&year=2025&release_from=2025-01-01&release_to=2026-01-01&min_rating=7.1&max_rating=8&runtime_min=80&runtime_max=180&sort=rating&order=asc
+  body: none
+  auth: inherit
+}
+
+params:query {
+  genre: action,adventure
+  year: 2025
+  release_from: 2025-01-01
+  release_to: 2026-01-01
+  min_rating: 7.1
+  max_rating: 8
+  runtime_min: 80
+  runtime_max: 180
+  sort: rating
+  order: asc
+}
+
+body:json {
+  {
+    "user": {
+      "email": "testing1@miika.com",
+      "username": "menktest",
+      "password": "abc123"
+    }
+  }
+}
+
+body:multipart-form {
+  email: miika@testing.com
+  password: abc123
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
