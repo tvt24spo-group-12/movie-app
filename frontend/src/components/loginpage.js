@@ -10,9 +10,12 @@ export default function LoginPage(){
         e.preventDefault();
 
         console.log(Identifier,Password)
-        const res = signIn(Identifier,Password)
-        if(res === 201 | res === "201" |res === 200 | res === "200" ){
+        const ress = await signIn(Identifier,Password)
+        if(ress === 201 | ress === "201" |ress === 200 | ress === "200" ){
             console.log("loggedin")
+            localStorage.setItem("username", Identifier)
+            location.reload(false)
+            
         }
         else{
             console.log("something went wrong")
