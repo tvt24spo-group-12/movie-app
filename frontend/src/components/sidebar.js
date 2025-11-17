@@ -18,7 +18,7 @@ export default function SideBar(){
     
     
       const usrname = window.localStorage.getItem('username')
-      console.log(usrname)
+     
       if(usrname === null){
         setloggedin(false);
        
