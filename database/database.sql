@@ -23,6 +23,7 @@ BEGIN
 	END IF;
 END$$;
 
+
 ALTER TABLE IF EXISTS public.favourite_movies DROP CONSTRAINT IF EXISTS movie_id;
 
 ALTER TABLE IF EXISTS public.favourite_movies DROP CONSTRAINT IF EXISTS user_id;
@@ -46,7 +47,7 @@ DROP TABLE IF EXISTS public.groups;
 CREATE TABLE IF NOT EXISTS public.groups
 (
     group_id serial NOT NULL,
-    group_name character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    group_name character varying(255)[] COLLATE pg_catalog."default" NOT NULL,
     owner_id integer NOT NULL,
     user_amount integer,
     CONSTRAINT "Groups_pkey" PRIMARY KEY (group_id)
@@ -67,7 +68,8 @@ CREATE TABLE IF NOT EXISTS public.movies
     poster_path text,
     backdrop_path text,
     vote_count integer,
-    vote_average integer,
+    vote_average numeric,
+    runtime integer,
     CONSTRAINT "Movies_pkey" PRIMARY KEY (movie_id)
 );
 

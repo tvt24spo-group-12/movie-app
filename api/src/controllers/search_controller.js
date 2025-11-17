@@ -1,101 +1,162 @@
-import { getByName } from "../models/movie_model.js";
-import { searchTMDBByName, getMovieDetailsByID } from "../models/tmdb_model.js";
+import { getByName, discoverMovies } from "../models/movie_model.js";
+import { searchTMDBByName, searchTMDBByFilters } from "../models/tmdb_model.js";
 
 export async function searchMoviesByName(req, res, next) {
   try {
-    const dbRes = await getByName(req.params.name);
+    const name = (req.params.name || "").trim();
 
-    const tmdbRes = await searchTMDBByName(req.params.name);
-    const tmdbDetails = await Promise.all(
-      tmdbRes.map(async (movie) => {
-        const details = await getMovieDetailsByID(movie.id);
-        return {
-          movie_id: details.id,
-          title: details.title,
-          release_date: details.release_date,
-          overview: details.overview,
-          genres: (details.genres || []).map((g) => g.name.toLowerCase()),
-          rating: details.vote_average,
-          votes: details.vote_count,
-          runtime: details.runtime,
-          poster_path: details.poster_path
-            ? `https://image.tmdb.org/t/p/w500${details.poster_path}`
-            : null,
-        };
-      }),
-    );
-
-    const movies = [...(dbRes || []), ...tmdbDetails];
-
-    if (!movies || movies.length === 0) {
-      return res.status(404).json({ error: "Movie not found" });
-    }
-
-    // Get filters from query params
     const {
-      genre, // comma-separated genre names
-      year, // YYYY
-      release_from, // date YYYY-MM-DD
-      release_to, // date YYYY-MM-DD
-      min_rating, // 0-10
-      max_rating, // 0-10
-      runtime_min, // runtime in minutes
-      runtime_max, // runtime in minutes
-      sort = "rating", // release_date/rating/title
-      order = "desc", // desc/asc
+      genre,
+      year,
+      release_from,
+      release_to,
+      min_rating,
+      max_rating,
+      runtime_min,
+      runtime_max,
+      sort = "rating",
+      order = "desc",
+      page,
     } = req.query;
 
-    let filtered = movies.filter((movie) => {
-      // Genre filter
-      if (genre) {
-        const genreFilters = genre
-          .split(",")
-          .map((g) => g.trim().toLowerCase());
-        if (!movie.genres?.some((g) => genreFilters.includes(g))) return false;
+    const filters = {
+      genre,
+      year,
+      release_from,
+      release_to,
+      min_rating,
+      max_rating,
+      runtime_min,
+      runtime_max,
+      sort,
+      order,
+      page,
+    };
+
+    if (!name) {
+      const nonEmptyFilters = Object.entries(filters)
+        .filter(([k]) => !["sort", "order", "page"].includes(k))
+        .some(([, v]) => v != null && String(v).trim() !== "");
+
+      if (!nonEmptyFilters) {
+        return res.status(400).json({
+          error: "At least one filter must be provided when no name is given",
+        });
       }
-
-      // Year filter
-      if (year && movie.release_date) {
-        const y = new Date(movie.release_date).getFullYear();
-        if (y !== Number(year)) return false;
-      }
-
-      // Release date range filter
-      if (release_from && new Date(movie.release_date) < new Date(release_from))
-        return false;
-      if (release_to && new Date(movie.release_date) > new Date(release_to))
-        return false;
-
-      // Rating filter
-      if (min_rating && movie.rating < Number(min_rating)) return false;
-      if (max_rating && movie.rating > Number(max_rating)) return false;
-
-      // Runtime filter
-      if (runtime_min && movie.runtime < Number(runtime_min)) return false;
-      if (runtime_max && movie.runtime > Number(runtime_max)) return false;
-
-      return true;
-    });
-
-    // Sort
-    if (sort) {
-      const dir = order === "asc" ? 1 : -1;
-      filtered.sort((a, b) => {
-        if (sort === "release_date") {
-          return (
-            (new Date(a.release_date || 0) - new Date(b.release_date || 0)) *
-            dir
-          );
-        } else if (sort === "rating") {
-          return ((a.rating || 0) - (b.rating || 0)) * dir;
-        } else if (sort === "title") {
-          return a.title.localeCompare(b.title) * dir;
-        }
-        return 0;
-      });
     }
 
-    res.json(filtered);
+    // helper to extract genre names in lowercase
+    const extractGenreNames = (movie) =>
+      (movie.genres || [])
+        .map((g) => {
+          // DB genres are objects with a name
+          if (typeof g === "object" && g.name) return g.name.toLowerCase();
+          // TMDb genres are already strings
+          if (typeof g === "string") return g.toLowerCase();
+          return null;
+        })
+        .filter(Boolean);
+
+    const applyFilters = (movies) =>
+      movies.filter((movie) => {
+        const movieGenres = extractGenreNames(movie);
+
+        if (genre) {
+          const filtersArr = genre
+            .split(",")
+            .map((g) => g.trim().toLowerCase())
+            .filter(Boolean);
+
+          if (!filtersArr.some((f) => movieGenres.includes(f))) return false;
+        }
+
+        if (year && movie.release_date) {
+          if (new Date(movie.release_date).getFullYear() !== Number(year))
+            return false;
+        }
+
+        if (release_from && movie.release_date) {
+          if (new Date(movie.release_date) < new Date(release_from))
+            return false;
+        }
+        if (release_to && movie.release_date) {
+          if (new Date(movie.release_date) > new Date(release_to)) return false;
+        }
+
+        if (min_rating != null && String(min_rating) !== "") {
+          if (
+            movie.vote_average == null ||
+            movie.vote_average < Number(min_rating)
+          )
+            return false;
+        }
+        if (max_rating != null && String(max_rating) !== "") {
+          if (
+            movie.vote_average == null ||
+            movie.vote_average > Number(max_rating)
+          )
+            return false;
+        }
+
+        if (runtime_min != null && String(runtime_min) !== "") {
+          if (movie.runtime == null || movie.runtime < Number(runtime_min))
+            return false;
+        }
+        if (runtime_max != null && String(runtime_max) !== "") {
+          if (movie.runtime == null || movie.runtime > Number(runtime_max))
+            return false;
+        }
+
+        return true;
+      });
+
+    let dbMovies = [];
+    let tmdbMovies = [];
+
+    if (name) {
+      dbMovies = (await getByName(name)) || [];
+      tmdbMovies = await searchTMDBByName(name);
+    } else {
+      // Filter-only search
+      dbMovies = await discoverMovies(filters);
+      tmdbMovies = await searchTMDBByFilters(filters);
+    }
+
+    tmdbMovies = tmdbMovies.map((movie) => ({
+      ...movie,
+      genres: (movie.raw.genres || []).map((g) => g?.name).filter(Boolean),
+    }));
+
+    console.log(dbMovies);
+    console.log(tmdbMovies);
+
+    // Merge DB + TMDb results
+    const merged = [...dbMovies, ...tmdbMovies];
+
+    // Apply any remaining filters
+    const filtered = applyFilters(merged);
+
+    // Sorting
+    const sortMap = {
+      release_date: "release_date",
+      rating: "vote_average",
+      title: "title",
+    };
+    const sortField = sortMap[sort] || sortMap.rating;
+    const dir = order === "asc" ? 1 : -1;
+
+    const sorted = filtered.slice().sort((a, b) => {
+      const va = a[sortField];
+      const vb = b[sortField];
+      if (sortField === "release_date")
+        return (new Date(va) - new Date(vb)) * dir;
+      if (sortField === "vote_average") return ((va || 0) - (vb || 0)) * dir;
+      return String(va ?? "").localeCompare(String(vb ?? "")) * dir;
+    });
+
+    if (!sorted.length)
+      return res.status(404).json({ error: "Movie not found" });
+    res.json(sorted);
   } catch (err) {
     next(err);
   }
