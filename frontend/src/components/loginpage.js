@@ -1,29 +1,28 @@
 import '../style/buttonStyle.css'
 import { useState } from 'react'
-import {signIn} from '../api/login'
+import { useAuth } from '../api/login'
 import '../style/sidebar.css'
 import RegisterPage from '../components/registerpage'
-
+const URL = "http://localhost:3001/user"
 export default function LoginPage(){
     const[Identifier, setIdentifier] = useState('')
     const[Password, setPassword] = useState('')
-
-    const[openRegister, setOpenRegister] = useState(true)
-    const[openLogin, setOpenLogin] = useState(true)
+    
+    const[openRegister, setOpenRegister] = useState(true);
+    const[openLogin, setOpenLogin] = useState(true);
+    const { signIn } = useAuth();
   const handleSubmit= async (e) =>{
         e.preventDefault();
-
         console.log(Identifier,Password)
-        const ress = await signIn(Identifier,Password)
-        if(ress === 201 | ress === "201" |ress === 200 | ress === "200" ){
-            console.log("loggedin")
+        try{
+       const res = await signIn(Identifier,Password)
+            
+            console.log("result : ",res)
             localStorage.setItem("username", Identifier)
             location.reload(false)
-            
-        }
-        else{
-            console.log("something went wrong")
-        }
+            }catch(error){
+                console.log(error)
+            }
     }
 
 return(
