@@ -5,10 +5,11 @@
     display: flex;
     justify-content: center;
     flex-direction: column;
+    
  height:100%;
- width: 15%;
+ width: 13%;
  top: -6vh;
- right: 85vw;
+right: 84%;
  z-index: 1;
  margin-right: 10px;
  overflow: hidden;
@@ -31,10 +32,12 @@
      flex-direction: column;
      justify-content: center;
     align-items: center;
+   
 
 }
 
 .placeHolder{
+  margin-top: 10px;
   margin-left: 10px;
   background-color: transparent;
     width: 250px;
@@ -56,14 +59,19 @@
     align-items: center;
     justify-content: center;
     height:3vh;
+    overflow: hidden;
 }
 
 .goToRegister{
     position: relative;
+    top: 50%;
+    right: 60%;
+    z-index: 5;
     margin-left: 5px;
     border: none;
     background-color: var(--bg);
     color: var(--text);
+
 
 }
 .goToRegister:hover{
@@ -86,27 +94,29 @@
     justify-content: center;
     align-items: center;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-
+  overflow: hidden;
 }
 
 .cancelBtn{
   border: none;
   background-color: transparent;
 
-  position: fixed;
+  position: absolute;
   font-size: 20px;
-  left: 21%;
+  left: -2.5%;
   width: 4vw;
   height:3vh;
-  top: 10%;
+  top: 1%;
+  z-index: 4;
+
 
 }
 
 .closeSideBar{
  width: 2vw;
- position: fixed;
+ position: absolute;
 z-index: 3;
- left: 12vw;
- top: 1vh;
+ right: 2%;
+ top: 1.5%;
  
 }

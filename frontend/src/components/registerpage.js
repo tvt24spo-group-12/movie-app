@@ -23,6 +23,7 @@ export default function RegisterPage(){
         }
     }
     return(
+       < div className='page popupcontainer'>
             <div className='page registerContainer'>
             <form onSubmit={handleSubmit}>
                 <input
@@ -46,12 +47,18 @@ export default function RegisterPage(){
                 value={Username}
                 onChange={(e) => setUsername(e.target.value)}
                 />
-                
+                <button
+                        onClick={() => {
+                        location.reload(false)
+                        }}
+                        className='btn-primary submitBtn cancelBtn'>
+                        X
+                       </button>
                 <button className='btn-primary submitBtn'>Sign Up</button>
             </form>
 
             </div>
-
+ </div>
 
        
     )

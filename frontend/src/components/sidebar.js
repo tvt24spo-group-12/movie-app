@@ -18,7 +18,7 @@ export default function SideBar(){
     
     
       const usrname = window.localStorage.getItem('username')
-      console.log(usrname)
+     
       if(usrname === null){
         setloggedin(false);
        
@@ -35,14 +35,14 @@ export default function SideBar(){
          
          if(sideBarOpen === true){
             setSideBarOpen(false)
-            document.getElementById("sideBar").style.right = "95vw"
-            document.getElementById("closeSidebar").style.left = "2vw";
+            document.getElementById("sideBar").style.right = "95%"
+            
          }
          if(sideBarOpen === false)
          {
            
-            document.getElementById("sideBar").style.right = "85vw"
-            document.getElementById("closeSidebar").style.left = " 12vw";
+            document.getElementById("sideBar").style.right = "84%"
+            
              setSideBarOpen(true)
          }
     }
@@ -57,10 +57,10 @@ export default function SideBar(){
     }
     return(
         <div >
-                <button onClick={closeSidebar} id="closeSidebar" className='btn-primary closeSideBar'>{sideBarOpen ? "<" : ">"}</button>
+               
          
         <div id='sideBar' className='page sidebarContainer'>
-        
+         <button onClick={closeSidebar} id="closeSidebar" className='btn-primary closeSideBar'>{sideBarOpen ? "<" : ">"}</button>
             <div className='buttonContainer'>
               
     
@@ -94,45 +94,22 @@ export default function SideBar(){
      </div>
         </div>
       {popupOpen &&
-      <div className='page popupcontainer'>
-         <button
-            onClick={() => {
-            setRegisterPage(false)
-            setLoginOpenForm(false)
-            setPopupOpen(false)
-            }}
-             className='btn-primary submitBtn cancelBtn'>
-            X
-        </button>
     
+         
+    <>
  {!loginform && registerPage && (
-
         <>
-       
         <RegisterPage/>
         </>
-        
-      
     )} 
     {loginform && !registerPage && 
-    (
-      
+    (    
         <>
         <LoginPage/>
-        <button onClick={() =>{
-            setRegisterPage(true)
-            setLoginOpenForm(false)
-        }} className='goToRegister'>Don't have an account? Register Here!</button>
-        </>
-       
-    )  
+     </>
+    )}
+    </>
     }
-    </div>
-
-    }
-      
-   
-    
         </div>
     )
 }
