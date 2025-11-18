@@ -1,0 +1,2 @@
+CREATE DATABASE devdb;
+CREATE DATABASE testdb;
