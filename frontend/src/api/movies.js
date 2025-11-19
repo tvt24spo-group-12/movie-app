@@ -31,13 +31,23 @@ async function fetchMovieDetails(id) {
 }
 
 // hae elokuvat backendin kautta, ja täydennä osittainiset tulokset tietojen haulla.
-export async function searchMovies(query) {
+export async function searchMovies(query, filters = {}) {
   const trimmed = query.trim();
-  if (!trimmed) return [];
+  
+  // Rakenna query string filttereille
+  const params = new URLSearchParams();
+  Object.entries(filters).forEach(([key, value]) => {
+    if (value !== "" && value != null) {
+      params.append(key, value);
+    }
+  });
+  
+  const queryString = params.toString();
+  const searchPath = trimmed 
+    ? `${API_BASE_URL}/movie/search/${encodeURIComponent(trimmed)}${queryString ? `?${queryString}` : ""}`
+    : `${API_BASE_URL}/movie/search/${queryString ? `?${queryString}` : ""}`;
 
-  const res = await fetch(
-    `${API_BASE_URL}/movie/search/${encodeURIComponent(trimmed)}`
-  );
+  const res = await fetch(searchPath);
 
   if (res.status === 404) return [];
   if (!res.ok) {
