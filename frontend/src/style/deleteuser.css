@@ -1,0 +1,112 @@
+.del-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  backdrop-filter: blur(2px);
+}
+
+
+.del-modal {
+  width: 360px;
+  max-width: 90%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.25rem 1.5rem;
+  color: var(--text);
+  transition: all var(--transition);
+}
+
+
+.del-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--error);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  margin-bottom: 0.75rem;
+}
+
+
+.del-title {
+  margin: 0 0 .5rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.del-text {
+  margin: 0 0 1rem;
+  color: var(--muted);
+  font-size: .9rem;
+  line-height: 1.45;
+}
+
+.del-text strong {
+  color: var(--text);
+}
+
+
+.del-checkbox {
+  display: flex;
+  gap: .5rem;
+  font-size: .85rem;
+  color: var(--muted);
+  margin-bottom: 1rem;
+}
+
+.del-checkbox input {
+  margin-top: 3px;
+}
+
+
+.del-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: .5rem;
+}
+
+.del-btn {
+  border: none;
+  border-radius: var(--radius);
+  padding: .55rem .95rem;
+  font-size: .9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--transition), transform 120ms ease;
+}
+
+
+.del-btn-danger {
+  background: var(--error);
+  color: #fff;
+}
+
+.del-btn-danger:hover:not(:disabled) {
+  transform: translateY(-1px);
+  background: color-mix(in srgb, var(--error) 90%, black);
+}
+
+.del-btn-danger:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+
+.del-btn-secondary {
+  background: var(--border);
+  color: var(--text);
+}
+
+.del-btn-secondary:hover {
+  transform: translateY(-1px);
+}
