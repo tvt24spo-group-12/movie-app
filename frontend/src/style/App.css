@@ -25,10 +25,10 @@ body {
   align-items: center;
   gap: 0.75rem;
   background: var(--surface);
-  border-radius: 999px;
   padding: 0.85rem 1.2rem;
   box-shadow: var(--shadow);
-  margin-bottom: 2.5rem;
+  margin-bottom: 0.5rem;
+  border-radius: var(--radius);
 }
 
 .search-bar input {
@@ -110,7 +110,6 @@ body {
   line-height: 1.2;
   font-weight: 600;
   display: -webkit-box;
-  -webkit-line-clamp: 1; /* show only 1 line */
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -177,4 +176,122 @@ body {
   justify-content: space-between;
   align-items: center;
   margin-right: 2em;
+}
+
+.filters {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 2rem;
+  overflow: hidden;
+}
+
+.filters__toggle {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background: var(--surface);
+  border: none;
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--transition);
+}
+
+.filters__toggle:hover {
+  background: var(--bg);
+}
+
+.filters__toggle-icon {
+  font-size: 0.8rem;
+  transition: transform 0.3s ease;
+  display: inline-block;
+}
+
+.filters__toggle-icon.open {
+  transform: rotate(180deg);
+}
+
+.filters__content {
+  padding: 1.5rem;
+  border-top: 1px solid var(--border);
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.filters__title {
+  font-size: 1.25rem;
+  margin: 0 0 1.25rem;
+  font-weight: 600;
+}
+
+.filters__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.filter-group label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.filter-group input,
+.filter-group select {
+  padding: 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 0.95rem;
+  transition: border-color var(--transition);
+}
+
+.filter-group input:focus,
+.filter-group select:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.filters__reset {
+  background-color: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.6rem 1.2rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.filters__reset:hover {
+  background-color: var(--bg);
+  transform: translateY(-1px);
+}
+
+.filters__reset:active {
+  transform: translateY(0);
 }
