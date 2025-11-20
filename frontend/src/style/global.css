@@ -15,7 +15,6 @@
     --success: #16a34a;         /*vihreä, kun joku onnistuu tms*/
     --error: #dc2626;           /*punainen, virheille tms*/
 
-
     --radius: 8px;               /*pyöristetyt reunat napeille tms*/
     --max-width: 1200px;         /*sivun maksimileveys*/
     --transition: 200ms 
