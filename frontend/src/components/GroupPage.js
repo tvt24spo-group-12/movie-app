@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
-import "./style/GroupPage.css";
-import './style/global.css';
+import "../style/GroupPage.css";
+import '../style/global.css';
 
 export default function GroupPage() {
  const [sidebarOpen, setSidebarOpen] = useState(true)
