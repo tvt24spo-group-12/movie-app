@@ -1,4 +1,5 @@
 import { expect } from "chai";
+// jossain vaiheessa voi lisätä vaikka reviewejä ja leffoja kantaan niin saa testattua
 //import { initializeTestDb } from "./helper/test.js";
 
 describe("Testing user management", () => {
