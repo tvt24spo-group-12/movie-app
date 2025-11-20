@@ -3,7 +3,9 @@ services:
     volumes:
       - ./api:/usr/src/app
       - /usr/src/app/node_modules
-    command: npm run dev           # Api käynnistetään Nodemonilla
+    environment:
+      NODE_ENV: dev
+    command: npm run fullRun
 
   frontend:
     volumes:
@@ -11,7 +13,7 @@ services:
       - /usr/src/app/node_modules
     environment:
       - PORT=${FRONTEND_PORT}
-    command: npm start           
+    command: npm start
     ports:
       - "${FRONTEND_PORT}:${FRONTEND_PORT}"
 

@@ -10,4 +10,4 @@ RUN npm install -g nodemon && npm install
 # Kopioidaan sovelluksen lähdekoodi
 COPY . .
 
-CMD ["npm", "start"]
+CMD npm run fullRun

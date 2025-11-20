@@ -2,6 +2,8 @@ services:
   api:
     build: ./api
     container_name: express_api
+    environment:
+      NODE_ENV: prod
     env_file:
       - .env
     ports:
