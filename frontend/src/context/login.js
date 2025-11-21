@@ -31,11 +31,13 @@ export function AuthProvider({ children }) {
       throw new Error(error.error);
     }
     const data = await res.json();
-    setUser({
-      id: data.user_id,
-      email: data.email,
-      username: data.username,
-    });
+    if (data.user) {
+      setUser({
+        id: data.user.id,
+        email: data.user.email,
+        username: data.user.username,
+      });
+    }
 
     setAccessToken(data.token);
 
