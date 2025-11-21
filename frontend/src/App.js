@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import InTheaters from "./components/inTheaters";
 import SideBar from "./components/sidebar";
 import { useAuth } from "./context/login";
-import GroupPage from "./GroupPage";
+import GroupPage from "./components/GroupPage";
 
 function App() {
   const{acceesToken, user, logout} = useAuth();

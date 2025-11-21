@@ -2,7 +2,11 @@ import {
   createUser,
   findUserByEmail,
   findUserByUsername,
+  saveRefreshToken,
+  getUserByRefreshToken,
+  clearRefreshToken
 } from "../models/user_model.js";
+import { verifyRefreshToken } from "../utils/jwt.js";
 import { compare as bcryptCompare } from "bcrypt";
 import jwt from "jsonwebtoken";
 
@@ -46,15 +50,18 @@ export async function login(req, res, next) {
     const accessToken = jwt.sign(
       { user_id: dbUser.user_id },
       process.env.JWT_SECRET,
-      { expiresIn: "15min" },
+      { expiresIn: "15min" }
     );
 
     //Luodaan refresh token joka voimassa 7 päivää
     const refreshToken = jwt.sign(
       { user_id: dbUser.user_id },
       process.env.REFRESH_SECRET,
-      { expiresIn: "7d" },
+      { expiresIn: "7d" }
     );
+
+    //tallenna refresh token kantaan
+    await saveRefreshToken(dbUser.username, refreshToken);
 
     //käytetään cookies niin ei pääse javascriptillä käsiksi
     res.cookie("refreshToken", refreshToken, {
@@ -66,10 +73,12 @@ export async function login(req, res, next) {
 
     //palautetaan perustiedot käyttäjästä ja kirjautumis token
     return res.json({
-      user_id: dbUser.user_id,
-      email: dbUser.email,
-      username: dbUser.username,
-      token: accessToken,
+      user: {
+        id: dbUser.user_id,
+        email: dbUser.email,
+        username: dbUser.username,
+      },
+      accessToken: accessToken,
     });
   } catch (err) {
     //virheet ohjataan error handelerille
@@ -99,5 +108,71 @@ export async function signUp(req, res, next) {
       .json({ user_id: result.rows[0].user_id, email: result.rows[0].email });
   } catch (err) {
     return next(err);
+  }
+}
+
+export async function refreshAccessToken(req, res, next) {
+  try {
+    const refreshToken = req.cookies?.refreshToken;
+
+    if (!refreshToken) {
+      return res.status(401).json({ error: "Refresh token required" });
+    }
+
+    
+    const decoded = verifyRefreshToken(refreshToken);
+
+    if (!decoded) {
+      return res
+        .status(403)
+        .json({ error: "Invalid or expired refresh token" });
+    }
+
+    
+    const user = await getUserByRefreshToken(refreshToken);
+    if (!user) {
+      return res.status(403).json({ error: "Invalid refresh token" });
+    }
+
+    const accessToken = jwt.sign(
+      { user_id: user.user_id },
+      process.env.JWT_SECRET,
+      { expiresIn: "15min" }
+    );
+    
+
+    res.json({
+      accessToken,
+      user: {
+        id: user.user_id,
+        email: user.email,
+        username: user.username,
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function logout(req, res, next) {
+  try {
+    const refreshToken = req.cookies?.refreshToken;
+    
+
+    if (refreshToken) {
+      const user = await getUserByRefreshToken(refreshToken);
+
+      if (user) {
+        
+        await clearRefreshToken(user.username);
+      }
+    }
+
+    
+    res.clearCookie("refreshToken");
+
+    res.json({ message: "Logout successful" });
+  } catch (err) {
+    next(err);
   }
 }

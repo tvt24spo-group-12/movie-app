@@ -23,3 +23,26 @@ export async function findUserByUsername(username) {
     [username]
   );
 }
+
+export async function saveRefreshToken(username, refreshToken) {
+  return await pool.query(
+    "UPDATE users SET refresh_token = $1 WHERE username = $2 RETURNING user_id",
+    [refreshToken, username]
+  );
+}
+
+export async function getUserByRefreshToken(refreshToken) {
+  const result = await pool.query(
+    "SELECT user_id, email, username FROM users WHERE refresh_token = $1",
+    [refreshToken]
+  );
+  return result.rows.length > 0 ? result.rows[0] : null;
+}
+
+export async function clearRefreshToken(username) {
+  const result = await pool.query(
+    "UPDATE users SET refresh_token = NULL WHERE username = $1 RETURNING username",
+    [username]
+  );
+  return result.rows[0];
+}
