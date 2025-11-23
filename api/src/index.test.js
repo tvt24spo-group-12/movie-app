@@ -8,6 +8,7 @@ describe("Testing user management", () => {
     password: "password123",
   };
   let id = -1;
+  let accessToken = null;
 
   //before(async () => {
   //  await initializeTestDb();
@@ -37,9 +38,11 @@ describe("Testing user management", () => {
     });
     const data = await response.json();
     expect(response.status).to.equal(200);
-    expect(data).to.include.all.keys(["user_id", "email", "token", "username"]);
-    expect(data.email).to.equal(user.identifier);
-    id = data.user_id;
+    expect(data).to.include.all.keys(["user", "accessToken"]);
+    expect(data.user).to.include.all.keys(["id", "email", "username"]);
+    expect(data.user.email).to.equal(user.identifier);
+    id = data.user.id;
+    accessToken = data.accessToken;
   });
   // sign out
 
@@ -47,7 +50,10 @@ describe("Testing user management", () => {
   it("should delete user", async () => {
     const response = await fetch(`http://localhost:3002/user/delete/${id}`, {
       method: "delete",
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${accessToken}`
+      },
     });
     const data = await response.json();
     expect(response.status).to.equal(200);
