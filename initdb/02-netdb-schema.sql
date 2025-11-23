@@ -103,6 +103,7 @@ CREATE TABLE IF NOT EXISTS public.users
     email character varying(255) COLLATE pg_catalog."default" NOT NULL,
     picture_path text COLLATE pg_catalog."default",
     "joinedGroups" integer[],
+    refresh_token text COLLATE pg_catalog."default",
     CONSTRAINT "User_pkey" PRIMARY KEY (user_id)
 );
 
