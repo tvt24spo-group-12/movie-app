@@ -91,13 +91,13 @@ export function AuthProvider({ children }) {
 
     if (res.status === 401 || res.status === 403) {
       try {
-        await refreshAccessToken();
+        const newToken = await refreshAccessToken();
 
         const resRetry = await fetch(url, {
           ...options,
           headers: {
             ...(options.headers || {}),
-            Authorization: accessToken ? `Bearer ${accessToken}` : "",
+            Authorization: newToken ? `Bearer ${newToken}` : "",
           },
           credentials: "include",
         });
