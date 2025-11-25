@@ -13,6 +13,67 @@ export async function getByName(name) {
   return result.rows;
 }
 
+export async function saveMovie(movieData) {
+  const {
+    movie_id,
+    title,
+    original_title,
+    overview,
+    genres,
+    status,
+    release_date,
+    in_theaters,
+    poster_path,
+    backdrop_path,
+    vote_count,
+    vote_average,
+    runtime,
+  } = movieData;
+
+  // Ensure integer fields have valid values
+  const safeVoteCount = vote_count !== undefined && vote_count !== null ? vote_count : 0;
+  const safeVoteAverage = vote_average !== undefined && vote_average !== null ? vote_average : 0;
+  const safeRuntime = runtime !== undefined && runtime !== null ? runtime : null;
+
+  const result = await pool.query(
+    `INSERT INTO movies 
+      (movie_id, title, original_title, overview, genres, status, release_date, 
+       in_theaters, poster_path, backdrop_path, vote_count, vote_average, runtime)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+     ON CONFLICT (movie_id) 
+     DO UPDATE SET
+       title = EXCLUDED.title,
+       original_title = EXCLUDED.original_title,
+       overview = EXCLUDED.overview,
+       genres = EXCLUDED.genres,
+       status = EXCLUDED.status,
+       release_date = EXCLUDED.release_date,
+       in_theaters = EXCLUDED.in_theaters,
+       poster_path = EXCLUDED.poster_path,
+       backdrop_path = EXCLUDED.backdrop_path,
+       vote_count = EXCLUDED.vote_count,
+       vote_average = EXCLUDED.vote_average,
+       runtime = EXCLUDED.runtime
+     RETURNING *`,
+    [
+      movie_id,
+      title,
+      original_title,
+      overview,
+      genres,
+      status,
+      release_date,
+      in_theaters,
+      poster_path,
+      backdrop_path,
+      safeVoteCount,
+      safeVoteAverage,
+      safeRuntime,
+    ]
+  );
+  return result.rows[0];
+}
+
 export async function discoverMovies(filters) {
   const conditions = [];
   const values = [];
