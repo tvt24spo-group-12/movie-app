@@ -3,7 +3,7 @@ import { useAuth } from "../../context/login";
 import MovieReviewCard from "./MovieReviewCard";
 import { searchMovieReviews } from "../../api/reviews";
 
-export default function UserMovieReviews({ user_id }) {
+export default function MovieReviews({ movie_id }) {
   const { authFetch } = useAuth();
   const [reviews, setReviews] = useState([]);
   const [status, setStatus] = useState("idle"); // idle | loading | success | error
@@ -15,8 +15,8 @@ export default function UserMovieReviews({ user_id }) {
       setError("");
 
       try {
-        const data = await searchMovieReviews({ authFetch, user_id });
-        setReviews(data);
+        const data = await searchMovieReviews(movie_id);
+        setReviews(data.ratings);
         setStatus("success");
       } catch (err) {
         console.error("Failed to fetch user reviews:", err);
@@ -45,18 +45,14 @@ export default function UserMovieReviews({ user_id }) {
     return (
       <div className="reviews">
         {reviews.map((review) => (
-          <MovieReviewCard key={review.id || review.movie_id} review={review} />
+          <MovieReviewCard
+            key={review.vote_id || review.movie_id}
+            review={review}
+          />
         ))}
       </div>
     );
   };
 
-  return (
-    <div className="page">
-      {/* TODO: implement getting username with user_id and add it here, if -1 then just "your" */}
-      <h1 className="page__title">Your reviews</h1>
-
-      {renderContent()}
-    </div>
-  );
+  return <div className="page">{renderContent()}</div>;
 }

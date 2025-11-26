@@ -18,13 +18,13 @@ function normalizeMovie(movie) {
     votes: movie.vote_count ?? null,
     releaseYear: movie.release_date
       ? new Date(movie.release_date).getFullYear()
-      : movie.year ?? null,
+      : (movie.year ?? null),
     runtime: movie.runtime ?? null,
   };
 }
 
 // kutsu backendin detail endpointin täyttääkseen kentät, jotka TMDb haku jättää poissa (runtime, genres, etc.)
-async function fetchMovieDetails(id) {
+export async function fetchMovieDetails(id) {
   const res = await fetch(`${API_BASE_URL}/movie/details/${id}`);
   if (!res.ok) throw new Error(`Failed to load movie ${id} details`);
   return normalizeMovie(await res.json());
@@ -33,7 +33,7 @@ async function fetchMovieDetails(id) {
 // hae elokuvat backendin kautta, ja täydennä osittainiset tulokset tietojen haulla.
 export async function searchMovies(query, filters = {}) {
   const trimmed = query.trim();
-  
+
   // Rakenna query string filttereille
   const params = new URLSearchParams();
   Object.entries(filters).forEach(([key, value]) => {
@@ -41,9 +41,9 @@ export async function searchMovies(query, filters = {}) {
       params.append(key, value);
     }
   });
-  
+
   const queryString = params.toString();
-  const searchPath = trimmed 
+  const searchPath = trimmed
     ? `${API_BASE_URL}/movie/search/${encodeURIComponent(trimmed)}${queryString ? `?${queryString}` : ""}`
     : `${API_BASE_URL}/movie/search/${queryString ? `?${queryString}` : ""}`;
 
@@ -71,17 +71,15 @@ export async function searchMovies(query, filters = {}) {
         return {
           ...movie,
           ...details,
-          genres:
-            details.genres.length
-              ? details.genres
-              : movie.genres,
+          genres: details.genres.length ? details.genres : movie.genres,
         };
       } catch {
         // jos tietoja ei löydy, palauta osittainen tulos.
         return movie;
       }
-    })
+    }),
   );
 
   return enriched;
 }
+

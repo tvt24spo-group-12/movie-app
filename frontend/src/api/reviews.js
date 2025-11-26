@@ -49,28 +49,30 @@ export async function searchUserReviews({ authFetch, user_id = -1 } = {}) {
     return review;
   });
 
-  // Return the data with the new 'poster' URL
+  // Return the data with the new poster URL
   return transformedReviews;
 }
 
-export async function searchMovieReviews(movie_id, auth_token) {
-  const options = {};
+export async function searchMovie({ authFetch, movie_id } = {}) {
+  const isUserSpecific = !!authFetch;
   let reqUrl;
+  let res;
 
-  // If a token is provided, fetch the user's specific rating
-  if (auth_token) {
+  if (isUserSpecific) {
     reqUrl = `${API_BASE_URL}/movie/${movie_id}/rating`;
-    options.headers = {
-      Authorization: `Bearer ${auth_token}`,
-    };
   } else {
-    // If no token, fetch all public ratings
+    // If authFetch is NOT provided, we fetch all public ratings (plural endpoint)
     reqUrl = `${API_BASE_URL}/movie/${movie_id}/ratings`;
   }
 
-  let res;
   try {
-    res = await fetch(reqUrl, options);
+    if (isUserSpecific) {
+      // Use authFetch for the authenticated endpoint
+      res = await authFetch(reqUrl);
+    } else {
+      // Use standard fetch for the public endpoint
+      res = await fetch(reqUrl);
+    }
   } catch (networkError) {
     throw new Error(
       `Network error while fetching movie reviews: ${networkError.message}`,
@@ -83,7 +85,7 @@ export async function searchMovieReviews(movie_id, auth_token) {
 
   if (res.status === 401) {
     throw new Error(
-      "Unauthorized: Authentication token is invalid or expired.",
+      "Unauthorized: Authentication required or token is invalid/expired.",
     );
   }
 
@@ -95,9 +97,41 @@ export async function searchMovieReviews(movie_id, auth_token) {
   return await res.json();
 }
 
-export async function postMovieRating(movie_id, auth_token, data) {
-  if (!auth_token) {
-    throw new Error("Authentication token is required to post a movie rating.");
+export async function searchMovieReviews(movie_id) {
+  let reqUrl = `${API_BASE_URL}/movie/${movie_id}/ratings`;
+  let res;
+
+  try {
+    res = await fetch(reqUrl);
+  } catch (networkError) {
+    throw new Error(
+      `Network error while fetching movie reviews: ${networkError.message}`,
+    );
+  }
+
+  if (res.status === 404) {
+    return [];
+  }
+
+  if (res.status === 401) {
+    throw new Error(
+      "Unauthorized: Authentication required or token is invalid/expired.",
+    );
+  }
+
+  if (!res.ok) {
+    const message = await res.text();
+    throw new Error(`Fetching movie reviews failed: ${res.status} ${message}`);
+  }
+
+  return await res.json();
+}
+
+export async function postMovieRating({ authFetch, movie_id, data } = {}) {
+  if (!authFetch) {
+    throw new Error(
+      "Authentication context is required to post a movie rating.",
+    );
   }
 
   const reqUrl = `${API_BASE_URL}/movie/${movie_id}/rating`;
@@ -106,14 +140,13 @@ export async function postMovieRating(movie_id, auth_token, data) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${auth_token}`,
     },
     body: JSON.stringify(data),
   };
 
   let res;
   try {
-    res = await fetch(reqUrl, options);
+    res = await authFetch(reqUrl, options);
   } catch (networkError) {
     throw new Error(
       `Network error while posting movie rating: ${networkError.message}`,
@@ -131,14 +164,13 @@ export async function postMovieRating(movie_id, auth_token, data) {
     throw new Error(`Posting movie rating failed: ${res.status} ${message}`);
   }
 
-  // Return the created/updated resource
   return await res.json();
 }
 
-export async function deleteMovieRating(movie_id, auth_token) {
-  if (!auth_token) {
+export async function deleteMovieRating({ authFetch, movie_id } = {}) {
+  if (!authFetch) {
     throw new Error(
-      "Authentication token is required to delete a movie rating.",
+      "Authentication context is required to delete a movie rating.",
     );
   }
 
@@ -146,14 +178,11 @@ export async function deleteMovieRating(movie_id, auth_token) {
 
   const options = {
     method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${auth_token}`,
-    },
   };
 
   let res;
   try {
-    res = await fetch(reqUrl, options);
+    res = await authFetch(reqUrl, options);
   } catch (networkError) {
     throw new Error(
       `Network error while deleting movie rating: ${networkError.message}`,
@@ -171,6 +200,5 @@ export async function deleteMovieRating(movie_id, auth_token) {
     throw new Error(`Deleting movie rating failed: ${res.status} ${message}`);
   }
 
-  // Return true for success, or check for 204 No Content if needed
   return res.status === 204 ? true : await res.json();
 }

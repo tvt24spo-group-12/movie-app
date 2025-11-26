@@ -8,6 +8,7 @@ import SideBar from "./components/sidebar";
 import { useAuth } from "./context/login";
 import GroupPage from "./components/GroupPage";
 import UserMovieReviews from "./components/reviews/UserMovieReviews";
+import MoviePage from "./components/MoviePage";
 
 function App() {
   const { acceesToken, user, logout } = useAuth();
@@ -15,6 +16,8 @@ function App() {
   return (
     <>
       <SideBar />
+      <MoviePage movie_id={100} />
+
       <UserMovieReviews user_id={-1} />
 
       {/*

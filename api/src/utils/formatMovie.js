@@ -18,3 +18,4 @@ export function formatMovie(data) {
     raw: data,
   };
 }
+
