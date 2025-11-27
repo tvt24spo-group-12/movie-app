@@ -35,14 +35,9 @@ export default function SideBar(){
          
          if(sideBarOpen === true){
             setSideBarOpen(false)
-            document.getElementById("sideBar").style.right = "95%"
-            
          }
          if(sideBarOpen === false)
          {
-           
-            document.getElementById("sideBar").style.right = "84%"
-            
              setSideBarOpen(true)
          }
     }
@@ -59,7 +54,7 @@ export default function SideBar(){
         <div >
                
          
-        <div id='sideBar' className='page sidebarContainer'>
+        <div id='sideBar' className={sideBarOpen === true ? "sidebarContainer" : "sideBarClosed"}>
          <button onClick={closeSidebar} id="closeSidebar" className='btn-primary closeSideBar'>{sideBarOpen ? "<" : ">"}</button>
             <div className='buttonContainer'>
               

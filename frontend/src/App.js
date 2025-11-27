@@ -2,11 +2,12 @@ import MovieList from "./components/MovieList";
 import './style/App.css';
 import './style/intheaters.css';
 import './style/global.css';
-import { useEffect, useState } from "react";
+//import { useEffect, useState } from "react";
 import InTheaters from "./components/inTheaters";
 import SideBar from "./components/sidebar";
 import { useAuth } from "./context/login";
-import GroupPage from "./components/GroupPage";
+//import GroupPage from "./components/GroupPage";
+//import GroupPage from "./GroupPage";
 
 function App() {
   const{acceesToken, user, logout} = useAuth();
@@ -18,13 +19,13 @@ function App() {
     
     <>
        <SideBar/>
-      <GroupPage />
+      {/*<GroupPage />*/}
       
-       {/*
+       
 
       <MovieList />
       <InTheaters/>
-      */}
+      
 
     
     </>
