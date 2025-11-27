@@ -1,6 +1,6 @@
 
 import pool from '../database.js'
-import userRouter from '../routers/user_router.js';
+
 
 const addFavoriteMovie = async (user_id, movie_id) =>{
 
@@ -22,5 +22,24 @@ const getAllFavoriteMovies = async(user_id) => {
         throw new Error(error)
     }
 }
+const getFavoriteMovieById = async(user_id,movie_id) => {
+    try{
+         const res = await pool.query('SELECT * FROM favourite_movies WHERE user_id = ($1) AND movie_id = ($2)',
+            [user_id,movie_id])
+            return res.rows;
+    }catch(error){
+        throw new Error(error)
+    }
+    }
 
-export{addFavoriteMovie, getAllFavoriteMovies}
+const removeFavoriteMovie = async(user_id, movie_id) => {
+    try{
+        const res = await pool.query('DELETE FROM favourite_movies WHERE user_id = ($1) AND movie_id = ($2)',
+            [user_id,movie_id]
+        )
+        return res.rows
+    }catch(error){
+        throw new Error(error)
+    }
+}
+export{addFavoriteMovie, getAllFavoriteMovies, removeFavoriteMovie,getFavoriteMovieById}

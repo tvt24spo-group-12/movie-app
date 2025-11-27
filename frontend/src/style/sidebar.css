@@ -11,8 +11,27 @@
     
  height:100%;
  width: 13%;
- top: -6vh;
-right: 84%;
+ top: 0;
+right: 86.5%;
+ z-index: 1;
+ margin-right: 10px;
+ overflow: hidden;
+ transition: var(--transition); /*Niklas lisännyt tämän eli pieni animaatio kun sidebar*/
+ 
+}
+.sideBarClosed{
+    position: fixed;
+
+  box-shadow: var(--shadow); 
+    background-color: var(--bg);
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    
+ height:100%;
+ width: 13%;
+ top: -0;
+right: 97%;
  z-index: 1;
  margin-right: 10px;
  overflow: hidden;
@@ -120,7 +139,7 @@ right: 84%;
 .closeSideBar{
  width: 2vw;
  position: absolute;
-z-index: 3;
+z-index: 5;
  right: 2%;
  top: 1.5%;
  

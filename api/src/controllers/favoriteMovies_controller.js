@@ -1,4 +1,4 @@
-import {addFavoriteMovie, getAllFavoriteMovies} from "../models/favoriteMovie_model.js"
+import {addFavoriteMovie, getAllFavoriteMovies, removeFavoriteMovie, getFavoriteMovieById} from "../models/favoriteMovie_model.js"
 import { saveMovie } from "../models/movie_model.js";
 import { getMovieDetailsByID } from "../models/tmdb_model.js";
 import { getByName } from "../models/movie_model.js";
@@ -53,6 +53,29 @@ const getAllFavorite = async (req, res) =>{
         }   
     }
 
+const removeFavorite = async (req, res) => {
+    try{
+        const userId = req.user.user_id
+        const movieId = parseInt(req.params.movieId, 10)
+        const result = await removeFavoriteMovie(userId,movieId)
+        res.json(result)
+    }catch(error){
+        console.log(error)
+    }
+}
+const getFavoriteById = async (req, res) =>{
+    try{
+            const userId = req.user.user_id
+            const movieId = parseInt(req.params.movieId, 10)
+            const result = await getFavoriteMovieById(userId,movieId)
+            if(result.length <= 0){
+                console.log("couldn't find a that movie")
+            }
+            res.json(result);
 
+        }catch(error){
+            console.log(error)
+        }   
+    }
 
-export{addFavorite, getAllFavorite}
+export{addFavorite, getAllFavorite, removeFavorite, getFavoriteById}
