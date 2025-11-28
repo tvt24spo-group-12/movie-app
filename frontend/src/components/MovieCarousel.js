@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import MovieCardMin from "./MovieCardMin";
 
-export default function MovieCarousel({ caption, movies = [] }) {
+export default function MovieCarousel({sidebar, caption, movies = [] }) {
   const [startIndex, setStartIndex] = useState(0);
   const [moviesPerPage, setMoviesPerPage] = useState(1);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
@@ -94,7 +94,7 @@ export default function MovieCarousel({ caption, movies = [] }) {
   return (
     <>
       <div className="carousel-header">
-        <h1 className="nowPlayingh1">{caption}</h1>
+        <h1 className={sidebar === true ? "nowPlayingh1": "nowPlayingh1Closed"}>{caption}</h1>
 
         {!isTouchDevice && (
           <div className="movie-nav">
@@ -111,7 +111,8 @@ export default function MovieCarousel({ caption, movies = [] }) {
         )}
       </div>
       <article
-        className={`movie-card movieContainer ${isTouchDevice ? "mobile-scroll" : ""}`}
+        className={sidebar === true ? `movie-card movieContainer ${isTouchDevice ? "mobile-scroll" : ""}` 
+                                    :  `movie-card movieContainerClosed ${isTouchDevice ? "mobile-scroll" : ""}`}
         ref={containerRef}
       >
         <div

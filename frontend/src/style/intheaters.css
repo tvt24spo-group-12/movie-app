@@ -18,12 +18,16 @@
 }
 
 .nowPlayingh1 {
-  margin-left: 2em;
+  margin-left: 8.2em;
   color: var(--primary-600);
 }
-
+.nowPlayingh1Closed{
+    margin-left: 2em;
+  color: var(--primary-600);
+}
 .movieContainer {
-
+  
+  margin-left: 16.5em;
   background-color: transparent;
   display: flex;
   align-items: center;
@@ -35,7 +39,19 @@
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
 }
-
+.movieContainerClosed{
+    margin-left: 4em;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  flex-direction: row;
+  column-gap: 20px;
+  height: auto;
+  overflow: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
 .movieContainer.mobile-scroll {
   overflow-x: auto !important;
   overflow-y: hidden;

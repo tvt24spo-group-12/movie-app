@@ -13,11 +13,11 @@ export default function LoginPage(){
     const { signIn } = useAuth();
   const handleSubmit= async (e) =>{
         e.preventDefault();
-        console.log(Identifier,Password)
+      
         try{
        const res = await signIn(Identifier,Password)
             
-            console.log("result : ",res)
+           
             localStorage.setItem("username", Identifier)
             location.reload(false)
             }catch(error){
