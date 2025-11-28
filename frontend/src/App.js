@@ -6,25 +6,26 @@ import './style/global.css';
 import InTheaters from "./components/inTheaters";
 import SideBar from "./components/sidebar";
 import { useAuth } from "./context/login";
+import { useState } from "react";
 //import GroupPage from "./components/GroupPage";
 //import GroupPage from "./GroupPage";
 
 function App() {
   const{acceesToken, user, logout} = useAuth();
-
+  const[sidebar, setsidebar] = useState(false)
   return (
     
     
    
     
     <>
-       <SideBar/>
+       <SideBar sidebar={sidebar} setsidebar={setsidebar}/>
       {/*<GroupPage />*/}
       
        
 
       <MovieList />
-      <InTheaters/>
+      <InTheaters sidebar={sidebar}/>
       
 
     
