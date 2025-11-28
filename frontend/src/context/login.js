@@ -6,6 +6,7 @@ const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [accessToken, setAccessToken] = useState(null);
+  const [loading, setLoading] = useState(true);
   //  const [loading, setLoading] = useState(true)
   /*
   useEffect(()=>{ //näkee tallentuiko muutokset ja (setUser & setAccessToken)
@@ -119,6 +120,7 @@ export function AuthProvider({ children }) {
       } catch (err) {
         console.log("No valid refresh token");
       }
+      setLoading(false);
     };
 
     tryRefresh();
@@ -127,10 +129,12 @@ export function AuthProvider({ children }) {
   const value = {
     user,
     accessToken,
+    loading,
     signIn,
     logout,
     refreshAccessToken,
     authFetch,
+    
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
