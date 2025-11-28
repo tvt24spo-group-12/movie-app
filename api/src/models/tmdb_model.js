@@ -195,7 +195,7 @@ export async function fetchNowPlaying() {
   let page = 1;
   let totalPages = 1;
 
-  // Fetch all pages
+  //Fetchaa nyt kaikki sivut + hakee suomen elokuvateattereissa olevat elokuvat.
   do {
     const listUrl = `${TMDB_BASE_URL}/movie/now_playing?language=en-US&region=FI&page=${page}`;
 
@@ -219,6 +219,7 @@ export async function fetchNowPlaying() {
 
   const detailedMovies = await Promise.all(
     allResults.map(async (movie) => {
+      //Hakee yksityiskohtaisemmat tiedot + credits
       const detailUrl = `${TMDB_BASE_URL}/movie/${movie.id}?language=en-US&append_to_response=credits`;
 
       const detailRes = await fetch(detailUrl, {
@@ -230,9 +231,7 @@ export async function fetchNowPlaying() {
       });
 
       if (!detailRes.ok) return null;
-
       const detailData = await detailRes.json();
-      console.log(formatMovie(detailData));
       return formatMovie(detailData);
     })
   );
