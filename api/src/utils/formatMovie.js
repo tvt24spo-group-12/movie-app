@@ -9,6 +9,18 @@ export function formatMovie(data) {
     genres: (data.genres || []).map((g) => g.name),
     vote_average: data.vote_average,
     vote_count: data.vote_count,
+    budget: data.budget,
+    original_language: data.original_language,
+    director: data.credits && data.credits.crew
+      ? data.credits.crew.find((member) => member.job === "Director")?.name || "N/A"
+      : "N/A",
+    top_cast: data.credits && data.credits.cast
+      ? data.credits.cast.slice(0, 4).map((member) => member.name)
+      : [],
+    distributor: data.production_companies && data.production_companies.length
+      ? data.production_companies[0].name
+      : "N/A",
+      
     moviePicture: data.poster_path
       ? `https://image.tmdb.org/t/p/w500${data.poster_path}`
       : null,

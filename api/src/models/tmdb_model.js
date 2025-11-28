@@ -191,24 +191,36 @@ export async function getMovieDetailsByID(movie_id) {
 export async function fetchNowPlaying() {
   const token = process.env.TMDB_ACCESS_TOKEN;
 
-  const listUrl = `${TMDB_BASE_URL}/movie/now_playing?language=en-US&page=1`;
+  let allResults = [];
+  let page = 1;
+  let totalPages = 1;
 
-  const listRes = await fetch(listUrl, {
-    method: "GET",
-    headers: {
-      accept: "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  //Fetchaa nyt kaikki sivut + hakee suomen elokuvateattereissa olevat elokuvat.
+  do {
+    const listUrl = `${TMDB_BASE_URL}/movie/now_playing?language=en-US&region=FI&page=${page}`;
 
-  if (!listRes.ok) throw new Error("Failed to fetch");
+    const listRes = await fetch(listUrl, {
+      method: "GET",
+      headers: {
+        accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-  const listData = await listRes.json();
-  const results = listData.results || [];
+    if (!listRes.ok) throw new Error("Failed to fetch");
+
+    const listData = await listRes.json();
+
+    totalPages = listData.total_pages;
+    allResults.push(...(listData.results || []));
+
+    page++;
+  } while (page <= totalPages);
 
   const detailedMovies = await Promise.all(
-    results.map(async (movie) => {
-      const detailUrl = `${TMDB_BASE_URL}/movie/${movie.id}?language=en-US`;
+    allResults.map(async (movie) => {
+      //Hakee yksityiskohtaisemmat tiedot + credits
+      const detailUrl = `${TMDB_BASE_URL}/movie/${movie.id}?language=en-US&append_to_response=credits`;
 
       const detailRes = await fetch(detailUrl, {
         method: "GET",
@@ -219,11 +231,11 @@ export async function fetchNowPlaying() {
       });
 
       if (!detailRes.ok) return null;
-
       const detailData = await detailRes.json();
       return formatMovie(detailData);
-    }),
+    })
   );
 
   return detailedMovies.filter(Boolean);
 }
+
