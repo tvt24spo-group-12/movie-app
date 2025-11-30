@@ -1,0 +1,31 @@
+meta {
+  name: Handle Join Request
+  type: http
+  seq: 6
+}
+
+post {
+  url: http://localhost:3001/group/:id/join/:userid
+  body: json
+  auth: bearer
+}
+
+params:path {
+  id: 10
+  userid: 3
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "action" : "accept"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

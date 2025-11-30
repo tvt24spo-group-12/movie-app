@@ -1,8 +1,9 @@
-/*Veeti voit korjata nuo merkatut toimimaan global.css mukaan.*/
+
 
 .sidebarContainer{
     position: fixed;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); /*global.css löytyy tähän muuttuja korjaa*/
+
+  box-shadow: var(--shadow); 
     background-color: var(--bg);
     display: flex;
     justify-content: center;
@@ -10,8 +11,27 @@
     
  height:100%;
  width: 13%;
- top: -6vh;
-right: 84%;
+ top: 0;
+right: 86.5%;
+ z-index: 1;
+ margin-right: 10px;
+ overflow: hidden;
+ transition: var(--transition); /*Niklas lisännyt tämän eli pieni animaatio kun sidebar*/
+ 
+}
+.sideBarClosed{
+    position: fixed;
+
+  box-shadow: var(--shadow); 
+    background-color: var(--bg);
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    
+ height:100%;
+ width: 13%;
+ top: -0;
+right: 97%;
  z-index: 1;
  margin-right: 10px;
  overflow: hidden;
@@ -49,7 +69,7 @@ right: 84%;
   margin-top: 5px;
   margin-bottom: 5px;
   border-radius: 5px;
-  border: 2px solid #000000;   /*global.css löytyy tähän muuttuja korjaa*/
+  border: var(--border);
   padding-left: 10px;
   font-size: 16px;  
   color: var(--text);
@@ -86,7 +106,7 @@ right: 84%;
 
 .popupcontainer{
   position: fixed;
- border: 1px solid rgb(255, 255, 255); /*global.css löytyy tähän muuttuja korjaa*/
+ border:var(--border); 
  border-radius: 4px; 
   left: 22.5%;
   width: 100%;
@@ -97,7 +117,7 @@ right: 84%;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); /*global.css löytyy tähän muuttuja korjaa*/
+   box-shadow: var(--shadow); 
   overflow: hidden;
 }
 
@@ -119,7 +139,7 @@ right: 84%;
 .closeSideBar{
  width: 2vw;
  position: absolute;
-z-index: 3;
+z-index: 5;
  right: 2%;
  top: 1.5%;
  

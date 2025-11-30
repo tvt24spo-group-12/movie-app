@@ -30,6 +30,23 @@ describe("Testing user management", () => {
     expect(data.email).to.equal(newUser.email);
   });
 
+  
+  it("should not sign up with existing email", async () => {
+    const existingUser = {
+      email: "foo@test.com",
+      username: "fooTest2",
+      password: "password1234",
+    };
+    const response = await fetch("http://localhost:3002/user/signup", {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user: existingUser }),
+    });
+    expect(response.status).to.equal(409);
+  });
+
+  
+
   it("should log in", async () => {
     const response = await fetch("http://localhost:3002/user/signin", {
       method: "post",
@@ -44,15 +61,48 @@ describe("Testing user management", () => {
     id = data.user.id;
     accessToken = data.accessToken;
   });
-  // sign out
 
+  it("should not log in with wrong credentials", async () => {
+    const response = await fetch("http://localhost:3002/user/signin", {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        user: { identifier: user.identifier, password: "wrongpass" },
+      }),
+    });
+    expect(response.status).to.equal(401);
+  });
+
+  
+  it("should log out", async () => {
+    const response = await fetch("http://localhost:3002/user/logout", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    expect(response.status).to.equal(200);
+  });
+
+
+  it("should not delete user without authentication token", async () => {
+    const response = await fetch(`http://localhost:3002/user/delete/${id}`, {
+      method: "delete",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    expect(response.status).to.equal(401);
+  });
+  
   //delete user
   it("should delete user", async () => {
     const response = await fetch(`http://localhost:3002/user/delete/${id}`, {
       method: "delete",
-      headers: { 
+      headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${accessToken}`
+        Authorization: `Bearer ${accessToken}`,
       },
     });
     const data = await response.json();
