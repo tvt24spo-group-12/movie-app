@@ -5,7 +5,7 @@ import '../style/sidebar.css'
 import '../style/buttonStyle.css'
 import { useAuth } from '../context/login'
 
-export default function SideBar(){
+export default function SideBar({sidebar,setsidebar}){
     const[sideBarOpen, setSideBarOpen] = useState(true)
     const[loginform, setLoginOpenForm] = useState(false)
     const[registerPage, setRegisterPage] = useState(false)
@@ -18,10 +18,12 @@ export default function SideBar(){
          
          if(sideBarOpen === true){
             setSideBarOpen(false)
+            setsidebar(false)
          }
          if(sideBarOpen === false)
          {
              setSideBarOpen(true)
+             setsidebar(true)
          }
     }
     if(loading) return null;
