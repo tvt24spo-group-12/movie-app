@@ -12,18 +12,18 @@ import SideBar from "./components/sidebar";
 
 function App() {
   const { acceesToken, user, logout } = useAuth();
-
+  const [sidebar, setsidebar] = useState(false);
   return (
     <>
-      <SideBar />
+      <SideBar sidebar={sidebar} setsidebar={setsidebar} />
       <MoviePage movie_id={100} />
       <UserMovieReviews user_id={-1} />
 
+      <InTheaters sidebar={sidebar} />
       {/*
 
       <GroupPage />
       <MovieList />
-      <InTheaters/>
       */}
     </>
   );
