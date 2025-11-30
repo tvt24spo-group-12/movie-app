@@ -55,20 +55,29 @@ function MoviePage({ movie_id }) {
 
   return (
     <>
-      <article className="movie-card">
-        <div className="movie-card__poster">
+      <div className="movie-backdrop-banner">
+        {movie.backdrop ? (
+          <img src={movie.backdrop} alt={`${movie.title} backdrop`} />
+        ) : (
+          <div className="movie-backdrop-banner__placeholder">
+            <span>No backdrop</span>
+          </div>
+        )}
+      </div>
+
+      <article className="movie-page">
+        <div className="movie-page__poster">
           {movie.poster ? (
             <img src={movie.poster} alt={`${movie.title} poster`} />
           ) : (
-            // placeholder, kun ei ole posteriä
-            <div className="movie-card__poster-placeholder">
+            <div className="movie-page__poster-placeholder">
               <span>No poster</span>
             </div>
           )}
         </div>
 
-        <div className="movie-card__content">
-          <div className="movie-card__meta">
+        <div className="movie-page__content">
+          <div className="movie-page__meta">
             {movie.releaseYear && <span>{movie.releaseYear} | </span>}
             {movie.runtime && <span>{movie.runtime} min | </span>}
             {movie.rating != null && (
@@ -76,29 +85,29 @@ function MoviePage({ movie_id }) {
             )}
           </div>
 
-          <h3 className="movie-card__title">{movie.title}</h3>
+          <h3 className="movie-page__title">{movie.title}</h3>
 
           {movie.genres?.length > 0 && (
-            <div className="movie-card__genres">{movie.genres.join(" • ")}</div>
+            <div className="movie-page__genres">{movie.genres.join(" • ")}</div>
           )}
 
-          <p className="movie-card__overview">
+          <p className="movie-page__overview">
             {movie.overview || "No description available yet."}
           </p>
 
           {movie.votes != null && (
-            <div className="movie-card__footer">
-              <span className="movie-card__votes">
+            <div className="movie-page__footer">
+              <span className="movie-page__votes">
                 {movie.votes.toLocaleString()} votes
               </span>
             </div>
           )}
         </div>
       </article>
+
       <MovieReviews movie_id={movie_id} />
     </>
   );
 }
 
 export default MoviePage;
-

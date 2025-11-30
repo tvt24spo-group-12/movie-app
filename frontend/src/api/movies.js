@@ -13,6 +13,7 @@ function normalizeMovie(movie) {
       : movie.poster_path
         ? `${TMDB_IMAGE_BASE}${movie.poster_path}`
         : null,
+    backdrop: movie.backdrop_path ? movie.backdrop_path : "",
     genres: Array.isArray(movie.genres) ? movie.genres : [],
     rating: movie.vote_average ?? null,
     votes: movie.vote_count ?? null,
@@ -82,4 +83,3 @@ export async function searchMovies(query, filters = {}) {
 
   return enriched;
 }
-
