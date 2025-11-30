@@ -1,0 +1,20 @@
+meta {
+  name: get users movie ratings
+  type: http
+  seq: 5
+}
+
+get {
+  url: http://localhost:3001/user/:userId/ratings
+  body: none
+  auth: none
+}
+
+params:path {
+  userId: 1
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
