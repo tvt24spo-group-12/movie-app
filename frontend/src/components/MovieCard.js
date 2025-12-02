@@ -48,7 +48,7 @@ function MovieCard({ movie,onAddFavorite  }) {
                 className="btn-primary"
                 onClick={() => onAddFavorite(movie.id)}
               >
-                Lisää suosikkeihin
+                Add to Favorites
               </button>
             )}
           </div>
