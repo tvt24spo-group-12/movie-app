@@ -1,4 +1,5 @@
 import MovieReviews from "./reviews/MovieReviews";
+import MovieReviewAdd from "./reviews/MovieReviewAdd";
 import { useEffect, useState } from "react";
 import { fetchMovieDetails } from "../api/movies";
 
@@ -15,6 +16,16 @@ function MoviePage({ movie_id }) {
   });
   const [status, setStatus] = useState("idle"); // idle | loading | success | error
   const [error, setError] = useState("");
+  const [addReviewOpen, setAddReviewOpen] = useState(false);
+  const [reviewsVersion, setReviewsVersion] = useState(0);
+
+  function openReviewForm() {
+    setAddReviewOpen(true);
+  }
+  function closeReviewForm(refresh = false) {
+    setAddReviewOpen(false);
+    if (refresh) setReviewsVersion((v) => v + 1);
+  }
 
   useEffect(() => {
     if (!movie_id) {
@@ -103,9 +114,19 @@ function MoviePage({ movie_id }) {
             </div>
           )}
         </div>
-      </article>
 
-      <MovieReviews movie_id={movie_id} />
+        <button className="review-form__button" onClick={openReviewForm}>
+          Add/Edit review
+        </button>
+      </article>
+      {addReviewOpen && (
+        <MovieReviewAdd
+          movieId={movie_id}
+          onClose={() => closeReviewForm(true)}
+        />
+      )}
+
+      <MovieReviews movie_id={movie_id} key={reviewsVersion} />
     </>
   );
 }
