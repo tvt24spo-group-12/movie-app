@@ -1,13 +1,13 @@
 meta {
   name: register
   type: http
-  seq: 1
+  seq: 3
 }
 
 post {
   url: http://localhost:3001/user/signup
   body: json
-  auth: inherit
+  auth: none
 }
 
 body:json {

@@ -1,13 +1,13 @@
 meta {
   name: search
   type: http
-  seq: 4
+  seq: 1
 }
 
 get {
   url: http://localhost:3001/movie/search/?genre=action,adventure&page=3
   body: none
-  auth: inherit
+  auth: none
 }
 
 params:query {

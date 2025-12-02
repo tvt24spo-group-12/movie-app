@@ -3,7 +3,7 @@ import { getNowPlaying } from "../api/moviesInTheaters";
 import MovieCarousel from "./MovieCarousel";
 import "../style/intheaters.css";
 
-export default function InTheaters() {
+export default function InTheaters({sidebar}) {
   const [movies, setMovies] = useState([]);
 
   // Fetch movies
@@ -21,7 +21,7 @@ export default function InTheaters() {
 
   return (
     <>
-      <MovieCarousel caption="Now playing" movies={movies} />
+      <MovieCarousel sidebar={sidebar} caption="Now playing" movies={movies} />
     </>
   );
 }
