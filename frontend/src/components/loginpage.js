@@ -2,7 +2,7 @@ import '../style/buttonStyle.css'
 import { useState } from 'react'
 import { useAuth } from '../context/login'
 import '../style/sidebar.css'
-import RegisterPage from '../components/registerpage'
+
 const URL = "http://localhost:3001/user"
 export default function LoginPage(){
     const[Identifier, setIdentifier] = useState('')
@@ -19,6 +19,8 @@ export default function LoginPage(){
             
            
             localStorage.setItem("username", Identifier)
+           
+        
             location.reload(false)
             }catch(error){
                 console.log(error)

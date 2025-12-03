@@ -1,9 +1,9 @@
 
 import pool from '../database.js'
 
-const uploadProfilePicture = async(user_id, path) => {
+const insertProfilePicture = async(user_id, path) => {
     try{
-        const res = await pool.query('INSERT INTO users (picture_path) VALUES ($1) WHERE user_id = ($2)'
+        const res = await pool.query('UPDATE users SET picture_path = ($1) WHERE user_id = ($2)'
             ,[path, user_id])
             return res.rows[0]
     }catch(error){
@@ -21,4 +21,4 @@ const getProfilePicture = async(user_id) => {
     }
 }
 
-export {uploadProfilePicture,getProfilePicture }
+export {insertProfilePicture,getProfilePicture }

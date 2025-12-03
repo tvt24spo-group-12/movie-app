@@ -4,16 +4,18 @@ import LoginPage from '../components/loginpage'
 import '../style/sidebar.css'
 import '../style/buttonStyle.css'
 import { useAuth } from '../context/login'
-import {uploadProfilePicture} from '../api/profilepicture'
+import {uploadProfilePicture, getProfilePicture} from '../api/profilepicture'
+
 
 export default function SideBar({sidebar,setsidebar}){
     const[sideBarOpen, setSideBarOpen] = useState(true)
     const[loginform, setLoginOpenForm] = useState(false)
     const[registerPage, setRegisterPage] = useState(false)
     const[popupOpen, setPopupOpen] = useState(false)
-    const{user, logout, loading} = useAuth();
+    const{user, logout, loading, authFetch} = useAuth();
   const[picture, setpicture] = useState(null)
   const[preview, setPreview] = useState('')
+
 useEffect(()=>{
   if(picture !== null){
     const pfpUrl = URL.createObjectURL(picture[0]);
@@ -23,8 +25,9 @@ useEffect(()=>{
  
   
 },[picture])
+
     const saveImage = (picture) => {
-        uploadProfilePicture(picture, user);
+        uploadProfilePicture(picture, user, authFetch);
     }
 
     const closeSidebar = () =>{

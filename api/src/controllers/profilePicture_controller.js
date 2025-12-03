@@ -1,8 +1,9 @@
-import{getProfilePicture, uploadProfilePicture} from '../models/profilePicture_model.js'
+import{getProfilePicture, insertProfilePicture} from '../models/profilePicture_model.js'
 
 const getProfilePictureById = async(req , res) =>{
     try
-     {   const userId = parseInt(req.params.userId, 10)
+     {   
+        const userId = parseInt(req.params.userId, 10)
         const result = await getProfilePicture(userId)
         res.json(result)
     }catch(err){
@@ -10,5 +11,16 @@ const getProfilePictureById = async(req , res) =>{
     }
 
 }
+const uploadProfilePicture = async(req,res) => {
+    try{
+        const {path} = req.body
+        const userId = parseInt(req.params.userId, 10)
+        const result = await insertProfilePicture(userId, path)
+        res.json(result)
+    }catch(err){
+        throw new Error(err)
+    
+    }
+}
 
-export{getProfilePictureById}
+export{getProfilePictureById,uploadProfilePicture}
