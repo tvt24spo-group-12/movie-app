@@ -12,18 +12,19 @@ export default function SideBar({sidebar,setsidebar}){
     const[registerPage, setRegisterPage] = useState(false)
     const[popupOpen, setPopupOpen] = useState(false)
     const{user, logout, loading} = useAuth();
-  const[picture, setpicture] = useState('')
+  const[picture, setpicture] = useState(null)
   const[preview, setPreview] = useState('')
 useEffect(()=>{
-  if(picture){
+  if(picture !== null){
     const pfpUrl = URL.createObjectURL(picture[0]);
     setPreview(pfpUrl)
+    saveImage(picture);
   }
-  console.log("test",picture )
-  saveImage(picture);
-},[picture,setpicture])
+ 
+  
+},[picture])
     const saveImage = (picture) => {
-        uploadProfilePicture(picture);
+        uploadProfilePicture(picture, user);
     }
 
     const closeSidebar = () =>{
@@ -53,8 +54,7 @@ useEffect(()=>{
     
     {user &&(
       <>
-        <img className='profilePicture' alt='profilepicture'src={preview}></img>
-        <button className={!picture ? 'btn-primary' : 'hideBtn'}onClick={() => {document.getElementById('input').click()}}>set profilepicture</button>
+        <img onClick={() => {document.getElementById('input').click()}} className='profilePicture' alt='profilepicture'src={preview}></img>
         <form className='imageForm'onSubmit={saveImage}><input id='input' type='file' accept='.png' onChange={e => setpicture(e.target.files)}></input>
         
         </form>
