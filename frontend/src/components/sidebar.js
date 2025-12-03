@@ -4,6 +4,7 @@ import LoginPage from '../components/loginpage'
 import '../style/sidebar.css'
 import '../style/buttonStyle.css'
 import { useAuth } from '../context/login'
+import {uploadProfilePicture} from '../api/profilepicture'
 
 export default function SideBar({sidebar,setsidebar}){
     const[sideBarOpen, setSideBarOpen] = useState(true)
@@ -11,8 +12,19 @@ export default function SideBar({sidebar,setsidebar}){
     const[registerPage, setRegisterPage] = useState(false)
     const[popupOpen, setPopupOpen] = useState(false)
     const{user, logout, loading} = useAuth();
- 
-    
+  const[picture, setpicture] = useState('')
+  const[preview, setPreview] = useState('')
+useEffect(()=>{
+  if(picture){
+    const pfpUrl = URL.createObjectURL(picture[0]);
+    setPreview(pfpUrl)
+  }
+  console.log("test",picture )
+  saveImage(picture);
+},[picture,setpicture])
+    const saveImage = (picture) => {
+        uploadProfilePicture(picture);
+    }
 
     const closeSidebar = () =>{
          
@@ -35,10 +47,18 @@ export default function SideBar({sidebar,setsidebar}){
          <button onClick={closeSidebar} id="closeSidebar" className='btn-primary closeSideBar'>{sideBarOpen ? "<" : ">"}</button>
             <div className='buttonContainer'>
               
+ 
+   
     
-    <img className='profilePicture' alt='profilepicture'src=''></img>
+    
     {user &&(
       <>
+        <img className='profilePicture' alt='profilepicture'src={preview}></img>
+        <button className={!picture ? 'btn-primary' : 'hideBtn'}onClick={() => {document.getElementById('input').click()}}>set profilepicture</button>
+        <form className='imageForm'onSubmit={saveImage}><input id='input' type='file' accept='.png' onChange={e => setpicture(e.target.files)}></input>
+        
+        </form>
+        
         <p>{user.username}</p>
         <button onClick={logout} 
         className='btn-primary Btn'>Log out</button>

@@ -14,7 +14,6 @@
      rgba(16,24,40,0.05);       /*varjot laatikoille ja korteille*/
     --success: #16a34a;         /*vihreä, kun joku onnistuu tms*/
     --error: #dc2626;           /*punainen, virheille tms*/
-
     --radius: 8px;               /*pyöristetyt reunat napeille tms*/
     --max-width: 1200px;         /*sivun maksimileveys*/
     --transition: 200ms 
@@ -63,7 +62,10 @@ body{
     color:var(--text);
     transition: background var(--transition), color var(--transition);
 }
-
+.profilePicture{
+width: 150px;
+height: 150px;
+}
 .container{
     max-width:var(--max-width);
     margin:0 auto;
