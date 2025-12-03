@@ -85,4 +85,5 @@ body{
     cursor:pointer;
     transition:transform 120ms ease;
 }
-.btn-primary:hover{ transform:translateY(-1px); }
+.btn-primary:hover{ transform:translateY(-1px); 
+filter: brightness(1.1);}

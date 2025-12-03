@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import SearchBar from "./SearchBar";
 import MovieCard from "./MovieCard";
 import { searchMovies } from "../api/movies";
+import { useAuth } from "../context/login";
+import { addFavorite } from "../api/favorites";
 
 function MovieList() {
     const [query, setQuery] = useState("");
@@ -9,6 +11,21 @@ function MovieList() {
     const [status, setStatus] = useState("idle"); // idle | loading | success | error
     const [error, setError] = useState("");
     const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+    const { authFetch, user } = useAuth();
+
+const handleAddFavorite = async (id) => {
+  if (!user) {
+    alert("Kirjaudu sisään lisätäksesi suosikkeihin");
+    return;
+  }
+
+  try {
+    await addFavorite(id, authFetch);
+    alert("Lisätty suosikkeihin");
+  } catch {
+    alert("Ei voitu lisätä");
+  }
+};
     
     // Filter
     const [filters, setFilters] = useState({
@@ -165,11 +182,16 @@ function MovieList() {
             {status === "success" && results.length === 0 && (
                 <p className="results__empty">No movies found{query ? ` for "${query}"` : " with the selected filters"}.</p>
             )}
-            {status === "success" &&
-                results.map((movie, index) => <MovieCard key={`${movie.id}-${index}`} movie={movie} />)}
-            </section>
-        </div>
-    );
+       {status === "success" &&
+          results.map((movie) => (
+            <MovieCard
+              key={movie.id}
+              movie={movie}
+              onAddFavorite={handleAddFavorite}
+            />
+          ))}
+      </section>
+    </div>
+  );
 }
-
 export default MovieList;
