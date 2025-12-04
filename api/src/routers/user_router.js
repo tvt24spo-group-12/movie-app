@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { deleteUserAccount } from "../controllers/delete_controller.js";
-import { signUp, login, refreshAccessToken, logout } from "../controllers/user_controller.js";
+import { signUp, login, refreshAccessToken, logout, changePassword } from "../controllers/user_controller.js";
 import { authenticateToken } from "../middleware/auth.js";
 import { getCurrentUserRatings, getUserRatings } from "../controllers/rating_controller.js";
 
@@ -13,8 +13,9 @@ userRouter.post("/signin", login);
 userRouter.delete("/delete/:user_id",authenticateToken, deleteUserAccount);
 userRouter.post("/refresh", refreshAccessToken);
 userRouter.post("/logout", logout);
+userRouter.post("/changePassword", authenticateToken, changePassword);
 
-userRouter.delete("/delete/:user_id", deleteUserAccount);
+//userRouter.delete("/delete/:user_id", deleteUserAccount); 
 userRouter.post("/favoriteMovies/:movieId", authenticateToken, addFavorite)
 userRouter.delete("/favoriteMovies/:movieId", authenticateToken, removeFavorite)
 userRouter.get("/favoriteMovies", authenticateToken,getAllFavorite)

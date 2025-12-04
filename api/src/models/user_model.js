@@ -24,6 +24,25 @@ export async function findUserByUsername(username) {
   );
 }
 
+export async function findUserById(user_id) {
+  return await pool.query(
+    "SELECT * FROM users WHERE user_id = $1",
+    [user_id]
+  );
+}
+
+export async function changeUserPassword(user_id, newPassword) {
+  const hashed = await new Promise((resolve, reject) =>
+    bcryptHash(newPassword, 10, (err, hashedPw) =>
+      err ? reject(err) : resolve(hashedPw),
+    ),
+  );
+  return await pool.query(
+    "UPDATE users SET password = $1 WHERE user_id = $2 RETURNING *",
+    [hashed, user_id]
+  );
+}  
+
 export async function saveRefreshToken(username, refreshToken) {
   return await pool.query(
     "UPDATE users SET refresh_token = $1 WHERE username = $2 RETURNING user_id",
