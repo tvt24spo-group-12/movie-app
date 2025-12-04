@@ -6,8 +6,16 @@ import "dotenv/config";
 import movieRouter from "./routers/movie_router.js";
 import userRouter from "./routers/user_router.js";
 import groupRouter from "./routers/group_router.js";
+import { fileURLToPath } from 'url';
+import path from 'path';
 
 const app = express();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+
+app.use('/public/ProfilePictures', express.static(path.join(__dirname, '../public/ProfilePictures')));
+
 const port = process.env.PORT;
 
 app.use(cors({

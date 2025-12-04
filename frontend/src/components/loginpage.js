@@ -2,9 +2,9 @@ import '../style/buttonStyle.css'
 import { useState } from 'react'
 import { useAuth } from '../context/login'
 import '../style/sidebar.css'
-import RegisterPage from '../components/registerpage'
+
 const URL = "http://localhost:3001/user"
-export default function LoginPage(){
+export default function LoginPage({loggedIn, setLoggedIn}){
     const[Identifier, setIdentifier] = useState('')
     const[Password, setPassword] = useState('')
     
@@ -19,6 +19,8 @@ export default function LoginPage(){
             
            
             localStorage.setItem("username", Identifier)
+           
+            setLoggedIn(true)
             location.reload(false)
             }catch(error){
                 console.log(error)

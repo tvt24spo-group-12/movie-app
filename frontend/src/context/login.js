@@ -1,6 +1,5 @@
 const url = "http://localhost:3001/user";
 import { createContext, useContext, useState, useEffect } from "react";
-
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
