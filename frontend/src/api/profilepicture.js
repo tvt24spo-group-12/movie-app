@@ -1,22 +1,24 @@
-const URL = "http://localhost:3001/user"
+const URL = "http://localhost:3001/"
 
 
 
 
  export async function uploadProfilePicture(picture, user, authFetch){
     
-    console.log(user.id, " ", picture);
+    //console.log(user.id, " ", picture);
     const userId = user.id
+     
+ 
+      const formData = new FormData();
+   formData.append('file', picture[0])
+       console.log(user.id, " ", formData);
     try {
-        const response = await authFetch(`${URL}/profilePicture/${userId}`, {
+        const response = await authFetch(`${URL}user/profilePicture/${userId}`, {
             method: 'POST',
            
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ picture})
+          body : formData,
         });
-        console.log("res: ",response)
+     
        return response
     } catch (error) {
         console.error(error);
@@ -29,12 +31,14 @@ const URL = "http://localhost:3001/user"
   
     const userId = user.id
     try {
-        const response = await authFetch(`${URL}/profilePicture/${userId}`, {
+        const response = await authFetch(`${URL}user/profilePicture/${userId}`, {
             method: 'GET',
            
         });
-        console.log("Get ; ",response)
-        return response;
+        const data = await response.json();
+        
+      
+        return data.picture_path
     } catch (error) {
         console.error(error);
         return 0;
