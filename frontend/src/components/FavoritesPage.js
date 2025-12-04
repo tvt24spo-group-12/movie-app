@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/login";
 import { getFavorites, removeFavorite } from "../api/favorites";
+import { fetchMovieDetails } from "../api/movies";
 import MovieCard from "../components/MovieCard";
 import "../style/FavoritesPage.css";
 
@@ -17,17 +18,18 @@ export default function FavoritesPage() {
       alert("Log in to remove favorites.");
       return;
     }
-  const ok = window.confirm("You sure you want to remove this movie from your favorites?");
+    const ok = window.confirm(
+      "You sure you want to remove this movie from your favorites?",
+    );
 
     if (!ok) {
-      return; 
+      return;
     }
     try {
       await removeFavorite(movieId, authFetch);
 
       // poista myös statesta, niin UI päivittyy heti
       setMovies((prev) => prev.filter((m) => m.movie_id !== movieId));
-
     } catch (err) {
       console.error(err);
       alert("Failed to remove favorite.");
@@ -54,15 +56,14 @@ export default function FavoritesPage() {
 
       const data = await Promise.all(
         favorites.map(async (fav) => {
-          const res = await fetch(`${API}/movie/details/${fav.movie_id}`);
-          const movie = await res.json();
+          const movie = await fetchMovieDetails(fav.movie_id);
 
           return {
             ...movie,
             movie_id: fav.movie_id,
             favorite_id: fav.favorite_id,
           };
-        })
+        }),
       );
 
       setMovies(data);
@@ -98,19 +99,14 @@ export default function FavoritesPage() {
       {loading && <p>Loading...</p>}
       {error && <p>{error}</p>}
 
-      {!loading && user && movies.length === 0 && (
-        <p>No favorites</p>
-      )}
+      {!loading && user && movies.length === 0 && <p>No favorites</p>}
 
       <div className="favorites-grid">
         {movies.map((movie) => {
           const id = movie.movie_id || movie.id;
 
           return (
-            <div
-              key={movie.favorite_id || id}
-              className="favorite-wrapper"
-            >
+            <div key={movie.favorite_id || id} className="favorite-wrapper">
               <MovieCard
                 movie={{
                   id,
