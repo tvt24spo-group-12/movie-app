@@ -125,8 +125,8 @@ function MoviePage({ movie_id }) {
           onClose={() => closeReviewForm(true)}
         />
       )}
-
-      <MovieReviews movie_id={movie_id} key={reviewsVersion} />
+      <MovieReviews movie_id={movie_id} own={true} key={reviewsVersion} />
+      <MovieReviews movie_id={movie_id} own={false} />
     </>
   );
 }
