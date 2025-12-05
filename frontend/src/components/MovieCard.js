@@ -1,5 +1,5 @@
 // näytä elokuva-kartta posterin, metatietojen ja äänen tiedon perusteella
-function MovieCard({ movie }) {
+function MovieCard({ movie,onAddFavorite  }) {
   const { title, overview, poster, rating, votes, releaseYear, genres, runtime } = movie;
 
   return (
@@ -36,11 +36,21 @@ function MovieCard({ movie }) {
           {overview || "No description available yet."}
         </p>
 
-        {votes != null && (
+       {votes != null && (
           <div className="movie-card__footer">
             <span className="movie-card__votes">
               {votes.toLocaleString()} votes
             </span>
+
+            {onAddFavorite && (
+              <button
+                type="button"
+                className="btn-primary"
+                onClick={() => onAddFavorite(movie.id)}
+              >
+                Add to Favorites
+              </button>
+            )}
           </div>
         )}
       </div>

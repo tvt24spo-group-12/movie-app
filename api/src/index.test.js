@@ -111,7 +111,122 @@ describe("Testing user management", () => {
   });
 });
 
+
+
 // describe("Other features", () => {
 //   const user = { email: "foo2@test.com", password: "password123" };
 //   // browse ratings
 // });
+
+describe("Testing rating system", () => {
+  const unique = Date.now();
+  const testUser = {
+    email: `ratertest+${unique}@example.com`,
+    username: `rater${unique}`,
+    password: "password123",
+  };
+
+  let accessToken = null;
+  const movieId = 550; 
+
+  it("should sign up and log in", async () => {
+    
+    const signupRes = await fetch("http://localhost:3002/user/signup", {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user: testUser }),
+    });
+    expect([201, 409]).to.include(signupRes.status);
+
+    
+    const loginRes = await fetch("http://localhost:3002/user/signin", {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user: { identifier: testUser.email, password: testUser.password } }),
+    });
+    const loginData = await loginRes.json();
+    expect(loginRes.status).to.equal(200);
+    expect(loginData).to.have.property("accessToken");
+    accessToken = loginData.accessToken;
+  });
+
+  it("should create a public rating for a movie", async () => {
+    const body = { score: 4, review: "great", public: true };
+    const res = await fetch(`http://localhost:3002/movie/${movieId}/rating`, {
+      method: "post",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${accessToken}` },
+      body: JSON.stringify(body),
+    });
+    const data = await res.json();
+    expect(res.status).to.equal(201);
+    expect(data).to.have.property("rating");
+    expect(data.rating).to.include.all.keys(["movie_id", "score", "public"]);
+    expect(Number(data.rating.movie_id)).to.equal(movieId);
+  });
+
+  it("should browse public ratings for the movie", async () => {
+    const res = await fetch(`http://localhost:3002/movie/${movieId}/ratings`);
+    const data = await res.json();
+    expect(res.status).to.equal(200);
+    expect(data).to.include.all.keys(["movie_id", "average_rating", "rating_count", "ratings"]);
+    expect(data.movie_id).to.equal(movieId);
+    expect(Array.isArray(data.ratings)).to.be.true;
+    expect(data.rating_count).to.be.at.least(1);
+  });
+
+  it("should return the current user's rating for the movie", async () => {
+    const res = await fetch(`http://localhost:3002/movie/${movieId}/rating`, {
+      method: "get",
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    const data = await res.json();
+    expect(res.status).to.equal(200);
+    expect(data).to.have.property("rating");
+    expect(data.rating.movie_id).to.equal(movieId);
+    expect(data.rating.score).to.equal(4);
+  });
+
+  it("should list the user's ratings", async () => {
+    const res = await fetch("http://localhost:3002/user/ratings", {
+      method: "get",
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    const data = await res.json();
+    expect(res.status).to.equal(200);
+    expect(data).to.include.all.keys(["user_id", "rating_count", "ratings"]);
+    expect(Array.isArray(data.ratings)).to.be.true;
+  });
+
+  // Negatiiviset testit
+  it("should return 400 for ratings when movie id is invalid", async () => {
+    const res = await fetch(`http://localhost:3002/movie/abc/ratings`);
+    expect(res.status).to.equal(400);
+  });
+
+  it("should reject creating a rating with invalid score", async () => {
+    const body = { score: 0, review: "bad score", public: true };
+    const res = await fetch(`http://localhost:3002/movie/${movieId}/rating`, {
+      method: "post",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${accessToken}` },
+      body: JSON.stringify(body),
+    });
+    expect(res.status).to.equal(400);
+  });
+
+  it("should return 401 when requesting user's movie rating without auth", async () => {
+    const res = await fetch(`http://localhost:3002/movie/${movieId}/rating`);
+    expect([401, 403]).to.include(res.status);
+  });
+
+  it("should return 401 when listing current user's ratings without auth", async () => {
+    const res = await fetch("http://localhost:3002/user/ratings");
+    expect([401, 403]).to.include(res.status);
+  });
+
+  it("should return 401 when deleting a rating without auth", async () => {
+    const res = await fetch(`http://localhost:3002/movie/${movieId}/rating`, {
+      method: "delete",
+    });
+    expect([401, 403]).to.include(res.status);
+  });
+});
