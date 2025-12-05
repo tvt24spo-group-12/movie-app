@@ -7,6 +7,7 @@ import { useAuth } from '../context/login'
 import {uploadProfilePicture, getProfilePicture} from '../api/profilepicture'
 
 
+
 export default function SideBar({sidebar,setsidebar}){
   const url = 'http://localhost:3001'
     const[sideBarOpen, setSideBarOpen] = useState(true)
@@ -17,9 +18,12 @@ export default function SideBar({sidebar,setsidebar}){
   const[picture, setpicture] = useState(null)
   const[preview, setPreview] = useState('')
 const[loggedIn,setLoggedIn] = useState(false)
+
+
 useEffect(()=>{
   if(picture !== null){
     const pfpUrl = URL.createObjectURL(picture[0]);
+
     setPreview(pfpUrl)
     saveImage(picture);
   }
@@ -27,11 +31,55 @@ useEffect(()=>{
   
 },[picture])
 
-    const saveImage = (picture) => {
-        uploadProfilePicture(picture, user, authFetch);
+
+const resizeImg = (file , maxW, maxH) => {
+  return new Promise((resolve)=>{
+    const img = new Image();
+    const reader = new FileReader();
+    reader.onload = e =>{
+      img.src = e.target.result;
+    }
+    img.onload = () => {
+      let width = img.width,
+      height = img.height
+
+      if(width > maxW){
+       height = (maxW / width) * height;
+        width = maxW;
+      }
+      if (height > maxH) {
+        width = (maxH / height) * width;
+        height = maxH;
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+
+      canvas.toBlob(
+        blob => resolve(blob),
+        file.type,
+        0.9 
+      );
+    }
+      reader.readAsDataURL(file);
+  })
+}
+const saveImage = async(picture) => 
+  {
+    const file = picture[0]
+    const resizedImg = await resizeImg(file, 1024, 768)
+    const resizedfile = new File([resizedImg], file.name,{type: file.type})
+    console.log("tet : ",resizedfile);
+    const response = await uploadProfilePicture(resizedfile, user, authFetch);
+    if(response === 404){
+      alert("we dont support this file");
+      location.reload(false)
+    }
     }
 useEffect(()=>{
-
 
   if(!loggedIn && user !== null)
   {
@@ -68,7 +116,7 @@ useEffect(()=>{
     {user &&(
       <>
         <img id='ProfilePicture' onClick={() => {document.getElementById('input').click()}} className='profilePicture' alt='profilepicture'src={preview}></img>
-        <form className='imageForm'onSubmit={saveImage}><input id='input' type='file' accept='.png' onChange={e => setpicture(e.target.files)}></input>
+        <form className='imageForm'onSubmit={saveImage}><input id='input' type='file' accept='image/*' onChange={e => setpicture(e.target.files)}></input>
         
         </form>
         

@@ -1,6 +1,7 @@
 import '../style/buttonStyle.css'
 import { useState } from 'react'
 import { useAuth } from '../context/login'
+import RegisterPage from './registerpage'
 import '../style/sidebar.css'
 
 const URL = "http://localhost:3001/user"
