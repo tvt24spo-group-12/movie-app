@@ -1,12 +1,12 @@
 .groupPage-wide {
-  margin-left: 16%;
+  margin-left: 270px;
   display: flex;
   height: 100vh;
   transition: var(--transition);
 }
 
 .groupPage-narrow {
-  margin-left: 5%;
+  margin-left: 2rem;
   display: flex;
   height: 100vh;
   transition: var(--transition);
@@ -32,4 +32,39 @@
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 1rem;
+}
+
+@media (max-width: 1200px) {
+  .groupPage-wide {
+    margin-left: 220px;
+  }
+}
+
+@media (max-width: 992px) {
+  .groupPage-wide,
+  .groupPage-narrow {
+    margin-left: 1rem;
+  }
+  
+  .group-layout {
+    flex-direction: column;
+  }
+  
+  .group-list {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .groupPage-wide,
+  .groupPage-narrow {
+    margin-left: 0.5rem;
+    margin-top: 4rem;
+  }
+  
+  .group-layout {
+    padding: 0.5rem;
+    gap: 0.5rem;
+  }
 }

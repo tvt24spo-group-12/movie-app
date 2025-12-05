@@ -23,7 +23,7 @@ export default function InTheaters() {
 
   return (
     <>
-      <MovieCarousel sidebar={sidebar} caption="Now playing" movies={movies} />
+      <MovieCarousel sidebar={sidebar} caption="Now Playing" movies={movies} />
     </>
   );
 }
