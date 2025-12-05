@@ -3,7 +3,6 @@ import { useState } from 'react'
 import { useAuth } from '../context/login'
 import RegisterPage from './registerpage'
 import '../style/sidebar.css'
-import RegisterPage from './registerpage'
 
 const URL = "http://localhost:3001/user"
 export default function LoginPage({loggedIn, setLoggedIn}){
