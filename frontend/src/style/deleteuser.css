@@ -110,3 +110,63 @@
 .del-btn-secondary:hover {
   transform: translateY(-1px);
 }
+
+@media (max-width: 480px) {
+  .del-modal {
+    width: 95%;
+    padding: 1rem;
+  }
+  
+  .del-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+  }
+  
+  .del-title {
+    font-size: 1.1rem;
+  }
+  
+  .del-text {
+    font-size: 0.85rem;
+  }
+  
+  .del-checkbox {
+    font-size: 0.8rem;
+  }
+  
+  .del-btn {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .del-modal {
+    width: 95%;
+    padding: 1rem;
+  }
+  
+  .del-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+  }
+  
+  .del-title {
+    font-size: 1.1rem;
+  }
+  
+  .del-text {
+    font-size: 0.85rem;
+  }
+  
+  .del-checkbox {
+    font-size: 0.8rem;
+  }
+  
+  .del-btn {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+  }
+}

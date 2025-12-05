@@ -7,54 +7,68 @@
   top: 10vh;
   left: 10vh;
 }
+
 .movieTitle {
   font-size: 20px;
   text-align: center;
 }
 
 .smallposter {
-  width: 250px;
+  width: 100%;
+  max-width: 250px;
+  height: auto;
   overflow: visible;
 }
 
 .nowPlayingh1 {
-  margin-left: 8.2em;
+  margin-left: 270px;
   color: var(--primary-600);
+  transition: margin var(--transition);
 }
-.nowPlayingh1Closed{
-    margin-left: 2em;
+
+.nowPlayingh1Closed {
+  margin-left: 2em;
   color: var(--primary-600);
+  transition: margin var(--transition);
 }
+
 .movieContainer {
-  
-  margin-left: 16.5em;
+  margin-left: 270px;
+  margin-right: 2em;
   background-color: transparent;
   display: flex;
   align-items: center;
-  justify-content: left;
+  justify-content: flex-start;
   flex-direction: row;
   column-gap: 20px;
   height: auto;
   overflow: hidden;
+  overflow-y: hidden;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
+  transition: margin var(--transition);
 }
-.movieContainerClosed{
-    margin-left: 4em;
+
+.movieContainerClosed {
+  margin-left: 2em;
+  margin-right: 2em;
   background-color: transparent;
   display: flex;
   align-items: center;
-  justify-content: left;
+  justify-content: flex-start;
   flex-direction: row;
   column-gap: 20px;
   height: auto;
   overflow: hidden;
+  overflow-y: hidden;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
+  transition: margin var(--transition);
 }
+
 .movieContainer.mobile-scroll {
   overflow-x: auto !important;
-  overflow-y: hidden;
+  overflow-y: hidden !important;
   -webkit-overflow-scrolling: touch;
   scroll-snap-type: x mandatory;
   overscroll-behavior-x: contain;
@@ -73,7 +87,7 @@
 }
 
 .movie-slider > * {
-  flex: 0 0 248px; /* fixed card width */
+  flex: 0 0 248px;
   box-sizing: border-box;
   scroll-snap-align: start;
   touch-action: pan-x;
@@ -90,6 +104,85 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
 .movieContainer.mobile-scroll::-webkit-scrollbar {
   display: none;
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+  .nowPlayingh1 {
+    margin-left: 220px;
+  }
+  
+  .movieContainer {
+    margin-left: 220px;
+  }
+}
+
+@media (max-width: 992px) {
+  .nowPlayingh1 {
+    margin-left: 2em;
+  }
+  
+  .movieContainer {
+    margin-left: 2em;
+    margin-right: 2em;
+  }
+  
+  .nowPlayingh1Closed {
+    margin-left: 1em;
+  }
+  
+  .movieContainerClosed {
+    margin-left: 1em;
+    margin-right: 1em;
+  }
+}
+
+@media (max-width: 768px) {
+  .movieContainer,
+  .movieContainerClosed {
+    overflow-x: auto !important;
+    margin-left: 1em;
+    margin-right: 1em;
+  }
+  
+  .nowPlayingh1,
+  .nowPlayingh1Closed {
+    margin-left: 1em;
+    margin-top: 4rem;
+    font-size: 1.5rem;
+  }
+  
+  .movie-slider > * {
+    flex: 0 0 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .movieContainer,
+  .movieContainerClosed {
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+  }
+  
+  .nowPlayingh1,
+  .nowPlayingh1Closed {
+    margin-left: 0.5em;
+    margin-top: 4rem;
+    font-size: 1.25rem;
+  }
+  
+  .movie-slider > * {
+    flex: 0 0 160px;
+  }
+  
+  .smallposter {
+    max-width: 160px;
+  }
+  
+  .movieTitle {
+    font-size: 16px;
+  }
 }

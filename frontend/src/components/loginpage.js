@@ -31,9 +31,9 @@ export default function LoginPage({loggedIn, setLoggedIn}){
 return(
     <>
     {openLogin &&(
-     < div className='page popupcontainer'>
-        
-    <form onSubmit={handleSubmit}>
+     <div className='popupcontainer'>
+        <h2 style={{alignSelf: 'start'}}>Login</h2>
+    <form onSubmit={handleSubmit} style={{width: '100%', display: 'flex', flexDirection: 'column', gap: '15px', alignItems: 'center'}}>
             <input
             className='placeHolder'
             type='text'
@@ -54,20 +54,19 @@ return(
                 setOpenLogin(false)
                 location.reload(false)
             }}
-             className='btn-primary submitBtn cancelBtn'>
+             className='cancelBtn'>
             X
         </button>
             <button onClick={() =>{
                 setOpenRegister(true)
                 setOpenLogin(false)
         }} className='goToRegister'>Don't have an account? Register Here!</button>
-        <button className="btn-primary submitBtn">Log in</button>
+        <button type='submit' className="btn-primary submitBtn">Log in</button>
         </form>
           </div>
          )}
-         {openRegister && !openLogin && (<RegisterPage/>)}
+         {openRegister && !openLogin && (<RegisterPage />)}
       
        </>
 )   
 }
-//       
