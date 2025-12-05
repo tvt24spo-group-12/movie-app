@@ -19,32 +19,44 @@ const getProfilePictureById = async(req , res) =>{
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const storagePath = path.join(__dirname, '../../public/ProfilePictures');
+
+
+
+const uploadProfilePicture = async(req,res) => {
+
+ const userId = parseInt(req.params.userId, 10)
+    const storagePath = path.join(__dirname, '../../public/ProfilePictures');
 console.log("sotatgerf : ", storagePath)
  const storage = multer.diskStorage({
      destination: storagePath, 
     filename: (_, file, cb) => {
-        cb(null, `${file.originalname}`);
+        cb(null, `${userId}_${file.originalname}`);
     }
 });
  const upload = multer({ storage }).single('file')
-
-const uploadProfilePicture = async(req,res) => {
     try{
-        const userId = parseInt(req.params.userId, 10)
+       
         upload(req, res, async (err) => {
             if (err) {
                 res.status(500).json({ error: err.message })
                 return
             }
+
             const path = `/public/ProfilePictures/${req.file.filename}`
-            const result = await insertProfilePicture(userId, path)
+            const res = await checkifExists(userId);
+            if(!String(res.toString().split(".png", ".jpg")).includes(path.toString().split(".png", ".jpg"))){
+                const result = await insertProfilePicture(userId, path)
             res.json(result)
             return path;
+            }
+           
         })
     }catch(err){
         res.status(500).json({ error: err.message })
     }
 }
-
+const checkifExists = async(userId) => {
+       const result = await getProfilePicture(userId)
+        return result;
+}
 export{getProfilePictureById,uploadProfilePicture}
