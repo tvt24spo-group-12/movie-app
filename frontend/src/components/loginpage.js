@@ -1,6 +1,7 @@
 import '../style/buttonStyle.css'
 import { useState } from 'react'
 import { useAuth } from '../context/login'
+import RegisterPage from './registerpage'
 import '../style/sidebar.css'
 import RegisterPage from './registerpage'
 

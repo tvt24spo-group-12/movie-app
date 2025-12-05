@@ -5,14 +5,14 @@ const URL = "http://localhost:3001/"
 
  export async function uploadProfilePicture(picture, user, authFetch){
     
-    //console.log(user.id, " ", picture);
+
     const userId = user.id
      
- 
-      const formData = new FormData();
-   formData.append('file', picture[0])
-       console.log(user.id, " ", formData);
-    try {
+       if(String(picture.name).includes(".png",".jpg")){
+       
+         const formData = new FormData();
+   formData.append('file', picture)
+  try {
         const response = await authFetch(`${URL}user/profilePicture/${userId}`, {
             method: 'POST',
            
@@ -20,11 +20,13 @@ const URL = "http://localhost:3001/"
         });
      
        return response
-    } catch (error) {
+
+        } catch (error) {
         console.error(error);
         return 0;
+        }
     }
-   
+    return 404;
 }
 
  export async function getProfilePicture(user, authFetch) {
