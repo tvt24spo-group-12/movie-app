@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../context/login";
-import ReviewCard from "./ReviewCard"; // Import the card component
-import { searchUserReviews } from "../../api/reviews"; // Assuming your API file is one level up
+import ReviewCard from "./ReviewCard";
+import { searchUserReviews } from "../../api/reviews";
+import { getUserInfo } from "../../api/user";
 
 export default function UserMovieReviews({ user_id }) {
-  const { authFetch } = useAuth();
+  const { user, authFetch } = useAuth();
   const [reviews, setReviews] = useState([]);
+  const [reviewUser, setReviewUser] = useState({});
   const [status, setStatus] = useState("idle"); // idle | loading | success | error
   const [error, setError] = useState("");
+  const id = user?.id;
 
   useEffect(() => {
     async function fetchReviews() {
@@ -15,8 +18,16 @@ export default function UserMovieReviews({ user_id }) {
       setError("");
 
       try {
-        const data = await searchUserReviews({ authFetch, user_id });
+        let data;
+
+        if (id === user_id) {
+          data = await searchUserReviews({ authFetch, user_id: -1 });
+        } else {
+          data = await searchUserReviews({ authFetch, user_id });
+        }
         setReviews(data);
+        const userData = await getUserInfo(user_id);
+        setReviewUser(userData);
         setStatus("success");
       } catch (err) {
         console.error("Failed to fetch user reviews:", err);
@@ -53,8 +64,11 @@ export default function UserMovieReviews({ user_id }) {
 
   return (
     <div className="page">
-      {/* TODO: implement getting username with user_id and add it here, if -1 then just "your" */}
-      <h1 className="page__title">Your reviews</h1>
+      <h1 className="page__title">
+        {user_id === -1 || user_id == id
+          ? "Your reviews"
+          : `${reviewUser?.username ?? "User"}'s reviews`}
+      </h1>
 
       {renderContent()}
     </div>
