@@ -1,6 +1,6 @@
 // näytä elokuva-kartta posterin, metatietojen ja äänen tiedon perusteella
 function MovieCardMin({ movie }) {
-  const { title, poster, rating, releaseYear, runtime } = movie;
+  const { title, poster, rating, releaseYear, runtime, id } = movie;
 
   return (
     <article className="movie-card-min">
@@ -22,11 +22,12 @@ function MovieCardMin({ movie }) {
           {rating != null && <span>⭐ {Number(rating).toFixed(1)}</span>}
         </div>
 
-        <h3 className="movie-card__title">{title}</h3>
+        <h3 className="movie-card__title">
+          <a href={`/movie/${id}`}>{title}</a>
+        </h3>
       </div>
     </article>
   );
 }
 
 export default MovieCardMin;
-

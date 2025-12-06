@@ -1,8 +1,18 @@
 // näytä elokuva-kartta posterin, metatietojen ja äänen tiedon perusteella
-import { useState } from 'react';
+import { useState } from "react";
 
 function MovieCard({ movie, onAddFavorite }) {
-  const { title, overview, poster, rating, votes, releaseYear, genres, runtime } = movie;
+  const {
+    title,
+    overview,
+    poster,
+    rating,
+    votes,
+    releaseYear,
+    genres,
+    runtime,
+    id,
+  } = movie;
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
@@ -25,16 +35,16 @@ function MovieCard({ movie, onAddFavorite }) {
           {rating != null && <span>⭐ {Number(rating).toFixed(1)}</span>}
         </div>
 
-        <h3 className="movie-card__title">{title}</h3>
+        <h3 className="movie-card__title">
+          <a href={`/movie/${id}`}>{title}</a>
+        </h3>
 
         {genres?.length > 0 && (
-          <div className="movie-card__genres">
-            {genres.join(" • ")}
-          </div>
+          <div className="movie-card__genres">{genres.join(" • ")}</div>
         )}
 
-        <p 
-          className={`movie-card__overview ${!isExpanded ? 'clamped' : ''}`}
+        <p
+          className={`movie-card__overview ${!isExpanded ? "clamped" : ""}`}
           onClick={() => setIsExpanded(!isExpanded)}
           title={!isExpanded ? "Click to read more" : "Click to show less"}
         >
@@ -64,3 +74,4 @@ function MovieCard({ movie, onAddFavorite }) {
 }
 
 export default MovieCard;
+

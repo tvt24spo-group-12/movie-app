@@ -2,8 +2,11 @@ import MovieReviews from "./reviews/MovieReviews";
 import MovieReviewAdd from "./reviews/MovieReviewAdd";
 import { useEffect, useState } from "react";
 import { fetchMovieDetails } from "../api/movies";
+import { addFavorite } from "../api/favorites";
+import { useAuth } from "../context/login";
 
 function MoviePage({ movie_id }) {
+  const { user, authFetch } = useAuth();
   const [movie, setMovie] = useState({
     title: "",
     poster: "",
@@ -115,8 +118,16 @@ function MoviePage({ movie_id }) {
           )}
         </div>
 
-        <button className="review-form__button" onClick={openReviewForm}>
+        <button className="btn-primary" onClick={openReviewForm}>
           Add/Edit review
+        </button>
+
+        <button
+          type="button"
+          className="btn-primary"
+          onClick={() => addFavorite(movie.id, authFetch)}
+        >
+          Add to Favorites
         </button>
       </article>
       {addReviewOpen && (
@@ -125,6 +136,7 @@ function MoviePage({ movie_id }) {
           onClose={() => closeReviewForm(true)}
         />
       )}
+
       <MovieReviews
         movie_id={movie_id}
         own={true}
