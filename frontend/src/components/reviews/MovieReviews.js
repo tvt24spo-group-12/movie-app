@@ -1,14 +1,24 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../context/login";
 import MovieReviewCard from "./MovieReviewCard";
+import SearchBar from "../SearchBar";
 import { searchMovieReviews, searchMovie } from "../../api/reviews";
 
 export default function MovieReviews({ movie_id, own = false }) {
+  const [query, setQuery] = useState("");
   const { user, authFetch } = useAuth();
   const [reviews, setReviews] = useState([]);
+  const [activeReviews, setActiveReviews] = useState([]);
   const [status, setStatus] = useState("idle"); // idle | loading | success | error
   const [error, setError] = useState("");
   const [show, setShow] = useState(true);
+
+  function normalize(str) {
+    return str
+      .normalize("NFD")
+      .replace(/\p{Diacritic}/gu, "")
+      .toLowerCase();
+  }
 
   useEffect(() => {
     if (!movie_id && (!own || user)) {
@@ -28,8 +38,6 @@ export default function MovieReviews({ movie_id, own = false }) {
         } else {
           data = await searchMovieReviews(movie_id);
         }
-
-        console.debug("search movie response:", data);
 
         if (data == null) {
           setReviews([]);
@@ -52,6 +60,41 @@ export default function MovieReviews({ movie_id, own = false }) {
 
     fetchReviews();
   }, [movie_id, own, user]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    function reviewToString(obj) {
+      if (obj == null) return "";
+      if (["string", "number", "boolean"].includes(typeof obj))
+        return String(obj);
+      if (Array.isArray(obj)) return obj.map(reviewToString).join(" ");
+      if (typeof obj === "object")
+        return Object.values(obj).map(reviewToString).join(" ");
+      return "";
+    }
+
+    function filterReviews() {
+      const trimmed = query.trim();
+      if (!trimmed) {
+        setActiveReviews(reviews);
+        return;
+      }
+
+      const terms = normalize(trimmed).split(/\s+/).filter(Boolean);
+
+      const filtered = reviews.filter((review) => {
+        const haystack = normalize(reviewToString(review));
+        return terms.every((t) => haystack.includes(t));
+      });
+
+      if (!controller.signal.aborted) setActiveReviews(filtered);
+    }
+
+    filterReviews();
+
+    return () => controller.abort();
+  }, [query, reviews]);
 
   const renderContent = () => {
     if (status === "loading") {
@@ -79,8 +122,16 @@ export default function MovieReviews({ movie_id, own = false }) {
             return "Public reviews";
           })()}
         </h1>
+
+        {!own && (
+          <SearchBar
+            value={query}
+            onChange={setQuery}
+            placeholder="Search reviews"
+          />
+        )}
         <div className="reviews">
-          {reviews.map((review) => (
+          {activeReviews.map((review) => (
             <MovieReviewCard
               key={review.vote_id || review.movie_id}
               review={review}
