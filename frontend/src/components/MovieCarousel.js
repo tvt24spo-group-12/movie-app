@@ -30,7 +30,7 @@ export default function MovieCarousel({sidebar, caption, movies = [] }) {
     updateMoviesPerPage();
     window.addEventListener("resize", updateMoviesPerPage);
     return () => window.removeEventListener("resize", updateMoviesPerPage);
-  }, [movies?.length]);
+  }, [movies?.length, sidebar]);
 
   const handleNext = () => {
     // On touch devices, use native scrolling; on desktop keep translate logic
@@ -111,8 +111,8 @@ export default function MovieCarousel({sidebar, caption, movies = [] }) {
         )}
       </div>
       <article
-        className={sidebar === true ? `movie-card movieContainer ${isTouchDevice ? "mobile-scroll" : ""}` 
-                                    :  `movie-card movieContainerClosed ${isTouchDevice ? "mobile-scroll" : ""}`}
+        className={sidebar === true ? `movieContainer ${isTouchDevice ? "mobile-scroll" : ""}` 
+                                    :  `movieContainerClosed ${isTouchDevice ? "mobile-scroll" : ""}`}
         ref={containerRef}
       >
         <div

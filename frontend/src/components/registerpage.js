@@ -23,9 +23,9 @@ export default function RegisterPage(){
         }
     }
     return(
-       < div className='page popupcontainer'>
-            <div className='page registerContainer'>
-            <form onSubmit={handleSubmit}>
+       <div className='popupcontainer'>
+        <h2 style={{alignSelf: 'start'}}>Register</h2>
+            <form onSubmit={handleSubmit} style={{width: '100%', display: 'flex', flexDirection: 'column', gap: '15px', alignItems: 'center'}}>
                 <input
                 className='placeHolder'
                 placeholder='Email'
@@ -51,13 +51,11 @@ export default function RegisterPage(){
                         onClick={() => {
                         location.reload(false)
                         }}
-                        className='btn-primary submitBtn cancelBtn'>
+                        className='cancelBtn'>
                         X
                        </button>
-                <button className='btn-primary submitBtn'>Sign Up</button>
+                <button type='submit' className='btn-primary submitBtn'>Sign Up</button>
             </form>
-
-            </div>
  </div>
 
        
