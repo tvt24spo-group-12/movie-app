@@ -117,13 +117,11 @@ export default function UserMovieReviews({ user_id }) {
           ? "Your reviews"
           : `${reviewUser?.username ?? "User"}'s reviews`}
       </h1>
-      {(user_id === -1 || user_id !== "" || user_id == id) && (
-        <SearchBar
-          value={query}
-          onChange={setQuery}
-          placeholder="Search reviews"
-        />
-      )}
+      <SearchBar
+        value={query}
+        onChange={setQuery}
+        placeholder="Search reviews"
+      />
 
       {renderContent()}
     </div>
