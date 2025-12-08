@@ -26,7 +26,8 @@ const uploadProfilePicture = async(req,res) => {
 
  const userId = parseInt(req.params.userId, 10)
     const storagePath = path.join(__dirname, '../../public/ProfilePictures');
-console.log("sotatgerf : ", storagePath)
+
+
  const storage = multer.diskStorage({
      destination: storagePath, 
     filename: (_, file, cb) => {
@@ -35,7 +36,8 @@ console.log("sotatgerf : ", storagePath)
 });
  const upload = multer({ storage }).single('file')
     try{
-       
+ 
+
         upload(req, res, async (err) => {
             if (err) {
                 res.status(500).json({ error: err.message })
@@ -44,9 +46,10 @@ console.log("sotatgerf : ", storagePath)
 
             const path = `/public/ProfilePictures/${req.file.filename}`
             const res = await checkifExists(userId);
-            if(!String(res.toString().split(".png", ".jpg")).includes(path.toString().split(".png", ".jpg"))){
-                const result = await insertProfilePicture(userId, path)
-            res.json(result)
+          
+            if(!res.toString().split(".png", ".jpg").includes(path.toString().split(".png", ".jpg"))){
+            await insertProfilePicture(userId, path)
+         
             return path;
             }
            
