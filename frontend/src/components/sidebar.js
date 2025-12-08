@@ -86,7 +86,7 @@ useEffect(()=>{
  getProfilePicture(user, authFetch).then((res) =>  {
   
     const imgurl = url+res
-
+    console.log(imgurl)
     document.getElementById('ProfilePicture').src=""+imgurl
 })
 
