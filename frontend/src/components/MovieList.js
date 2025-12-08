@@ -91,7 +91,7 @@ const handleAddFavorite = async (id) => {
     return (
         <div className="page">
             <h1 className="page__title">Movie Search</h1>
-            <SearchBar value={query} onChange={setQuery} />
+            <SearchBar value={query} onChange={setQuery} placeholder="Search for movies" />
 
             <div className="filters">
                 <button 

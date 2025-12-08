@@ -4,7 +4,8 @@ import {
   findUserByUsername,
   saveRefreshToken,
   getUserByRefreshToken,
-  clearRefreshToken
+  clearRefreshToken,
+  getUserById,
 } from "../models/user_model.js";
 import { verifyRefreshToken } from "../utils/jwt.js";
 import { compare as bcryptCompare } from "bcrypt";
@@ -50,14 +51,14 @@ export async function login(req, res, next) {
     const accessToken = jwt.sign(
       { user_id: dbUser.user_id },
       process.env.JWT_SECRET,
-      { expiresIn: "15min" }
+      { expiresIn: "15min" },
     );
 
     //Luodaan refresh token joka voimassa 7 päivää
     const refreshToken = jwt.sign(
       { user_id: dbUser.user_id },
       process.env.REFRESH_SECRET,
-      { expiresIn: "7d" }
+      { expiresIn: "7d" },
     );
 
     //tallenna refresh token kantaan
@@ -119,7 +120,6 @@ export async function refreshAccessToken(req, res, next) {
       return res.status(401).json({ error: "Refresh token required" });
     }
 
-    
     const decoded = verifyRefreshToken(refreshToken);
 
     if (!decoded) {
@@ -128,7 +128,6 @@ export async function refreshAccessToken(req, res, next) {
         .json({ error: "Invalid or expired refresh token" });
     }
 
-    
     const user = await getUserByRefreshToken(refreshToken);
     if (!user) {
       return res.status(403).json({ error: "Invalid refresh token" });
@@ -137,9 +136,8 @@ export async function refreshAccessToken(req, res, next) {
     const accessToken = jwt.sign(
       { user_id: user.user_id },
       process.env.JWT_SECRET,
-      { expiresIn: "15min" }
+      { expiresIn: "15min" },
     );
-    
 
     res.json({
       accessToken,
@@ -157,18 +155,15 @@ export async function refreshAccessToken(req, res, next) {
 export async function logout(req, res, next) {
   try {
     const refreshToken = req.cookies?.refreshToken;
-    
 
     if (refreshToken) {
       const user = await getUserByRefreshToken(refreshToken);
 
       if (user) {
-        
         await clearRefreshToken(user.username);
       }
     }
 
-    
     res.clearCookie("refreshToken");
 
     res.json({ message: "Logout successful" });
@@ -176,3 +171,24 @@ export async function logout(req, res, next) {
     next(err);
   }
 }
+
+export async function getUserInfoById(req, res, next) {
+  try {
+    const userId = req.params.userId;
+
+    if (!userId) {
+      return res.status(400).json({ error: "Missing user_id parameter" });
+    }
+
+    const user = await getUserById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.json(user);
+  } catch (err) {
+    next(err);
+  }
+}
+

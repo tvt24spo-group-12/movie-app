@@ -1,8 +1,12 @@
 import MovieReviews from "./reviews/MovieReviews";
+import MovieReviewAdd from "./reviews/MovieReviewAdd";
 import { useEffect, useState } from "react";
 import { fetchMovieDetails } from "../api/movies";
+import { addFavorite } from "../api/favorites";
+import { useAuth } from "../context/login";
 
 function MoviePage({ movie_id }) {
+  const { user, authFetch } = useAuth();
   const [movie, setMovie] = useState({
     title: "",
     poster: "",
@@ -15,6 +19,16 @@ function MoviePage({ movie_id }) {
   });
   const [status, setStatus] = useState("idle"); // idle | loading | success | error
   const [error, setError] = useState("");
+  const [addReviewOpen, setAddReviewOpen] = useState(false);
+  const [reviewsVersion, setReviewsVersion] = useState(0);
+
+  function openReviewForm() {
+    setAddReviewOpen(true);
+  }
+  function closeReviewForm(refresh = false) {
+    setAddReviewOpen(false);
+    if (refresh) setReviewsVersion((v) => v + 1);
+  }
 
   useEffect(() => {
     if (!movie_id) {
@@ -103,9 +117,36 @@ function MoviePage({ movie_id }) {
             </div>
           )}
         </div>
-      </article>
 
-      <MovieReviews movie_id={movie_id} />
+        <button className="btn-primary" onClick={openReviewForm}>
+          Add/Edit review
+        </button>
+
+        <button
+          type="button"
+          className="btn-primary"
+          onClick={() => addFavorite(movie.id, authFetch)}
+        >
+          Add to Favorites
+        </button>
+      </article>
+      {addReviewOpen && (
+        <MovieReviewAdd
+          movieId={movie_id}
+          onClose={() => closeReviewForm(true)}
+        />
+      )}
+
+      <MovieReviews
+        movie_id={movie_id}
+        own={true}
+        key={`own-${reviewsVersion}`}
+      />
+      <MovieReviews
+        movie_id={movie_id}
+        own={false}
+        key={`all-${reviewsVersion}`}
+      />
     </>
   );
 }
