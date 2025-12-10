@@ -135,3 +135,17 @@ group-details-toggle {
 .group-details-toggle:hover {
   color: var(--primary);
 }
+
+
+.group-link {
+    margin: 5px;
+  cursor: pointer;
+  padding: 0.3rem;
+  padding-left: 0.5rem;
+  border-radius: var(--radius);
+  transition: background 150ms ease;
+}
+
+.group-link:hover {
+  background: var(--border);
+}
