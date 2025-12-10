@@ -3,7 +3,7 @@ import useDeleteUser from "../api/useDeleteUser";
 import "../style/deleteuser.css";
 import { useAuth } from "../context/login";
 
-export default function DeleteUser({ open, onCancel }) {
+export default function DeleteUser({ open, onCancel, onDeleted }) {
   const [confirmation, setConfirmation] = useState(false);
   const [deleted, setDeleted] = useState(false);
   const [verify, setVerify] = useState("")
@@ -13,8 +13,8 @@ export default function DeleteUser({ open, onCancel }) {
   if (!open) return null;
 
   function onConfirm() {
-    onCancel(); 
-  }
+  if (onDeleted) onDeleted();
+}
 
 
 
