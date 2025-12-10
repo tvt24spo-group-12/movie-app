@@ -4,12 +4,14 @@ import LoginPage from '../components/loginpage'
 import '../style/sidebar.css'
 import '../style/buttonStyle.css'
 import { useAuth } from '../context/login'
+import { useRouter } from '../routes/RouterContext'
 import {uploadProfilePicture, getProfilePicture} from '../api/profilepicture'
 
 
 
 export default function SideBar({sidebar,setsidebar}){
   const url = 'http://localhost:3001'
+  const { navigate } = useRouter()
     const[sideBarOpen, setSideBarOpen] = useState(true)
     const[loginform, setLoginOpenForm] = useState(false)
     const[registerPage, setRegisterPage] = useState(false)
@@ -17,7 +19,6 @@ export default function SideBar({sidebar,setsidebar}){
     const{user, logout, loading, authFetch} = useAuth();
   const[picture, setpicture] = useState(null)
   const[preview, setPreview] = useState('')
-const[loggedIn,setLoggedIn] = useState(false)
 
 
 useEffect(()=>{
@@ -81,7 +82,7 @@ const saveImage = async(picture) =>
     }
 useEffect(()=>{
 
-  if(!loggedIn && user !== null)
+  if(user && user !== null)
   {
  getProfilePicture(user, authFetch).then((res) =>  {
   
@@ -91,7 +92,7 @@ useEffect(()=>{
 })
 
 }
-},[loggedIn, user])
+},[user])
     const closeSidebar = () =>{
          
          if(sideBarOpen === true){
@@ -121,25 +122,42 @@ useEffect(()=>{
         </form>
         
         <p>{user.username}</p>
-        <button onClick={()=>{ setLoggedIn(false);
-          logout()
-        }} 
-        className='btn-primary Btn'>Log out</button>
+        
+        <nav className='navigationLinks'>
+          <button onClick={() => navigate('/')} className='btn-primary Btn'>Home</button>
+          <button onClick={() => navigate('/movies')} className='btn-primary Btn'>Movies</button>
+          <button onClick={() => navigate('/groups')} className='btn-primary Btn'>Groups</button>
+          <button onClick={() => navigate('/reviews')} className='btn-primary Btn'>My Reviews</button>
+          <button onClick={() => navigate('/favorites')} className='btn-primary Btn'>Favorites</button>
+          <br></br>
+          <button onClick={()=>{ 
+            logout()
+            navigate('/')
+          }} 
+          className='btn-primary Btn'>Log out</button>
+        </nav>
       </>
     )
       
     }
     {!loginform && !registerPage && !user &&(
-      <><button onClick={() => { 
-        setLoginOpenForm(true)
-        setPopupOpen(true)
-        }} className="btn-primary Btn">Login</button>
+      <>
+        <nav className='navigationLinks'>
+          <button onClick={() => navigate('/')} className='btn-primary Btn'>Home</button>
+          <button onClick={() => navigate('/movies')} className='btn-primary Btn'>Movies</button>
+          <br></br>
+          <button onClick={() => { 
+            setLoginOpenForm(true)
+            setPopupOpen(true)
+          }} className="btn-primary Btn">Login</button>
 
-      <button onClick={()=>{
-        setPopupOpen(true)
-        setLoginOpenForm(false)
-        setRegisterPage(true)}}
-        className="btn-primary Btn">Register</button>
+        <button onClick={()=>{
+            setPopupOpen(true)
+            setLoginOpenForm(false)
+            setRegisterPage(true)
+          }}
+          className="btn-primary Btn">Register</button>
+        </nav>
       </>
 
     )}
@@ -152,13 +170,16 @@ useEffect(()=>{
     <>
  {!loginform && registerPage && (
         <>
-        <RegisterPage/>
+        <RegisterPage setLoginOpenForm={setLoginOpenForm} setRegisterPage={setRegisterPage}/>
         </>
     )} 
     {loginform && !registerPage && 
     (    
         <>
-        <LoginPage loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
+        <LoginPage loggedIn={false} setLoggedIn={() => {
+          setPopupOpen(false)
+          setLoginOpenForm(false)
+        }} setLoginOpenForm={setLoginOpenForm} setRegisterPage={setRegisterPage}/>
      </>
     )}
     </>

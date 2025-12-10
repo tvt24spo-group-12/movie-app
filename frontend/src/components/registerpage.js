@@ -2,8 +2,8 @@ import '../style/buttonStyle.css'
 import { useState } from 'react'
 import {signUp} from '../api/register'
 import '../style/sidebar.css'
-export default function RegisterPage(){
 
+export default function RegisterPage({ setLoginOpenForm, setRegisterPage }){
 
  const[Email, setEmail] = useState('')
     const[Password, setPassword] = useState('')
@@ -19,7 +19,9 @@ export default function RegisterPage(){
         }
         else{
             console.log("signedup")
-           location.reload(false)
+           // Switch to login page instead of reloading
+            setRegisterPage(false)
+            setLoginOpenForm(true)
         }
     }
     return(
@@ -28,32 +30,38 @@ export default function RegisterPage(){
             <form onSubmit={handleSubmit} style={{width: '100%', display: 'flex', flexDirection: 'column', gap: '15px', alignItems: 'center'}}>
                 <input
                 className='placeHolder'
+                placeholder='Username'
+                type='username'
+                value={Username}
+                onChange={(e) => setUsername(e.target.value)}
+                />
+                <input
+                className='placeHolder'
                 placeholder='Email'
                 type='Email'
                 value={Email}
                 onChange={(e) => setEmail(e.target.value)}
                 />
-                   <input
-                   className='placeHolder'
-                placeholder='password'
+                <input
+                className='placeHolder'
+                placeholder='Password'
                 type='password'
                 value={Password}
                 onChange={(e) => setPassword(e.target.value)}
                 />
-                   <input
-                   className='placeHolder'
-                placeholder='username'
-                type='username'
-                value={Username}
-                onChange={(e) => setUsername(e.target.value)}
-                />
                 <button
+                        type='button'
                         onClick={() => {
-                        location.reload(false)
+                        setRegisterPage(false)
+                        setLoginOpenForm(false)
                         }}
                         className='cancelBtn'>
                         X
                        </button>
+                <button type='button' onClick={() => {
+                    setRegisterPage(false)
+                    setLoginOpenForm(true)
+                }} className='goToRegister'>Already have an account? Login Here!</button>
                 <button type='submit' className='btn-primary submitBtn'>Sign Up</button>
             </form>
  </div>

@@ -26,7 +26,7 @@ export default function MovieReviewAdd({ movieId, onClose }) {
       }
       if (!authFetch) {
         setStatus("error");
-        setError("Not authenticated");
+        setError("You must be logged in to add or edit reviews.");
         handleClose();
         return;
       }

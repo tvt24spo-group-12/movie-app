@@ -3,6 +3,7 @@ import GroupPage from "../components/GroupPage";
 import UserMovieReviews from "../components/reviews/UserMovieReviews";
 import MoviePage from "../components/MoviePage";
 import InTheaters from "../components/inTheaters";
+import FavoritesPage from "../components/FavoritesPage";
 // import LoginPage from "../components/loginpage";
 // import RegisterPage from "../components/registerpage";
 // import DeleteUser from "../components/DeleteUser";
@@ -27,6 +28,10 @@ export const routes = [
   {
     path: "/groups",
     component: GroupPage,
+  },
+  {
+    path: "/favorites",
+    component: FavoritesPage,
   },
   {
     path: "/reviews",
