@@ -5,6 +5,7 @@ import { searchMovies } from "../api/movies";
 import { useAuth } from "../context/login";
 import { addFavorite } from "../api/favorites";
 
+
 function MovieList() {
     const [query, setQuery] = useState("");
     const [movies, setMovies] = useState([]);
@@ -12,6 +13,25 @@ function MovieList() {
     const [error, setError] = useState("");
     const [isFiltersOpen, setIsFiltersOpen] = useState(false);
     const { authFetch, user } = useAuth();
+
+    const debouncedQuery = useDebounce(query, 300);
+
+function useDebounce(value, delay) {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    setStatus("loading") // set loading status at this point, so the website still feels responsive
+    const timer = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+    
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [value, delay]);
+  
+  return debouncedValue;
+}
 
 const handleAddFavorite = async (id) => {
   if (!user) {
@@ -40,7 +60,7 @@ const handleAddFavorite = async (id) => {
         const controller = new AbortController();
     
         async function fetchMovies() {
-          const trimmed = query.trim();
+          const trimmed = debouncedQuery.trim();
           
           // Tarkista onko yhtään filtteriä asetettu
           const hasFilters = Object.entries(filters)
@@ -70,7 +90,7 @@ const handleAddFavorite = async (id) => {
         fetchMovies();
     
         return () => controller.abort();
-    }, [query, filters]);
+    }, [debouncedQuery, filters]);
 
     const results = useMemo(() => movies ?? [], [movies]);
 

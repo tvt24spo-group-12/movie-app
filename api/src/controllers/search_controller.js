@@ -46,16 +46,32 @@ export async function searchMoviesByName(req, res, next) {
     }
 
     // helper to extract genre names in lowercase
-    const extractGenreNames = (movie) =>
-      (movie.genres || [])
+    const extractGenreNames = (movie) => {
+      let genres = movie.genres;
+
+      // Handle various edge cases
+      if (!genres) return [];
+      if (Array.isArray(genres)) {
+        // Already an array, use it
+      } else if (typeof genres === "string") {
+        // Convert string to array (e.g., "Drama,Romance" -> ["Drama", "Romance"])
+        genres = genres.split(",").map((g) => g.trim());
+      } else if (typeof genres === "object" && !Array.isArray(genres)) {
+        // Single object, wrap in array
+        genres = [genres];
+      } else {
+        // Any other case
+        return [];
+      }
+
+      return genres
         .map((g) => {
-          // DB genres are objects with a name
           if (typeof g === "object" && g.name) return g.name.toLowerCase();
-          // TMDb genres are already strings
           if (typeof g === "string") return g.toLowerCase();
           return null;
         })
         .filter(Boolean);
+    };
 
     const applyFilters = (movies) =>
       movies.filter((movie) => {
