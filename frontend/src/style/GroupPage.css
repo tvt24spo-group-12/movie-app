@@ -5,12 +5,6 @@
   transition: var(--transition);
 }
 
-.groupPage-narrow {
-  margin-left: 2rem;
-  display: flex;
-  height: 100vh;
-  transition: var(--transition);
-}
 .group-layout {
   display: flex;
   flex: 1;
@@ -67,4 +61,68 @@
     padding: 0.5rem;
     gap: 0.5rem;
   }
+}
+
+
+.create-group-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1rem;
+  max-width: 320px;
+  margin-top: 0.5rem;
+}
+.create-group-box input {
+  background: var(--surface);
+  color: var(--text);
+}
+
+.create-actions {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+}
+.btn-success {
+  background: var(--success);
+  color: #fff;
+  border: none;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+    margin-left: 0.5rem;
+}
+.btn-success:hover {
+  filter: brightness(0.9);  
+}
+
+.btn-danger {
+  background: var(--error);
+  color: #fff;
+  border: none;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  margin-left: 0.5rem;
+}
+.btn-danger:hover {
+  filter: brightness(0.9);  
+}
+
+.admin-badge {
+  background: var(--primary);
+  color: white;
+  padding: 2px 6px;
+  border-radius: var(--radius);
+  font-size: 0.7rem;
+  margin-left: 8px;
+}
+
+.admin-row {
+  font-weight: bold;
+}
+
+.admin-label {
+  color: var(--primary);
+  margin-top: 0.5rem;
 }
