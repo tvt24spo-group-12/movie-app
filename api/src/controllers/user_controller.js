@@ -3,6 +3,8 @@ import {
   findUserByEmail,
   findUserByUsername,
   saveRefreshToken,
+  findUserById,
+  changeUserPassword,
   getUserByRefreshToken,
   clearRefreshToken,
   getUserById,
@@ -187,6 +189,31 @@ export async function getUserInfoById(req, res, next) {
     }
 
     res.json(user);
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function changePassword(req, res, next) {
+  try {
+    const userId = req.user?.user_id;
+    const { oldPassword, newPassword } = req.body;
+    if (!oldPassword || !newPassword) {
+      return res
+        .status(400)
+        .json({ error: "Old password and new password are required" });
+    }
+    const user = await findUserById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    const dbUser = user.rows[0];
+    const match = await bcryptCompare(oldPassword, dbUser.password);
+    if (!match) {
+      return res.status(401).json({ error: "Old password is incorrect" });
+    }
+    await changeUserPassword(userId, newPassword);
+    res.json({ message: "Password changed successfully" });
   } catch (err) {
     next(err);
   }

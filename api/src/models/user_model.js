@@ -14,6 +14,18 @@ export async function createUser(email, username, plainPassword) {
   );
 }
 
+export async function changeUserPassword(user_id, newPassword) {
+  const hashed = await new Promise((resolve, reject) =>
+    bcryptHash(newPassword, 10, (err, hashedPw) =>
+      err ? reject(err) : resolve(hashedPw),
+    ),
+  );
+  return await pool.query(
+    "UPDATE users SET password = $1 WHERE user_id = $2 RETURNING *",
+    [hashed, user_id]
+  );
+}  
+
 export async function findUserByEmail(email) {
   return await pool.query("SELECT * FROM users WHERE email = $1", [email]);
 }
@@ -21,6 +33,13 @@ export async function findUserByUsername(username) {
   return await pool.query("SELECT * FROM users WHERE username = $1", [
     username,
   ]);
+}
+
+export async function findUserById(user_id) {
+  return await pool.query(
+    "SELECT * FROM users WHERE user_id = $1",
+    [user_id]
+  );
 }
 
 export async function saveRefreshToken(username, refreshToken) {
