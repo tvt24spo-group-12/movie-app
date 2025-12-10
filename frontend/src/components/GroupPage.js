@@ -27,6 +27,7 @@ const [selectedGroup, setSelectedGroup] = useState(null);
 const [members, setMembers] = useState([]);
 const [pending, setPending] = useState([]);
 const [myGroupIds, setMyGroupIds] = useState([]);
+const [showDetails, setShowDetails] = useState(false);
 
 
 const userId = user ? (user.user_id ?? user.id ?? null) : null;
@@ -245,9 +246,7 @@ async function handleDeleteGroup() {
             </div>
           ))}
                       
-            {selectedGroup && isAdmin(selectedGroup) && (
-            <p className="admin-label">You are admin of this group</p>
-             )}  
+          
 
             <h3>All groups</h3>
 
@@ -264,16 +263,31 @@ async function handleDeleteGroup() {
             ))}
           
         </div>
-          <div className="group-view">
-
+         <div className="group-view">
+          {selectedGroup && (
+            <div className="group-banner">
+              <h1 className="group-banner-title">
+                {Array.isArray(selectedGroup.group_name)
+                  ? selectedGroup.group_name.join(", ")
+                  : selectedGroup.group_name}
+              </h1>
+            </div>
+          )}
+            {selectedGroup && isAdmin(selectedGroup) && (
+            <p className="admin-label">You are admin of this group</p>
+             )} 
         {!selectedGroup && <p>Click a group</p>}
 
           {selectedGroup && (
             <div className="card">
-              <h2>{Array.isArray(selectedGroup.group_name)
-                ? selectedGroup.group_name.join(", ")
-                : selectedGroup.group_name}</h2>
-
+              <h2
+                className="group-details-toggle"
+                onClick={() => setShowDetails(v => !v)}
+              >
+                Group Details
+              </h2>
+              {showDetails && (
+              <>
               <p>Members - {members.length}</p>
 
               {!isAdmin(selectedGroup) && !members.some(m => m.user_id === currentUserId) && (
@@ -294,29 +308,24 @@ async function handleDeleteGroup() {
                 </button>
               )}
 
-                           
-                  <p>Members - {members.length}
-                  </p>
-                  {isAdmin(selectedGroup) && (
-                    <>
-                      <h4>Members</h4>
-                      {members.map(m => (
-                        <div key={m.user_id}>
-                          {m.username}
-                          {m.user_id === currentUserId && " (YOU)"}
-                          {m.user_id !== currentUserId && (
-                          
-                            <button
-                              className="btn-danger"
-                              onClick={() => handleKick(m.user_id)}
-                            >
-                              Kick
-                            </button>
-                          )}
-                        </div>
-                      ))}
-                    </>
-                  )}
+               
+
+                <h4>Member count</h4>
+                {members.map(m => (
+                  <div key={m.user_id}>
+                    {m.username}
+                    {m.user_id === currentUserId && " (YOU)"}
+
+                    {isAdmin(selectedGroup) && m.user_id !== currentUserId && (
+                      <button
+                        className="btn-danger"
+                        onClick={() => handleKick(m.user_id)}
+                      >
+                        Kick
+                      </button>
+                    )}
+                  </div>
+                ))}
               {isAdmin(selectedGroup) && (
                 <>
                   <h4>Pending requests</h4>
@@ -340,10 +349,12 @@ async function handleDeleteGroup() {
                   ))}
                 </>
               )}
+                </>
+            )}
           </div>
-        )}
+          
+          )}
           </div>
-
       </div>
     </div>
   );

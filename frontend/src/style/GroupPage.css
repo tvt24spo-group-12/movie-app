@@ -126,3 +126,12 @@
   color: var(--primary);
   margin-top: 0.5rem;
 }
+group-details-toggle {
+  cursor: pointer;
+  user-select: none;
+  padding: 0.25rem 0;
+}
+
+.group-details-toggle:hover {
+  color: var(--primary);
+}
