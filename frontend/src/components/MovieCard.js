@@ -1,7 +1,10 @@
 // näytä elokuva-kartta posterin, metatietojen ja äänen tiedon perusteella
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getFavorite, handleFavorite } from "../api/favorites";
+import { useAuth } from "../context/login";
 
-function MovieCard({ movie, onAddFavorite }) {
+function MovieCard({ movie }) {
+  const { user, authFetch } = useAuth();
   const {
     title,
     overview,
@@ -14,6 +17,46 @@ function MovieCard({ movie, onAddFavorite }) {
     id,
   } = movie;
   const [isExpanded, setIsExpanded] = useState(false);
+  const [favorited, setFavorited] = useState(false);
+
+  async function onFavoriteClick() {
+    if (!user) {
+      alert("You must be logged in to add movies to favorites.");
+      return;
+    }
+
+    // Optimistically toggle favorite
+    setFavorited((prev) => !prev);
+
+    try {
+      const newState = await handleFavorite(id, authFetch);
+
+      // Sync with backend result in case of mismatch
+      setFavorited(newState);
+    } catch (err) {
+      console.error("Failed to toggle favorite:", err);
+      // Revert state on error
+      setFavorited((prev) => !prev);
+    }
+  }
+
+  useEffect(() => {
+    let mounted = true;
+    async function loadFavorite() {
+      if (!id || !authFetch) return;
+      try {
+        const favorite = await getFavorite(id, authFetch);
+        if (Array.isArray(favorite) && favorite.length > 0) setFavorited(true);
+      } catch (err) {
+        console.error("Failed to load favorite:", err);
+      }
+    }
+
+    loadFavorite();
+    return () => {
+      mounted = false;
+    };
+  }, [id, authFetch, favorited]);
 
   return (
     <article className="movie-card">
@@ -57,13 +100,13 @@ function MovieCard({ movie, onAddFavorite }) {
               {votes.toLocaleString()} votes
             </span>
 
-            {onAddFavorite && (
+            {user && (
               <button
                 type="button"
                 className="btn-primary"
-                onClick={() => onAddFavorite(movie.id)}
+                onClick={onFavoriteClick}
               >
-                Add to Favorites
+                {favorited ? "Unfavorite" : "Favorite"}
               </button>
             )}
           </div>
@@ -74,4 +117,3 @@ function MovieCard({ movie, onAddFavorite }) {
 }
 
 export default MovieCard;
-

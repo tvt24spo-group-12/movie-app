@@ -13,6 +13,13 @@ export async function getByName(name) {
   return result.rows;
 }
 
+export async function getById(id) {
+  const result = await pool.query("SELECT * FROM movies WHERE movie_id = $1", [
+    id,
+  ]);
+  return result.rows;
+}
+
 export async function saveMovie(movieData) {
   const {
     movie_id,
@@ -31,9 +38,12 @@ export async function saveMovie(movieData) {
   } = movieData;
 
   // Ensure integer fields have valid values
-  const safeVoteCount = vote_count !== undefined && vote_count !== null ? vote_count : 0;
-  const safeVoteAverage = vote_average !== undefined && vote_average !== null ? vote_average : 0;
-  const safeRuntime = runtime !== undefined && runtime !== null ? runtime : null;
+  const safeVoteCount =
+    vote_count !== undefined && vote_count !== null ? vote_count : 0;
+  const safeVoteAverage =
+    vote_average !== undefined && vote_average !== null ? vote_average : 0;
+  const safeRuntime =
+    runtime !== undefined && runtime !== null ? runtime : null;
 
   const result = await pool.query(
     `INSERT INTO movies 
@@ -69,7 +79,7 @@ export async function saveMovie(movieData) {
       safeVoteCount,
       safeVoteAverage,
       safeRuntime,
-    ]
+    ],
   );
   return result.rows[0];
 }

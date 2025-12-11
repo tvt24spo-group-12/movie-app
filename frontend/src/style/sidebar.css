@@ -152,7 +152,6 @@
 }
 
 .closeSideBar{
- width: 2vw;
  position: absolute;
 z-index: 5;
  right: 2%;
