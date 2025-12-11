@@ -41,7 +41,7 @@ export async function getTrending(req, res) {
     res.json(movies);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Failed to fetch popular movies" });
+    res.status(500).json({ error: "Failed to fetch trending movies" });
   }
 }
 
@@ -51,6 +51,6 @@ export async function getUpcoming(req, res) {
     res.json(movies);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Failed to fetch popular movies" });
+    res.status(500).json({ error: "Failed to fetch upcoming movies" });
   }
 }
