@@ -1,0 +1,22 @@
+meta {
+  name: Get Group Data
+  type: http
+}
+
+get {
+  url: http://localhost:3001/group/:id
+  auth: bearer
+}
+
+params:path {
+  id: 1
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
