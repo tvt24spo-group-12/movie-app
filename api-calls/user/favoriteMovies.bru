@@ -1,0 +1,33 @@
+meta {
+  name: favoriteMovies
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:3001/user/favoriteMovies/:movieId
+}
+get{
+    url: http://localhost:3001/user/favoriteMovies
+}
+get{
+    url: http://localhost:3001/user/favoriteMovies/:movieId
+}
+
+delete{
+url: http://localhost:3001/user/favoriteMovies/:movieId
+}
+
+params:path {
+  userId: 1
+}
+
+headers {
+  Authorization: Bearer {{token}}
+  Content-Type: application/json
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
