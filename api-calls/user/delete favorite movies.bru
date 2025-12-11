@@ -1,0 +1,25 @@
+meta {
+  name: delete favorite movies
+  type: http
+  seq: 1
+}
+
+delete {
+  url: http://localhost:3001/user/favoriteMovies/:movieId
+  body: none
+  auth: none
+}
+
+params:path {
+  userId: 1
+}
+
+headers {
+  Authorization: Bearer {{token}}
+  Content-Type: application/json
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
