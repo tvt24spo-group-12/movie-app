@@ -2,6 +2,7 @@ const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:3001";
 
 const TMDB_IMAGE_BASE = "https://image.tmdb.org/t/p/w500";
 
+// Tuukka
 // muunna raw API data (our DB + TMDb) yhteen muotoon, jonka UI ymmärtää.
 function normalizeMovie(movie) {
   return {
@@ -24,6 +25,7 @@ function normalizeMovie(movie) {
   };
 }
 
+// Tuukka
 // kutsu backendin detail endpointin täyttääkseen kentät, jotka TMDb haku jättää poissa (runtime, genres, etc.)
 export async function fetchMovieDetails(id) {
   const res = await fetch(`${API_BASE_URL}/movie/details/${id}`);
@@ -31,6 +33,7 @@ export async function fetchMovieDetails(id) {
   return normalizeMovie(await res.json());
 }
 
+// Tuukka
 // hae elokuvat backendin kautta, ja täydennä osittainiset tulokset tietojen haulla.
 export async function searchMovies(query, filters = {}) {
   const trimmed = query.trim();
@@ -76,6 +79,150 @@ export async function searchMovies(query, filters = {}) {
         };
       } catch {
         // jos tietoja ei löydy, palauta osittainen tulos.
+        return movie;
+      }
+    }),
+  );
+
+  return enriched;
+}
+
+// Veeti & Miika
+export async function getNowPlaying() {
+  const res = await fetch(`${API_BASE_URL}/movie/nowplaying`);
+  if (res.status === 404) return [];
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(`Failed to load now playing: ${res.status} ${text}`);
+  }
+
+  const raw = await res.json();
+  const basicMovies = (Array.isArray(raw) ? raw : []).map(normalizeMovie);
+
+  const enriched = await Promise.all(
+    basicMovies.map(async (movie) => {
+      const missing =
+        !movie.overview ||
+        !movie.poster ||
+        movie.rating == null ||
+        !movie.genres.length;
+      if (!missing) return movie;
+      try {
+        const details = await fetchMovieDetails(movie.id);
+        return {
+          ...movie,
+          ...details,
+          genres: details.genres.length ? details.genres : movie.genres,
+        };
+      } catch {
+        return movie;
+      }
+    }),
+  );
+
+  return enriched;
+}
+
+// Miika
+export async function getPopular() {
+  const res = await fetch(`${API_BASE_URL}/movie/popular`);
+  if (res.status === 404) return [];
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(`Failed to load popular: ${res.status} ${text}`);
+  }
+
+  const raw = await res.json();
+  const basicMovies = (Array.isArray(raw) ? raw : []).map(normalizeMovie);
+
+  const enriched = await Promise.all(
+    basicMovies.map(async (movie) => {
+      const missing =
+        !movie.overview ||
+        !movie.poster ||
+        movie.rating == null ||
+        !movie.genres.length;
+      if (!missing) return movie;
+      try {
+        const details = await fetchMovieDetails(movie.id);
+        return {
+          ...movie,
+          ...details,
+          genres: details.genres.length ? details.genres : movie.genres,
+        };
+      } catch {
+        return movie;
+      }
+    }),
+  );
+
+  return enriched;
+}
+
+// Miika
+export async function getTrending() {
+  const res = await fetch(`${API_BASE_URL}/movie/trending`);
+  if (res.status === 404) return [];
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(`Failed to load trending: ${res.status} ${text}`);
+  }
+
+  const raw = await res.json();
+  const basicMovies = (Array.isArray(raw) ? raw : []).map(normalizeMovie);
+
+  const enriched = await Promise.all(
+    basicMovies.map(async (movie) => {
+      const missing =
+        !movie.overview ||
+        !movie.poster ||
+        movie.rating == null ||
+        !movie.genres.length;
+      if (!missing) return movie;
+      try {
+        const details = await fetchMovieDetails(movie.id);
+        return {
+          ...movie,
+          ...details,
+          genres: details.genres.length ? details.genres : movie.genres,
+        };
+      } catch {
+        return movie;
+      }
+    }),
+  );
+
+  return enriched;
+}
+
+// Miika
+export async function getUpcoming() {
+  const res = await fetch(`${API_BASE_URL}/movie/upcoming`);
+  if (res.status === 404) return [];
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(`Failed to load upcoming: ${res.status} ${text}`);
+  }
+
+  const raw = await res.json();
+  const basicMovies = (Array.isArray(raw) ? raw : []).map(normalizeMovie);
+
+  const enriched = await Promise.all(
+    basicMovies.map(async (movie) => {
+      const missing =
+        !movie.overview ||
+        !movie.poster ||
+        movie.rating == null ||
+        !movie.genres.length;
+      if (!missing) return movie;
+      try {
+        const details = await fetchMovieDetails(movie.id);
+        return {
+          ...movie,
+          ...details,
+          genres: details.genres.length ? details.genres : movie.genres,
+        };
+      } catch {
         return movie;
       }
     }),

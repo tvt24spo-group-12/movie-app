@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { getNowPlaying } from "../api/movies";
+import { getTrending } from "../api/movies";
 import MovieCarousel from "./MovieCarousel";
 import "../style/intheaters.css";
 import { useSidebar } from "../context/sidebar";
 
-export default function InTheaters() {
+export default function TrendingCarousel() {
   const { sidebar } = useSidebar();
   const [movies, setMovies] = useState([]);
 
@@ -12,8 +12,8 @@ export default function InTheaters() {
   useEffect(() => {
     async function fetchNowPlaying() {
       try {
-        const nowPlaying = await getNowPlaying();
-        setMovies(nowPlaying);
+        const trending = await getTrending();
+        setMovies(trending);
       } catch (err) {
         console.error("Failed to fetch now playing movies:", err);
       }
@@ -23,7 +23,7 @@ export default function InTheaters() {
 
   return (
     <>
-      <MovieCarousel sidebar={sidebar} caption="Now Playing" movies={movies} />
+      <MovieCarousel sidebar={sidebar} caption="Trending" movies={movies} />
     </>
   );
 }

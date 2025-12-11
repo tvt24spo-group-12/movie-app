@@ -5,6 +5,7 @@ function MovieReviewCard({ review }) {
     updated_at,
     score,
     username,
+    user_id,
     review: reviewText,
   } = review;
 
@@ -12,7 +13,9 @@ function MovieReviewCard({ review }) {
     <article className="review-card">
       <div className="review-card__header">
         <div className="review-card__user-info">
-          <h4 className="review-card__username">{username}</h4>
+          <h4 className="review-card__username">
+            <a href={`/reviews/${user_id}`}>{username}</a>
+          </h4>
           <div className="review-card__meta">
             {created_at && (
               <span className="review-card__date">

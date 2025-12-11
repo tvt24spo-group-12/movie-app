@@ -2,6 +2,9 @@ import { Router } from "express";
 import {
   getMovies,
   getTMDBDetailsById,
+  getPopular,
+  getTrending,
+  getUpcoming,
 } from "../controllers/movie_controller.js";
 import { searchMoviesByName } from "../controllers/search_controller.js";
 import { getNowPlaying } from "../controllers/nowPlaying_controller.js";
@@ -19,6 +22,9 @@ movieRouter.get("/", getMovies);
 movieRouter.get("/details/:id", getTMDBDetailsById);
 movieRouter.get("/search/:name?", searchMoviesByName);
 movieRouter.get("/nowplaying", getNowPlaying);
+movieRouter.get("/popular", getPopular);
+movieRouter.get("/trending", getTrending);
+movieRouter.get("/upcoming", getUpcoming);
 
 movieRouter.post("/:movieId/rating", authenticateToken, addOrUpdateRating);
 movieRouter.get("/:movieId/rating", authenticateToken, getUserRatingForMovie);
