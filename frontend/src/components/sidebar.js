@@ -12,7 +12,11 @@ import {uploadProfilePicture, getProfilePicture} from '../api/profilepicture'
 export default function SideBar({sidebar,setsidebar}){
   const url = 'http://localhost:3001'
   const { navigate } = useRouter()
-    const[sideBarOpen, setSideBarOpen] = useState(true)
+  const [sideBarOpen, setSideBarOpen] = useState(() => {
+    // Read from localStorage, default to true
+    const saved = localStorage.getItem("sideBarOpen");
+    return saved !== null ? JSON.parse(saved) : true;
+  });
     const[loginform, setLoginOpenForm] = useState(false)
     const[registerPage, setRegisterPage] = useState(false)
     const[popupOpen, setPopupOpen] = useState(false)
@@ -93,6 +97,10 @@ useEffect(()=>{
 
 }
 },[user])
+
+useEffect(() => {
+  localStorage.setItem("sideBarOpen", JSON.stringify(sideBarOpen));
+}, [sideBarOpen]);
     const closeSidebar = () =>{
          
          if(sideBarOpen === true){
