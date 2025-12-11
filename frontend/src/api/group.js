@@ -72,3 +72,34 @@ export async function deleteGroup(groupId, authFetch) {
   if (!res.ok) throw new Error("Delete failed");
   return res.json();
 }
+export async function updateDescription(groupId, description, authFetch) {
+  const res = await authFetch(`${API}/group/${groupId}/description`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ description })
+  });
+
+  if (!res.ok) throw new Error("Description update failed");
+  return res.json();
+}
+export async function updateSettings(groupId, settings, authFetch) {
+  const res = await authFetch(`${API}/group/${groupId}/settings`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(settings)
+  });
+
+  if (!res.ok) throw new Error("Settings update failed");
+  return res.json();
+}
+export async function deleteSuggestedMovie(groupId, suggestionId, authFetch) {
+  const res = await authFetch(`/group/${groupId}/suggested/${suggestionId}`, {
+    method: "DELETE"
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to delete suggestion");
+  }
+
+  return res.json();
+}

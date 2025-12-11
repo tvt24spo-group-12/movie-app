@@ -22,10 +22,17 @@
 
 .group-view {
   flex: 1;
-  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
+  background-color: "transparent";
   padding: 1rem;
+ 
+}
+
+.group-description {
+  margin-top: 6px;
+  font-size: 1rem;
+  opacity: 0.9;
 }
 
 @media (max-width: 1200px) {
@@ -63,6 +70,24 @@
   }
 }
 
+.group-banner {
+  padding: 20px;
+  width: 100%;
+  border-radius: var(--radius);
+  margin-bottom: 1rem;
+  
+}
+
+.group-banner-inner {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.suggested-box {
+  padding: 20px;
+  border-radius: var(--radius);
+  background-color:rgba(255, 255, 255, 0.2);
+}
 
 .create-group-box {
   background: var(--surface);
@@ -108,14 +133,19 @@
 .btn-danger:hover {
   filter: brightness(0.9);  
 }
-
+.member-row {
+  display: flex;
+  align-items: center;
+   gap: 10px;
+  padding: 4px 0;
+}
 .admin-badge {
+  margin-left: 8px;
+  padding: 2px 6px;
   background: var(--primary);
   color: white;
-  padding: 2px 6px;
-  border-radius: var(--radius);
-  font-size: 0.7rem;
-  margin-left: 8px;
+  border-radius: 4px;
+  font-size: 12px;
 }
 
 .admin-row {
@@ -143,9 +173,91 @@ group-details-toggle {
   padding: 0.3rem;
   padding-left: 0.5rem;
   border-radius: var(--radius);
-  transition: background 150ms ease;
 }
 
 .group-link:hover {
   background: var(--border);
 }
+.admin-edit-box {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.group-textarea {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 8px;
+  border-radius: 6px;
+  width: 100%;
+  min-height: 80px;
+  resize: vertical;
+}
+
+.admin-edit-box textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.admin-edit-box input[type="color"] {
+  width: 60px;
+  height: 40px;
+  border: none;
+  cursor: pointer;
+}
+.tmdb-results {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.tmdb-result-card {
+  padding: 8px;
+  border: 1px var(--border) solid;
+  border-radius: 6px;
+  width: 150px;
+  text-align: center;
+}
+.tmdb-result-card:hover {
+  transform: translateY(1%);
+}
+.tmdb-result-card .btn-success {
+  margin-top: 6px;
+
+}
+.tmdb-result-card img {
+  width: 100px;
+  border-radius: 4px;
+}
+.suggested-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.suggested-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--surface);
+  padding: 8px 12px;
+  border-radius: 6px;
+  color: var(--text);
+}
+
+.suggested-row button {
+  padding: 4px 10px;
+   transform: translateY(1%);
+}
+
+.suggested-box {
+  margin-bottom: 2rem;
+}
+
