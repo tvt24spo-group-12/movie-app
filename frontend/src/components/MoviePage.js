@@ -2,7 +2,7 @@ import MovieReviews from "./reviews/MovieReviews";
 import MovieReviewAdd from "./reviews/MovieReviewAdd";
 import { useEffect, useState } from "react";
 import { fetchMovieDetails } from "../api/movies";
-import { addFavorite } from "../api/favorites";
+import { handleFavorite, getFavorite } from "../api/favorites";
 import { useAuth } from "../context/login";
 
 function MoviePage({ movie_id }) {
@@ -21,6 +21,7 @@ function MoviePage({ movie_id }) {
   const [error, setError] = useState("");
   const [addReviewOpen, setAddReviewOpen] = useState(false);
   const [reviewsVersion, setReviewsVersion] = useState(0);
+  const [favorited, setFavorited] = useState(false);
 
   function openReviewForm() {
     if (!user) {
@@ -32,6 +33,15 @@ function MoviePage({ movie_id }) {
   function closeReviewForm(refresh = false) {
     setAddReviewOpen(false);
     if (refresh) setReviewsVersion((v) => v + 1);
+  }
+
+  async function onFavoriteClick() {
+    if (!user) {
+      alert("You must be logged in to add movies to favorites.");
+      return;
+    }
+    const newState = await handleFavorite(movie_id, authFetch);
+    setFavorited(newState);
   }
 
   useEffect(() => {
@@ -49,6 +59,10 @@ function MoviePage({ movie_id }) {
         const result = await fetchMovieDetails(movie_id);
 
         setMovie(result);
+
+        const favorite = await getFavorite(movie_id, authFetch);
+
+        if (Array.isArray(favorite) && favorite.length > 0) setFavorited(true);
         setStatus("success");
       } catch (err) {
         setError(err.message);
@@ -126,18 +140,8 @@ function MoviePage({ movie_id }) {
           Add/Edit review
         </button>
 
-        <button
-          type="button"
-          className="btn-primary"
-          onClick={() => {
-            if (!user) {
-              alert("You must be logged in to add movies to favorites.");
-              return;
-            }
-            addFavorite(movie.id, authFetch);
-          }}
-        >
-          Add to Favorites
+        <button type="button" className="btn-primary" onClick={onFavoriteClick}>
+          {favorited ? "Unfavorite" : "Favorite"}
         </button>
       </article>
       {addReviewOpen && (

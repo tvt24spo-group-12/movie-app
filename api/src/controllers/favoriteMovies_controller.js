@@ -1,14 +1,15 @@
 import {addFavoriteMovie, getAllFavoriteMovies, removeFavoriteMovie, getFavoriteMovieById} from "../models/favoriteMovie_model.js"
 import { saveMovie } from "../models/movie_model.js";
 import { getMovieDetailsByID } from "../models/tmdb_model.js";
-import { getByName } from "../models/movie_model.js";
+import { getById } from "../models/movie_model.js";
+
 const addFavorite = async (req, res) =>{
     try{
         const userId = req.user.user_id
         const movieId = parseInt(req.params.movieId, 10)
         const tmdbData = await getMovieDetailsByID(movieId);
         
-        if((await getByName(tmdbData.name)).length > 0){
+        if((await getById(movieId)).length > 0){
             console.log("now rawdata")
             const result = await addFavoriteMovie(userId, movieId)    
             res.json(result);
@@ -33,8 +34,19 @@ const addFavorite = async (req, res) =>{
               };
 
             await saveMovie(movieToSave);
-            const result = await addFavoriteMovie(userId, movieId)    
-            res.json({insertId: result.insertId, });
+
+            const existing = await getFavoriteMovieById(userId, movieId); // expected: [] or rows
+
+            if (existing && existing.length > 0) {
+              // Already favorited do not insert again
+              return res.status(409).json({
+                message: "Movie already in favorites",
+                favoriteId: existing[0].id ?? null,
+              });
+            }
+
+            // Not existing — add favorite
+            const result = await addFavoriteMovie(userId, movieId);
 
         }    
     }catch(error){

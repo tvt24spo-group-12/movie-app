@@ -3,7 +3,6 @@ import SearchBar from "./SearchBar";
 import MovieCard from "./MovieCard";
 import { searchMovies } from "../api/movies";
 import { useAuth } from "../context/login";
-import { addFavorite } from "../api/favorites";
 
 
 function MovieList() {
@@ -32,20 +31,6 @@ function useDebounce(value, delay) {
   
   return debouncedValue;
 }
-
-const handleAddFavorite = async (id) => {
-  if (!user) {
-    alert("Kirjaudu sisään lisätäksesi suosikkeihin");
-    return;
-  }
-
-  try {
-    await addFavorite(id, authFetch);
-    alert("Lisätty suosikkeihin");
-  } catch {
-    alert("Ei voitu lisätä");
-  }
-};
     
     // Filter
     const [filters, setFilters] = useState({
@@ -207,7 +192,6 @@ const handleAddFavorite = async (id) => {
             <MovieCard
               key={movie.id}
               movie={movie}
-              onAddFavorite={handleAddFavorite}
             />
           ))}
       </section>
