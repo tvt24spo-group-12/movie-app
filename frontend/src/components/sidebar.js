@@ -1,201 +1,169 @@
-import { useEffect, useState } from "react";
-import RegisterPage from "../components/registerpage";
-import LoginPage from "../components/loginpage";
-import SettingsPage from "../components/SettingsPage";
-import "../style/sidebar.css";
-import "../style/buttonStyle.css";
-import { useAuth } from "../context/login";
-import { uploadProfilePicture, getProfilePicture } from "../api/profilepicture";
+import { useEffect, useState } from 'react'
+import RegisterPage from '../components/registerpage'
+import LoginPage from '../components/loginpage'
+import '../style/sidebar.css'
+import '../style/buttonStyle.css'
+import { useAuth } from '../context/login'
+import {uploadProfilePicture, getProfilePicture} from '../api/profilepicture'
 
-export default function SideBar({ sidebar, setsidebar }) {
-  const url = "http://localhost:3001";
-  const [sideBarOpen, setSideBarOpen] = useState(true);
-  const [loginform, setLoginOpenForm] = useState(false);
-  const [registerPage, setRegisterPage] = useState(false);
-  const [popupOpen, setPopupOpen] = useState(false);
-  const { user, logout, loading, authFetch } = useAuth();
-  const [settingsPage, setSettingsPage] = useState(false);
-  const [picture, setpicture] = useState(null);
-  const [preview, setPreview] = useState("");
-  const [loggedIn, setLoggedIn] = useState(false);
 
-  useEffect(() => {
-    if (picture !== null) {
-      const pfpUrl = URL.createObjectURL(picture[0]);
 
-      setPreview(pfpUrl);
-      saveImage(picture);
-    }
-  }, [picture]);
+export default function SideBar({sidebar,setsidebar}){
+  const url = 'http://localhost:3001'
+    const[sideBarOpen, setSideBarOpen] = useState(true)
+    const[loginform, setLoginOpenForm] = useState(false)
+    const[registerPage, setRegisterPage] = useState(false)
+    const[popupOpen, setPopupOpen] = useState(false)
+    const{user, logout, loading, authFetch} = useAuth();
+  const[picture, setpicture] = useState(null)
+  const[preview, setPreview] = useState('')
+const[loggedIn,setLoggedIn] = useState(false)
 
-  function onCancel() {
-    setSettingsPage(false);
+
+useEffect(()=>{
+  if(picture !== null){
+    const pfpUrl = URL.createObjectURL(picture[0]);
+
+    setPreview(pfpUrl)
+    saveImage(picture);
   }
+ 
+  
+},[picture])
 
-  const resizeImg = (file, maxW, maxH) => {
-    return new Promise((resolve) => {
-      const img = new Image();
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        img.src = e.target.result;
-      };
-      img.onload = () => {
-        let width = img.width,
-          height = img.height;
 
-        if (width > maxW) {
-          height = (maxW / width) * height;
-          width = maxW;
-        }
-        if (height > maxH) {
-          width = (maxH / height) * width;
-          height = maxH;
-        }
-        const canvas = document.createElement("canvas");
-        canvas.width = width;
-        canvas.height = height;
+const resizeImg = (file , maxW, maxH) => {
+  return new Promise((resolve)=>{
+    const img = new Image();
+    const reader = new FileReader();
+    reader.onload = e =>{
+      img.src = e.target.result;
+    }
+    img.onload = () => {
+      let width = img.width,
+      height = img.height
 
-        const ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0, width, height);
+      if(width > maxW){
+       height = (maxW / width) * height;
+        width = maxW;
+      }
+      if (height > maxH) {
+        width = (maxH / height) * width;
+        height = maxH;
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
 
-        canvas.toBlob((blob) => resolve(blob), file.type, 0.9);
-      };
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+
+      canvas.toBlob(
+        blob => resolve(blob),
+        file.type,
+        0.9 
+      );
+    }
       reader.readAsDataURL(file);
-    });
-  };
-  const saveImage = async (picture) => {
-    const file = picture[0];
-    const resizedImg = await resizeImg(file, 1024, 768);
-    const resizedfile = new File([resizedImg], file.name, { type: file.type });
-    console.log("tet : ", resizedfile);
-    const response = await uploadProfilePicture(resizedfile, user, authFetch);
-    if (response === 404) {
-      alert("we dont support this file");
-      location.reload(false);
-    }
-  };
-  useEffect(() => {
-    if (!loggedIn && user !== null) {
-      getProfilePicture(user, authFetch).then((res) => {
-        const imgurl = url + res;
-        console.log(imgurl);
-        document.getElementById("ProfilePicture").src = "" + imgurl;
-      });
-    }
-  }, [loggedIn, user]);
-  const closeSidebar = () => {
-    if (sideBarOpen === true) {
-      setSideBarOpen(false);
-      setsidebar(false);
-    }
-    if (sideBarOpen === false) {
-      setSideBarOpen(true);
-      setsidebar(true);
-    }
-  };
-  if (loading) return null;
-  return (
-    <div>
-      <div
-        id="sideBar"
-        className={sideBarOpen === true ? "sidebarContainer" : "sideBarClosed"}
-      >
-        <button
-          onClick={closeSidebar}
-          id="closeSidebar"
-          className="btn-primary closeSideBar"
-        >
-          {sideBarOpen ? "<" : ">"}
-        </button>
-        <div className="buttonContainer">
-          {user && (
-            <>
-              <img
-                id="ProfilePicture"
-                onClick={() => {
-                  document.getElementById("input").click();
-                }}
-                className="profilePicture"
-                alt="profilepicture"
-                src={preview}
-              ></img>
-              <form className="imageForm" onSubmit={saveImage}>
-                <input
-                  id="input"
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => setpicture(e.target.files)}
-                ></input>
-              </form>
-
-              <p>{user.username}</p>
-              <button
-                onClick={() => {
-                  setLoggedIn(false);
-                  logout();
-                }}
-                className="btn-primary Btn"
-              >
-                Log out
-              </button>
-
-              <button
-                onClick={() => {
-                  setSettingsPage(true);
-                }}
-                className="btn-primary Btn"
-              >
-                set
-              </button>
-            </>
-          )}
-          {!loginform && !registerPage && !user && (
-            <>
-              <button
-                onClick={() => {
-                  setLoginOpenForm(true);
-                  setPopupOpen(true);
-                }}
-                className="btn-primary Btn"
-              >
-                Login
-              </button>
-
-              <button
-                onClick={() => {
-                  setPopupOpen(true);
-                  setLoginOpenForm(false);
-                  setRegisterPage(true);
-                }}
-                className="btn-primary Btn"
-              >
-                Register
-              </button>
-            </>
-          )}
-        </div>
-      </div>
-
-      {popupOpen && (
-        <>
-          {!loginform && registerPage && (
-            <>
-              <RegisterPage />
-            </>
-          )}
-          {loginform && !registerPage && (
-            <>
-              <LoginPage loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
-            </>
-          )}
-        </>
-      )}
-      {settingsPage && (
-        <SettingsPage
-          isOpen={settingsPage}
-          onClose={() => setSettingsPage(false)}
-        />
-      )}
-    </div>
-  );
+  })
 }
+const saveImage = async(picture) => 
+  {
+    const file = picture[0]
+    const resizedImg = await resizeImg(file, 1024, 768)
+    const resizedfile = new File([resizedImg], file.name,{type: file.type})
+    console.log("tet : ",resizedfile);
+    const response = await uploadProfilePicture(resizedfile, user, authFetch);
+    if(response === 404){
+      alert("we dont support this file");
+      location.reload(false)
+    }
+    }
+useEffect(()=>{
+
+  if(!loggedIn && user !== null)
+  {
+ getProfilePicture(user, authFetch).then((res) =>  {
+  
+    const imgurl = url+res
+    console.log(imgurl)
+    document.getElementById('ProfilePicture').src=""+imgurl
+})
+
+}
+},[loggedIn, user])
+    const closeSidebar = () =>{
+         
+         if(sideBarOpen === true){
+            setSideBarOpen(false)
+            setsidebar(false)
+         }
+         if(sideBarOpen === false)
+         {
+             setSideBarOpen(true)
+             setsidebar(true)
+         }
+    }
+    if(loading) return null;
+    return(
+        <div >
+               
+         
+        <div id='sideBar' className={sideBarOpen === true ? "sidebarContainer" : "sideBarClosed"}>
+         <button onClick={closeSidebar} id="closeSidebar" className='btn-primary closeSideBar'>{sideBarOpen ? "<" : ">"}</button>
+            <div className='buttonContainer'>
+
+    {user &&(
+      <>
+        <img id='ProfilePicture' onClick={() => {document.getElementById('input').click()}} className='profilePicture' alt='profilepicture'src={preview}></img>
+        <form className='imageForm'onSubmit={saveImage}><input id='input' type='file' accept='image/*' onChange={e => setpicture(e.target.files)}></input>
+        
+        </form>
+        
+        <p>{user.username}</p>
+        <button onClick={()=>{ setLoggedIn(false);
+          logout()
+        }} 
+        className='btn-primary Btn'>Log out</button>
+      </>
+    )
+      
+    }
+    {!loginform && !registerPage && !user &&(
+      <><button onClick={() => { 
+        setLoginOpenForm(true)
+        setPopupOpen(true)
+        }} className="btn-primary Btn">Login</button>
+
+      <button onClick={()=>{
+        setPopupOpen(true)
+        setLoginOpenForm(false)
+        setRegisterPage(true)}}
+        className="btn-primary Btn">Register</button>
+      </>
+
+    )}
+    
+     </div>
+        </div>
+      {popupOpen &&
+    
+         
+    <>
+ {!loginform && registerPage && (
+        <>
+        <RegisterPage/>
+        </>
+    )} 
+    {loginform && !registerPage && 
+    (    
+        <>
+        <LoginPage loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
+     </>
+    )}
+    </>
+    }
+        </div>
+    )
+}
+
