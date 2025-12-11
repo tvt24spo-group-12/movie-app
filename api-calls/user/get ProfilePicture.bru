@@ -1,16 +1,11 @@
 meta {
-  name: profilePicture
+  name: get profilePicture
   type: http
   seq: 1
 }
 
-post {
-  url: http://localhost:3001/user/profilePicture/:userID
-  body: json
-  
-}
 get{
-    url: http://localhost:3001/user/profilePicture/:userID
+    url: http://localhost:3001/user/profilePicture/:userId
   body: none
   
 }
@@ -21,10 +16,7 @@ headers {
   Authorization: Bearer {{token}}
   Content-Type: application/json
 }
-body:json 
-  {
-   "path" : "test.png"
-}
+
 settings {
   encodeUrl: true
   timeout: 0

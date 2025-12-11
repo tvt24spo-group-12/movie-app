@@ -1,25 +1,16 @@
 meta {
-  name: favoriteMovies
+  name: get favoriteMovies by id
   type: http
   seq: 1
 }
 
-post {
-  url: http://localhost:3001/user/favoriteMovies/:movieId
-}
-get{
-    url: http://localhost:3001/user/favoriteMovies
-}
 get{
     url: http://localhost:3001/user/favoriteMovies/:movieId
 }
 
-delete{
-url: http://localhost:3001/user/favoriteMovies/:movieId
-}
 
 params:path {
-  userId: 1
+  Movie_id : 550
 }
 
 headers {

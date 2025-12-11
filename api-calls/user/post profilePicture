@@ -1,0 +1,27 @@
+meta {
+  name: post profilePicture
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:3001/user/profilePicture/:userId
+  body: json
+  
+}
+
+params:path {
+  userId: 1
+}
+headers {
+  Authorization: Bearer {{token}}
+  Content-Type: application/json
+}
+body:json 
+  {
+   "path" : "test.png"
+}
+settings {
+  encodeUrl: true
+  timeout: 0
+}
