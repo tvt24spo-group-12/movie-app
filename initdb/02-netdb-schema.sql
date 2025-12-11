@@ -23,7 +23,6 @@ BEGIN
 	END IF;
 END$$;
 
-
 CREATE TABLE IF NOT EXISTS public.favourite_movies
 (
     favorite_id serial NOT NULL,
@@ -60,6 +59,8 @@ CREATE TABLE IF NOT EXISTS public.groups
     group_name character varying(255)[] COLLATE pg_catalog."default" NOT NULL,
     owner_id integer NOT NULL,
     user_amount integer,
+    settings json,
+    description text,
     CONSTRAINT "Groups_pkey" PRIMARY KEY (group_id)
 );
 
