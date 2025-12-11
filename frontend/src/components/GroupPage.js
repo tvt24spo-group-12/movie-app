@@ -433,7 +433,6 @@ async function handleDeleteGroup() {
       )}
 
       {/* DETAILS TOGGLE */}
-
       <h2
         className="group-details-toggle"
         onClick={() => {
@@ -572,33 +571,35 @@ async function handleDeleteGroup() {
           )}
 
           {/* SUGGESTED LIST */}
-
+      {isAdmin(selectedGroup) && (
           <h3>Suggested movies</h3>
-
+          )}
           {suggested.length === 0 && <p>No suggestions yet.</p>}
-
+        {isAdmin(selectedGroup) && (
           <div className="suggested-list">
             {suggested.map(movie => (
               <div key={movie.id} className="suggested-list-row">
                 <span className="suggested-title">{movie.title}</span>
 
-                {isAdmin(selectedGroup) && (
+               
                   <button
                     className="btn-danger"
                     onClick={() => handleRemoveSuggestion(movie.id)}
                   >
                     Remove
                   </button>
-                )}
-              </div>
+               
+              </div> 
             ))}
           </div>
+          )}
 
           {/* TMDB SEARCH */}
 
-          {isAdmin(selectedGroup) && (
-            <div className="tmdb-search-box">
-              <h4>Search for movies</h4>
+          {(isAdmin(selectedGroup) || isMemberOfGroup(selectedGroup, members, currentUserId)) && (
+          <div className="tmdb-search-box">
+              <h3>Search for movies</h3>
+              <label>Added movies will be shown on group page</label>
 
               <SearchBar
                 value={tmdbSearch}
