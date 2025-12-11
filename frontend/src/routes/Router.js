@@ -1,14 +1,14 @@
-import { useRouter } from "./useRouter";
+import { useRouter } from "./RouterContext";
 import { routes, defaultRoute } from "./routes";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 
 export default function Router() {
   const { currentPath, navigate } = useRouter();
 
   // Extract route params (/movie/:id -> { id: "123" })
   const extractParams = (routePath, actualPath) => {
-    const routeParts = routePath.split("/");
-    const actualParts = actualPath.split("/");
+    const routeParts = routePath.split("/").filter(Boolean);
+    const actualParts = actualPath.split("/").filter(Boolean);
     const params = {};
 
     if (routeParts.length !== actualParts.length) {
@@ -28,34 +28,47 @@ export default function Router() {
     return params;
   };
 
-  // Find matching route
-  const findRoute = () => {
+  // Find matching route - improved logic
+  const findRoute = (path) => {
+    // Special case for root path
+    if (path === "/") {
+      const rootRoute = routes.find(r => r.path === "/");
+      if (rootRoute) {
+        return { route: rootRoute, params: {} };
+      }
+    }
+
     // Try exact matches first
     for (const route of routes) {
-      if (route.exact && route.path === currentPath) {
+      if (route.exact && route.path === path) {
         return { route, params: {} };
       }
     }
 
     // Try parameterized routes
     for (const route of routes) {
-      const params = extractParams(route.path, currentPath);
+      const params = extractParams(route.path, path);
       if (params !== null) {
         return { route, params };
       }
     }
 
-    // Try non-exact matches
+    // Try non-exact matches (but exclude root path from prefix matching)
     for (const route of routes) {
-      if (!route.exact && currentPath.startsWith(route.path)) {
-        return { route, params: {} };
+      if (!route.exact && route.path !== "/" && path.startsWith(route.path)) {
+        // Make sure it's a real route match, not a false prefix
+        const nextChar = path[route.path.length];
+        if (!nextChar || nextChar === "/") {
+          return { route, params: {} };
+        }
       }
     }
 
     return null;
   };
 
-  const match = findRoute();
+  // Use useMemo to ensure match is recalculated when currentPath changes
+  const match = useMemo(() => findRoute(currentPath), [currentPath]);
 
   // Handle 404 redirect to default route
   useEffect(() => {
@@ -69,7 +82,7 @@ export default function Router() {
     const defaultMatch = routes.find(r => r.path === defaultRoute);
     if (defaultMatch) {
       const Component = defaultMatch.component;
-      return <Component {...(defaultMatch.props || {})} />;
+      return <Component key={currentPath} {...(defaultMatch.props || {})} />;
     }
     return <div>404 - Page not found</div>;
   }
@@ -92,6 +105,6 @@ export default function Router() {
     Object.assign(componentProps, params);
   }
 
-  return <Component {...componentProps} />;
+  return <Component key={currentPath} {...componentProps} />;
 }
 

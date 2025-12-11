@@ -1,4 +1,4 @@
-// näytä elokuva-kartta posterin, metatietojen ja äänen tiedon perusteella
+// Review card for displaying individual movie reviews
 function MovieReviewCard({ review }) {
   const {
     created_at,
@@ -9,21 +9,28 @@ function MovieReviewCard({ review }) {
   } = review;
 
   return (
-    <article className="movie-card-min">
-      <div className="movie-card__content">
-        <div className="movie-card__meta">
-          {created_at && (
-            <span>{new Date(created_at).toLocaleDateString("fi-FI")} | </span>
-          )}
-          {score != null && <span>⭐ {Number(score).toFixed(1)}</span>}
+    <article className="review-card">
+      <div className="review-card__header">
+        <div className="review-card__user-info">
+          <h4 className="review-card__username">{username}</h4>
+          <div className="review-card__meta">
+            {created_at && (
+              <span className="review-card__date">
+                {new Date(created_at).toLocaleDateString("fi-FI")}
+              </span>
+            )}
+            {score != null && (
+              <span className="review-card__rating">
+                ⭐ {Number(score).toFixed(1)}
+              </span>
+            )}
+          </div>
         </div>
-
-        <h3 className="movie-card__title">{username}</h3>
-
-        <p className="movie-card__overview">
-          {reviewText || "No review text for this review."}
-        </p>
       </div>
+
+      <p className="review-card__text">
+        {reviewText || "No review text for this review."}
+      </p>
     </article>
   );
 }

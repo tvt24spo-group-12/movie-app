@@ -175,7 +175,18 @@ z-index: 5;
 }
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
+@media (max-width: 1200px) {
+    .sidebarContainer,
+    .sideBarClosed {
+        width: 220px;
+    }
+    
+    .sideBarClosed {
+        left: -220px;
+    }
+}
+
+@media (max-width: 992px) {
     .sidebarContainer,
     .sideBarClosed {
         width: 200px;
@@ -183,6 +194,18 @@ z-index: 5;
     
     .sideBarClosed {
         left: -200px;
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebarContainer,
+    .sideBarClosed {
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    .sideBarClosed {
+        left: -100%;
     }
     
     .placeHolder,
