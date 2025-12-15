@@ -147,7 +147,13 @@ export async function searchMoviesByName(req, res, next) {
     console.log(tmdbMovies);
 
     // Merge DB + TMDb results
-    const merged = [...dbMovies, ...tmdbMovies];
+    const merged = [
+      ...dbMovies,
+      ...tmdbMovies.filter(
+        (tmdbMovie) =>
+          !dbMovies.some((dbMovie) => dbMovie.movie_id === tmdbMovie.movie_id),
+      ),
+    ];
 
     // Apply any remaining filters
     const filtered = applyFilters(merged);

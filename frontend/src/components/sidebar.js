@@ -13,7 +13,11 @@ import SettingsPage from './SettingsPage'
 export default function SideBar({sidebar,setsidebar}){
   const url = 'http://localhost:3001'
   const { navigate } = useRouter()
-    const[sideBarOpen, setSideBarOpen] = useState(true)
+  const [sideBarOpen, setSideBarOpen] = useState(() => {
+    // Read from localStorage, default to true
+    const saved = localStorage.getItem("sideBarOpen");
+    return saved !== null ? JSON.parse(saved) : true;
+  });
     const[loginform, setLoginOpenForm] = useState(false)
     const[registerPage, setRegisterPage] = useState(false)
     const[popupOpen, setPopupOpen] = useState(false)
@@ -95,6 +99,10 @@ useEffect(()=>{
 
 }
 },[user])
+
+useEffect(() => {
+  localStorage.setItem("sideBarOpen", JSON.stringify(sideBarOpen));
+}, [sideBarOpen]);
     const closeSidebar = () =>{
          
          if(sideBarOpen === true){
@@ -107,6 +115,12 @@ useEffect(()=>{
              setsidebar(true)
          }
     }
+
+  //sulkee navin jos on mobiilimuotoilu, niin ei tarvi avata ja sulkea sivua vaihtaessa
+  function handleNav(path) {
+    navigate(path);
+    if (window.innerWidth < 768) closeSidebar();
+  }
     if(loading) return null;
     return(
         <div >
@@ -126,6 +140,11 @@ useEffect(()=>{
         <p>{user.username}</p>
         
         <nav className='navigationLinks'>
+          <button onClick={() => handleNav('/')} className='btn-primary Btn'>Home</button>
+          <button onClick={() => handleNav('/movies')} className='btn-primary Btn'>Movies</button>
+          <button onClick={() => handleNav('/groups')} className='btn-primary Btn'>Groups</button>
+          <button onClick={() => handleNav('/reviews')} className='btn-primary Btn'>My Reviews</button>
+          <button onClick={() => handleNav('/favorites')} className='btn-primary Btn'>Favorites</button>
           <button onClick={() => navigate('/')} className='btn-primary Btn'>Home</button>
           <button onClick={() => navigate('/movies')} className='btn-primary Btn'>Movies</button>
           <button onClick={() => navigate('/groups')} className='btn-primary Btn'>Groups</button>
