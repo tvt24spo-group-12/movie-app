@@ -6,6 +6,7 @@ import {
   refreshAccessToken,
   logout,
   getUserInfoById,
+  changePassword
 } from "../controllers/user_controller.js";
 import { authenticateToken } from "../middleware/auth.js";
 import {
@@ -30,6 +31,7 @@ userRouter.post("/signin", login);
 userRouter.delete("/delete/:user_id", authenticateToken, deleteUserAccount);
 userRouter.post("/refresh", refreshAccessToken);
 userRouter.post("/logout", logout);
+userRouter.post("/changePassword", authenticateToken, changePassword);
 
 userRouter.delete("/delete/:user_id", deleteUserAccount);
 
