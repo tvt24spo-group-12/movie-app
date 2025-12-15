@@ -2,7 +2,8 @@ import MovieList from "../components/MovieList";
 import GroupPage from "../components/GroupPage";
 import UserMovieReviews from "../components/reviews/UserMovieReviews";
 import MoviePage from "../components/MoviePage";
-import InTheaters from "../components/inTheaters";
+import HomePage from "../components/HomePage";
+import FavoritesPage from "../components/FavoritesPage";
 // import LoginPage from "../components/loginpage";
 // import RegisterPage from "../components/registerpage";
 // import DeleteUser from "../components/DeleteUser";
@@ -10,7 +11,7 @@ import InTheaters from "../components/inTheaters";
 export const routes = [
   {
     path: "/",
-    component: InTheaters,
+    component: HomePage,
     exact: true,
   },
   {
@@ -27,6 +28,10 @@ export const routes = [
   {
     path: "/groups",
     component: GroupPage,
+  },
+  {
+    path: "/favorites",
+    component: FavoritesPage,
   },
   {
     path: "/reviews",
@@ -56,4 +61,3 @@ export const routes = [
 
 // Default route (404 or home fallback)
 export const defaultRoute = "/";
-

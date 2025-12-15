@@ -5,6 +5,7 @@ import { useAuth } from "./context/login";
 import SideBar from "./components/sidebar";
 import Router from "./routes/Router";
 import { SidebarProvider, useSidebar } from "./context/sidebar";
+import { RouterProvider } from "./routes/RouterContext";
 
 function AppContent() {
   const { sidebar, setSidebar } = useSidebar();
@@ -19,9 +20,11 @@ function AppContent() {
 
 function App() {
   return (
-    <SidebarProvider>
-      <AppContent />
-    </SidebarProvider>
+    <RouterProvider>
+      <SidebarProvider>
+        <AppContent />
+      </SidebarProvider>
+    </RouterProvider>
   );
 }
 

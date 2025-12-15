@@ -11,6 +11,10 @@ import {
   viewPendingRequests,
 } from "../controllers/group_controller.js";
 import { authenticateToken } from "../middleware/auth.js";
+import {
+  setGroupDescription,
+  setGroupSettings
+} from "../controllers/group_controller.js";
 
 const groupRouter = Router();
 
@@ -23,5 +27,8 @@ groupRouter.post("/:id/join/:userId", authenticateToken, handleJoinRequest);
 groupRouter.post("/:id/kick/:userId", authenticateToken, kickMember);
 groupRouter.post("/:id/leave", authenticateToken, leaveGroup);
 groupRouter.get("/:id/requests", authenticateToken, viewPendingRequests);
+
+groupRouter.put("/:id/description", authenticateToken, setGroupDescription);
+groupRouter.put("/:id/settings", authenticateToken, setGroupSettings);
 
 export default groupRouter;

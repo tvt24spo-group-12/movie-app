@@ -71,7 +71,7 @@ export default function FavoritesPage() {
       console.log("Favorites movies:", data);
     } catch (err) {
       console.error(err);
-      setError("Suosikkien haku epäonnistui.");
+      setError("Failed to load favorites.");
       setMovies([]);
     } finally {
       setLoading(false);
@@ -87,7 +87,7 @@ export default function FavoritesPage() {
   }, [user]);
 
   return (
-    <div className="favorites-container">
+    <div className="favorites-page">
       <div className="favorites-header">
         <h2>Your Favorites</h2>
         <button className="btn-primary" onClick={loadFavorites}>
@@ -95,48 +95,50 @@ export default function FavoritesPage() {
         </button>
       </div>
 
-      {!user && <p>log in inorder to see favourites.</p>}
-      {loading && <p>Loading...</p>}
-      {error && <p>{error}</p>}
+      {!user && <p className="favorites-message">Log in to view favorites.</p>}
+      {loading && <p className="favorites-message">Loading...</p>}
+      {error && <p className="favorites-error">{error}</p>}
 
-      {!loading && user && movies.length === 0 && <p>No favorites</p>}
+      {!loading && user && movies.length === 0 && <p className="favorites-message">No favorites yet.</p>}
 
-      <div className="favorites-grid">
-        {movies.map((movie) => {
-          const id = movie.movie_id || movie.id;
+      <div className="favorites-container">
+        <div className="favorites-grid">
+          {movies.map((movie) => {
+            const id = movie.movie_id || movie.id;
 
-          return (
-            <div key={movie.favorite_id || id} className="favorite-wrapper">
-              <MovieCard
-                movie={{
-                  id,
-                  title: movie.title || movie.original_title,
-                  overview: movie.overview,
-                  poster:
-                    movie.poster ||
-                    (movie.poster_path
-                      ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-                      : null),
-                  rating: movie.vote_average || movie.rating,
-                  votes: movie.vote_count || movie.votes,
-                  releaseYear: movie.release_date
-                    ? new Date(movie.release_date).getFullYear()
-                    : null,
-                  runtime: movie.runtime,
-                  genres: movie.genres || [],
-                }}
-              />
+            return (
+              <div key={movie.favorite_id || id} className="favorite-card-wrapper">
+                <MovieCard
+                  movie={{
+                    id,
+                    title: movie.title || movie.original_title,
+                    overview: movie.overview,
+                    poster:
+                      movie.poster ||
+                      (movie.poster_path
+                        ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+                        : null),
+                    rating: movie.vote_average || movie.rating,
+                    votes: movie.vote_count || movie.votes,
+                    releaseYear: movie.release_date
+                      ? new Date(movie.release_date).getFullYear()
+                      : null,
+                    runtime: movie.runtime,
+                    genres: movie.genres || [],
+                  }}
+                />
 
-              <button
-                type="button"
-                className="btn-danger"
-                onClick={() => handleRemove(movie.movie_id)}
-              >
-                Remove
-              </button>
-            </div>
-          );
-        })}
+                <button
+                  type="button"
+                  className="btn-remove-favorite"
+                  onClick={() => handleRemove(movie.movie_id)}
+                >
+                  Remove
+                </button>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

@@ -9,7 +9,11 @@ import {
   getPendingMembers,
   updateMembershipStatus,
   removeMember,
-  isOwner,
+  isOwner
+} from "../models/group_model.js";
+import {
+  updateGroupDescription,
+  updateGroupSettings
 } from "../models/group_model.js";
 
 export async function listGroups(req, res, next) {
@@ -50,17 +54,32 @@ export async function viewGroup(req, res, next) {
     if (!group) return res.status(404).json({ error: "Group not found" });
 
     const member = await isMember(groupId, userId);
+    const owner = group.owner_id === userId;
+  
+    let members = [];
+    let pending = [];
 
-    if (!member && group.owner_id !== userId)
-      return res.status(403).json({ error: "Not allowed" });
+    if (member || owner) {
+      members = await getMembersByGroup(groupId);
+    }
 
-    const members = await getMembersByGroup(groupId);
-    res.json(members);
+    if (owner) {
+      pending = await getPendingMembers(groupId);
+    }
+    const suggestions = group.settings?.suggestedMovies || [];
+    res.json({
+      group,
+      members,
+      pending,
+      isMember: member,
+      isOwner: owner,
+      suggestions
+    });
+
   } catch (err) {
     next(err);
   }
 }
-
 export async function removeGroup(req, res, next) {
   try {
     const groupId = req.params.id;
@@ -180,6 +199,46 @@ export async function viewPendingRequests(req, res, next) {
       group_id: groupId,
       pending_requests: pending,
     });
+  } catch (err) {
+    next(err);
+  }
+}
+export async function setGroupDescription(req, res, next) {
+  try {
+    const groupId = req.params.id;
+    const ownerId = req.user?.user_id;
+    const { description } = req.body;
+
+    if (!ownerId) {
+      return res.status(401).json({ error: "Authentication required" });
+    }
+
+    const updated = await updateGroupDescription(groupId, ownerId, description);
+    if (!updated) {
+      return res.status(403).json({ error: "Only owner can update description" });
+    }
+
+    res.json({ success: true, description: updated.description });
+  } catch (err) {
+    next(err);
+  }
+}
+export async function setGroupSettings(req, res, next) {
+  try {
+    const groupId = req.params.id;
+    const ownerId = req.user?.user_id;
+    const settings = req.body; 
+
+    if (!ownerId) {
+      return res.status(401).json({ error: "Authentication required" });
+    }
+
+    const updated = await updateGroupSettings(groupId, ownerId, settings);
+    if (!updated) {
+      return res.status(403).json({ error: "Only owner can update settings" });
+    }
+
+    res.json({ success: true, settings: updated.settings });
   } catch (err) {
     next(err);
   }

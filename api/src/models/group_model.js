@@ -131,3 +131,23 @@ export async function isOwner(groupId, userId) {
   );
   return result.rowCount > 0;
 }
+export async function updateGroupDescription(groupId, ownerId, description) {
+  const sql = `
+    UPDATE groups
+    SET description = $1
+    WHERE group_id = $2 AND owner_id = $3
+    RETURNING *;
+  `;
+  const result = await pool.query(sql, [description, groupId, ownerId]);
+  return result.rows[0];
+}
+export async function updateGroupSettings(groupId, ownerId, settings) {
+  const sql = `
+    UPDATE groups
+    SET settings = $1
+    WHERE group_id = $2 AND owner_id = $3
+    RETURNING *;
+  `;
+  const result = await pool.query(sql, [settings, groupId, ownerId]);
+  return result.rows[0];
+}

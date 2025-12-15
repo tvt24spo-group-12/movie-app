@@ -1,0 +1,29 @@
+meta {
+  name: Update Group Description
+  type: http
+}
+
+put {
+  url: http://localhost:3001/group/:id/description
+  body: json
+  auth: bearer
+}
+
+params:path {
+  id: 5
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "description": "This is my updated group description."
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

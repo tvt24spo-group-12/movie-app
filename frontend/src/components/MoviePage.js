@@ -23,6 +23,10 @@ function MoviePage({ movie_id }) {
   const [reviewsVersion, setReviewsVersion] = useState(0);
 
   function openReviewForm() {
+    if (!user) {
+      alert("You must be logged in to add or edit a review.");
+      return;
+    }
     setAddReviewOpen(true);
   }
   function closeReviewForm(refresh = false) {
@@ -125,7 +129,13 @@ function MoviePage({ movie_id }) {
         <button
           type="button"
           className="btn-primary"
-          onClick={() => addFavorite(movie.id, authFetch)}
+          onClick={() => {
+            if (!user) {
+              alert("You must be logged in to add movies to favorites.");
+              return;
+            }
+            addFavorite(movie.id, authFetch);
+          }}
         >
           Add to Favorites
         </button>

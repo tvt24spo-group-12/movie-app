@@ -1,0 +1,32 @@
+meta {
+  name: Update Group Settings
+  type: http
+}
+
+put {
+  url: http://localhost:3001/group/:id/settings
+  body: json
+  auth: bearer
+}
+
+params:path {
+  id: 5
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "bannerColor": "#4A90E2",
+    "textColor": "#ffffff",
+    "showMembers": true,
+    "layout": "wide"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

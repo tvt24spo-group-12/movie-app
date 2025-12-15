@@ -98,7 +98,7 @@ export default function MovieReviews({ movie_id, own = false }) {
 
   const renderContent = () => {
     if (status === "loading") {
-      return <p>Loading your movie reviews...</p>;
+      return <p className="reviews-loading">Loading reviews...</p>;
     }
 
     if (status === "error") {
@@ -106,22 +106,22 @@ export default function MovieReviews({ movie_id, own = false }) {
     }
 
     if (reviews.length === 0 && own) {
-      return <p>You haven't posted any reviews yet.</p>;
+      return <p className="reviews-empty">You haven't posted any reviews yet.</p>;
     }
 
     if (reviews.length === 0 && !own) {
-      return <p>There aren't any public reviews yet.</p>;
+      return <p className="reviews-empty">There aren't any public reviews yet.</p>;
     }
 
     // Success: Map over reviews and render ReviewCard for each
     return (
       <>
-        <h1 className="page__title">
+        <h2 className="reviews-title">
           {(() => {
             if (own) return "Your review";
             return "Public reviews";
           })()}
-        </h1>
+        </h2>
 
         {!own && (
           <SearchBar
@@ -144,5 +144,5 @@ export default function MovieReviews({ movie_id, own = false }) {
 
   if (!show) return null;
 
-  return <div className="page">{renderContent()}</div>;
+  return <section className="reviews-section">{renderContent()}</section>;
 }

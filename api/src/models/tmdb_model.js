@@ -233,9 +233,152 @@ export async function fetchNowPlaying() {
       if (!detailRes.ok) return null;
       const detailData = await detailRes.json();
       return formatMovie(detailData);
-    })
+    }),
   );
 
   return detailedMovies.filter(Boolean);
 }
 
+export async function fetchPopular() {
+  const token = process.env.TMDB_ACCESS_TOKEN;
+
+  let allResults = [];
+  let page = 1;
+  let totalPages = 2;
+
+  //Fetchaa nyt kaikki sivut + hakee suomen elokuvateattereissa olevat elokuvat.
+  do {
+    const listUrl = `${TMDB_BASE_URL}/movie/popular?language=en-US&region=FI&page=${page}`;
+
+    const listRes = await fetch(listUrl, {
+      method: "GET",
+      headers: {
+        accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!listRes.ok) throw new Error("Failed to fetch");
+
+    const listData = await listRes.json();
+
+    allResults.push(...(listData.results || []));
+
+    page++;
+  } while (page <= totalPages);
+
+  const detailedMovies = await Promise.all(
+    allResults.map(async (movie) => {
+      //Hakee yksityiskohtaisemmat tiedot + credits
+      const detailUrl = `${TMDB_BASE_URL}/movie/${movie.id}?language=en-US&append_to_response=credits`;
+
+      const detailRes = await fetch(detailUrl, {
+        method: "GET",
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!detailRes.ok) return null;
+      const detailData = await detailRes.json();
+      return formatMovie(detailData);
+    }),
+  );
+
+  return detailedMovies.filter(Boolean);
+}
+
+export async function fetchTrending() {
+  const token = process.env.TMDB_ACCESS_TOKEN;
+
+  let allResults = [];
+
+  const listUrl = `${TMDB_BASE_URL}/trending/movie/week?language=en-US`;
+
+  const listRes = await fetch(listUrl, {
+    method: "GET",
+    headers: {
+      accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!listRes.ok) throw new Error("Failed to fetch");
+
+  const listData = await listRes.json();
+
+  allResults.push(...(listData.results || []));
+
+  const detailedMovies = await Promise.all(
+    allResults.map(async (movie) => {
+      //Hakee yksityiskohtaisemmat tiedot + credits
+      const detailUrl = `${TMDB_BASE_URL}/movie/${movie.id}?language=en-US&append_to_response=credits`;
+
+      const detailRes = await fetch(detailUrl, {
+        method: "GET",
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!detailRes.ok) return null;
+      const detailData = await detailRes.json();
+      return formatMovie(detailData);
+    }),
+  );
+
+  return detailedMovies.filter(Boolean);
+}
+
+export async function fetchUpcoming() {
+  const token = process.env.TMDB_ACCESS_TOKEN;
+
+  let allResults = [];
+  let page = 1;
+  let totalPages = 1;
+
+  //Fetchaa nyt kaikki sivut + hakee suomen elokuvateattereissa olevat elokuvat.
+  do {
+    const listUrl = `${TMDB_BASE_URL}/movie/upcoming?language=en-US&region=FI&page=${page}`;
+
+    const listRes = await fetch(listUrl, {
+      method: "GET",
+      headers: {
+        accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!listRes.ok) throw new Error("Failed to fetch");
+
+    const listData = await listRes.json();
+
+    totalPages = listData.total_pages;
+    allResults.push(...(listData.results || []));
+
+    page++;
+  } while (page <= totalPages);
+
+  const detailedMovies = await Promise.all(
+    allResults.map(async (movie) => {
+      //Hakee yksityiskohtaisemmat tiedot + credits
+      const detailUrl = `${TMDB_BASE_URL}/movie/${movie.id}?language=en-US&append_to_response=credits`;
+
+      const detailRes = await fetch(detailUrl, {
+        method: "GET",
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!detailRes.ok) return null;
+      const detailData = await detailRes.json();
+      return formatMovie(detailData);
+    }),
+  );
+
+  return detailedMovies.filter(Boolean);
+}
