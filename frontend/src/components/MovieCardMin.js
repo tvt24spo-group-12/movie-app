@@ -6,7 +6,7 @@ function MovieCardMin({ movie }) {
     <article className="movie-card-min">
       <div className="movie-card__poster">
         {poster ? (
-          <img src={poster} alt={`${title} poster`} />
+          <img src={poster} alt={`${title} poster`} loading="lazy" />
         ) : (
           // placeholder, kun ei ole posteriä
           <div className="movie-card__poster-placeholder">
