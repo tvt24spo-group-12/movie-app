@@ -145,11 +145,6 @@ useEffect(() => {
           <button onClick={() => handleNav('/groups')} className='btn-primary Btn'>Groups</button>
           <button onClick={() => handleNav('/reviews')} className='btn-primary Btn'>My Reviews</button>
           <button onClick={() => handleNav('/favorites')} className='btn-primary Btn'>Favorites</button>
-          <button onClick={() => navigate('/')} className='btn-primary Btn'>Home</button>
-          <button onClick={() => navigate('/movies')} className='btn-primary Btn'>Movies</button>
-          <button onClick={() => navigate('/groups')} className='btn-primary Btn'>Groups</button>
-          <button onClick={() => navigate('/reviews')} className='btn-primary Btn'>My Reviews</button>
-          <button onClick={() => navigate('/favorites')} className='btn-primary Btn'>Favorites</button>
           
           <br></br>
           <button onClick={() => setSettingsOpen(true)} className='btn-primary Btn'>Settings</button>
