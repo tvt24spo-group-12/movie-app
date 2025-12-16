@@ -11,7 +11,7 @@ import SettingsPage from './SettingsPage'
 
 
 export default function SideBar({sidebar,setsidebar}){
-  const url = 'http://localhost:3001'
+  const url = process.env.REACT_APP_FRONTEND_URL || 'http://localhost:3001'
   const { navigate } = useRouter()
   const [sideBarOpen, setSideBarOpen] = useState(() => {
     // Read from localStorage, default to true
@@ -39,7 +39,7 @@ useEffect(()=>{
 },[picture])
 
 
-const resizeImg = (file , maxW, maxH) => {
+const resizeImg = (file , maxW, maxH) => { //rajaa kuvaa ettei lataa turhan isoja kuvia
   return new Promise((resolve)=>{
     const img = new Image();
     const reader = new FileReader();
@@ -74,13 +74,13 @@ const resizeImg = (file , maxW, maxH) => {
       reader.readAsDataURL(file);
   })
 }
-const saveImage = async(picture) => 
+const saveImage = async(picture) => //tallentaa kuvan
   {
     const file = picture[0]
     const resizedImg = await resizeImg(file, 1024, 768)
-    const resizedfile = new File([resizedImg], file.name,{type: file.type})
-    console.log("tet : ",resizedfile);
-    const response = await uploadProfilePicture(resizedfile, user, authFetch);
+    const resizedfile = new File([resizedImg], file.name,{type: file.type}) //rajaa kuvan
+   
+    const response = await uploadProfilePicture(resizedfile, user, authFetch); //tallentaa kuvan kantaa jos kaikki menee oikein
     if(response === 404){
       alert("we dont support this file");
       location.reload(false)
@@ -90,10 +90,9 @@ useEffect(()=>{
 
   if(user && user !== null)
   {
- getProfilePicture(user, authFetch).then((res) =>  {
+ getProfilePicture(user, authFetch).then((res) =>  { //hakee kuvan jos on kannassa
   
     const imgurl = url+res
-    console.log(imgurl)
     document.getElementById('ProfilePicture').src=""+imgurl
 })
 

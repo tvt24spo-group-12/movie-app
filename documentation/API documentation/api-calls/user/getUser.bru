@@ -1,0 +1,20 @@
+meta {
+  name: getUser
+  type: http
+  seq: 6
+}
+
+get {
+  url: http://localhost:3001/user/:userId
+  body: none
+  auth: inherit
+}
+
+params:path {
+  userId: 1
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

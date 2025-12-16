@@ -7,14 +7,14 @@ const addFavorite = async (req, res) =>{
     try{
         const userId = req.user.user_id
         const movieId = parseInt(req.params.movieId, 10)
-        const tmdbData = await getMovieDetailsByID(movieId);
+        const tmdbData = await getMovieDetailsByID(movieId); //hakee tarvittavat tiedot elokuvasta
         
-        if((await getById(movieId)).length > 0){
-            console.log("now rawdata")
+        if((await getById(movieId)).length > 0){ //tarkistaa onko elokuva taulussa elokuvan tietoja
+           
             const result = await addFavoriteMovie(userId, movieId)    
             res.json(result);
-        }else{
-            console.log("rawdata")
+        }else{//jos ei ole. hakee sitten elokuvan tiedot ja tallentaa elokuva tauluun
+           
 
         const rawData = tmdbData.raw || tmdbData;
               const movieToSave = {
@@ -35,17 +35,17 @@ const addFavorite = async (req, res) =>{
 
             await saveMovie(movieToSave);
 
-            const existing = await getFavoriteMovieById(userId, movieId); // expected: [] or rows
+            const existing = await getFavoriteMovieById(userId, movieId); //hakee elokuvan favoritemovies taulusta movieid:n ja userid:n perusteellla
 
-            if (existing && existing.length > 0) {
-              // Already favorited do not insert again
+            if (existing && existing.length > 0) { // jos löytyy elokuva niin älä tallenna
+            
               return res.status(409).json({
                 message: "Movie already in favorites",
                 favoriteId: existing[0].id ?? null,
               });
             }
 
-            // Not existing — add favorite
+            // jos ei löydy tallentaa favorite movie tauluun elokuvan
             const result = await addFavoriteMovie(userId, movieId);
 
         }    
@@ -54,7 +54,7 @@ const addFavorite = async (req, res) =>{
     }
     
 }
-const getAllFavorite = async (req, res) =>{
+const getAllFavorite = async (req, res) =>{//hakee kaikki favoriteelokuvat käyttäjä on lisännyt
     try{
             const userId = req.user.user_id
             const result = await getAllFavoriteMovies(userId)    
@@ -65,7 +65,7 @@ const getAllFavorite = async (req, res) =>{
         }   
     }
 
-const removeFavorite = async (req, res) => {
+const removeFavorite = async (req, res) => {//poistaa käyttäjän valitseman favorite elokuvan
     try{
         const userId = req.user.user_id
         const movieId = parseInt(req.params.movieId, 10)
@@ -75,7 +75,7 @@ const removeFavorite = async (req, res) => {
         console.log(error)
     }
 }
-const getFavoriteById = async (req, res) =>{
+const getFavoriteById = async (req, res) =>{ //hakee favorite elokuvan user- ja movie_id:n perusteella
     try{
             const userId = req.user.user_id
             const movieId = parseInt(req.params.movieId, 10)

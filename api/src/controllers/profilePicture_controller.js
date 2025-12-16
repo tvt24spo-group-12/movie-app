@@ -21,7 +21,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 
-
 const uploadProfilePicture = async(req,res) => {
 
  const userId = parseInt(req.params.userId, 10)
@@ -45,10 +44,11 @@ const uploadProfilePicture = async(req,res) => {
             }
 
             const path = `/public/ProfilePictures/${req.file.filename}`
-            const res = await checkifExists(userId);
+           
+            const res = await checkifExists(userId); //tarkistaa onko käyttäjä tallentanu jo kuvaa
           
-            if(!res.toString().split(".png", ".jpg").includes(path.toString().split(".png", ".jpg"))){
-            await insertProfilePicture(userId, path)
+            if(!res.toString().split(".png", ".jpg").includes(path.toString().split(".png", ".jpg"))){ //tarkistaa onko palautettu res muuttuja kuvan path (.png tai .jpg)
+            await insertProfilePicture(userId, path) // jos ei löydy kuvaa tallentaa se kuvan kantaan
          
             return path;
             }

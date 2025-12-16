@@ -1,4 +1,4 @@
-const url = "http://localhost:3001/user";
+const url =`${process.env.REACT_APP_API_URL}/user`|| "http://localhost:3001/user";
 import { createContext, useContext, useState, useEffect } from "react";
 const AuthContext = createContext(null);
 
@@ -6,15 +6,6 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [accessToken, setAccessToken] = useState(null);
   const [loading, setLoading] = useState(true);
-  //  const [loading, setLoading] = useState(true)
-  /*
-  useEffect(()=>{ //näkee tallentuiko muutokset ja (setUser & setAccessToken)
-    console.log("use: ",accessToken)
-    console.log("user: ",user)
-
-  },[accessToken,user])
-
-  */
 
   const signIn = async (Identifier, Password) => {
     const res = await fetch(url + "/signin", {
