@@ -5,6 +5,15 @@ const TMDB_IMAGE_BASE = "https://image.tmdb.org/t/p/w500";
 // Tuukka
 // muunna raw API data (our DB + TMDb) yhteen muotoon, jonka UI ymmärtää.
 function normalizeMovie(movie) {
+
+  // Muunna asteikko: jos luku on yli 5, jaa kahdella. Muuten käytä sellaisenaan
+  let normalizedRating = null;
+  if (typeof movie?.vote_average === "number") {
+    normalizedRating = movie.vote_average > 5
+      ? movie.vote_average / 2
+      : movie.vote_average;
+  }
+
   return {
     id: movie.movie_id ?? movie.id,
     title: movie.name ?? movie.title ?? "Untitled",
@@ -16,7 +25,7 @@ function normalizeMovie(movie) {
         : null,
     backdrop: movie.backdrop_path ? movie.backdrop_path : "",
     genres: Array.isArray(movie.genres) ? movie.genres : [],
-    rating: movie.vote_average ?? null,
+    rating: normalizedRating,
     votes: movie.vote_count ?? null,
     releaseYear: movie.release_date
       ? new Date(movie.release_date).getFullYear()
