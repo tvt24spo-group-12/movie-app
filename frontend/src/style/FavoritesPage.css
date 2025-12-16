@@ -87,7 +87,6 @@
   background: var(--bg);
   border-radius: var(--radius);
   border: 1px solid var(--border);
-  overflow: hidden;
   position: relative;
   transition: transform var(--transition), box-shadow var(--transition);
 }
