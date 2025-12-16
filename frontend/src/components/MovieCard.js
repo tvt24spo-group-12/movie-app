@@ -62,7 +62,7 @@ function MovieCard({ movie }) {
     <article className="movie-card">
       <div className="movie-card__poster">
         {poster ? (
-          <img src={poster} alt={`${title} poster`} />
+          <img src={poster} alt={`${title} poster`} loading="lazy" />
         ) : (
           // placeholder, kun ei ole posteriä
           <div className="movie-card__poster-placeholder">
@@ -79,7 +79,7 @@ function MovieCard({ movie }) {
         </div>
 
         <h3 className="movie-card__title">
-          <a href={`/movie/${id}`}>{title}</a>
+          <a href={`/movie/${id}`} aria-label={`Open details for ${title}`}>{title}</a>
         </h3>
 
         {genres?.length > 0 && (

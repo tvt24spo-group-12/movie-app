@@ -91,7 +91,7 @@ export default function FavoritesPage() {
       <div className="favorites-header">
         <h2>Your Favorites</h2>
         <button className="btn-primary" onClick={loadFavorites}>
-          Update
+          Refresh Favorites
         </button>
       </div>
 
