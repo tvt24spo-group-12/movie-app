@@ -1,5 +1,5 @@
 
-const url = 'http://localhost:3001/user'
+const url =`${process.env.REACT_APP_API_URL}/user`|| "http://localhost:3001/user";
 const signUp = async ( Email, Password, Username) =>{
      
         try{
