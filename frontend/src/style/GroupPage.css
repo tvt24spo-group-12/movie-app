@@ -10,6 +10,7 @@
   flex: 1;
   padding: 1rem;
   gap: 1rem;
+  width: 100%;
 }
 
 .group-list {
@@ -27,7 +28,7 @@
   border-radius: var(--radius);
   background-color: "transparent";
   padding: 1rem;
- 
+  width: calc(100% - 270px);
 }
 
 .group-description {

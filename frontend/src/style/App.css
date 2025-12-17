@@ -458,7 +458,6 @@ body {
   max-width: 1080px;
   margin: 0 auto;
   padding: 2rem 1.75rem;
-  margin-left: 270px;
   transition: margin var(--transition);
   width: calc(100% - 270px);
   box-sizing: border-box;
