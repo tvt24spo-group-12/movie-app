@@ -14,11 +14,11 @@ export default function RegisterPage({ setLoginOpenForm, setRegisterPage }){
 
     
         const res =await signUp(Email,Password,Username)
-        if(!res === 201 | !res === "201" ){
-            alert("something went wrong :/");
+        if(res !== 201 | res !== "201"){
+            alert("something went wrong, check credentials. Username might be taken and password must have 1 uppercase letter and be 8 characters long");
         }
         else{
-            console.log("signedup")
+            
            // Switch to login page instead of reloading
             setRegisterPage(false)
             setLoginOpenForm(true)
