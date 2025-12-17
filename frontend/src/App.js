@@ -6,6 +6,7 @@ import SideBar from "./components/sidebar";
 import Router from "./routes/Router";
 import { SidebarProvider, useSidebar } from "./context/sidebar";
 import { RouterProvider } from "./routes/RouterContext";
+import { ThemeProvider } from "./context/theme";
 
 function AppContent() {
   const { sidebar, setSidebar } = useSidebar();
@@ -20,11 +21,13 @@ function AppContent() {
 
 function App() {
   return (
-    <RouterProvider>
-      <SidebarProvider>
-        <AppContent />
-      </SidebarProvider>
-    </RouterProvider>
+    <ThemeProvider>
+      <RouterProvider>
+        <SidebarProvider>
+          <AppContent />
+        </SidebarProvider>
+      </RouterProvider>
+    </ThemeProvider>
   );
 }
 

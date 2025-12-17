@@ -18,6 +18,22 @@
   gap: 1rem;
 }
 
+.favorites-header .btn-secondary {
+  padding: 0.6rem 1.1rem;
+  background: var(--surface);
+  color: var(--primary);
+  border: 1px solid var(--primary);
+  border-radius: var(--radius);
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform var(--transition), filter var(--transition);
+}
+
+.favorites-header .btn-secondary:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
 .favorites-header h2 {
   margin: 0;
   font-size: 1.75rem;

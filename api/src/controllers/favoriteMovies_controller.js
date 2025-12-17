@@ -65,6 +65,23 @@ const getAllFavorite = async (req, res) =>{//hakee kaikki favoriteelokuvat käyt
         }   
     }
 
+// Public endpoint for sharing favorites by user id
+const getFavoritesByUserIdPublic = async (req, res) => {
+    try {
+        const userId = parseInt(req.params.userId, 10);
+
+        if (Number.isNaN(userId)) {
+            return res.status(400).json({ message: "Invalid user id" });
+        }
+
+        const result = await getAllFavoriteMovies(userId);
+        res.json(result);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Failed to fetch favorites" });
+    }
+};
+
 const removeFavorite = async (req, res) => {//poistaa käyttäjän valitseman favorite elokuvan
     try{
         const userId = req.user.user_id
@@ -90,4 +107,4 @@ const getFavoriteById = async (req, res) =>{ //hakee favorite elokuvan user- ja 
         }   
     }
 
-export{addFavorite, getAllFavorite, removeFavorite, getFavoriteById}
+export{addFavorite, getAllFavorite, removeFavorite, getFavoriteById, getFavoritesByUserIdPublic}

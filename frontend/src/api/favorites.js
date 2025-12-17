@@ -43,6 +43,16 @@ export async function removeFavorite(movieId, authFetch) {
   return res.json();
 }
 
+export async function getFavoritesPublic(userId) {
+  const res = await fetch(`${API_URL}/user/${userId}/favoriteMovies`, {
+    method: "GET",
+  });
+
+  if (!res.ok) throw new Error("Failed to load favorites");
+
+  return res.json();
+}
+
 export async function handleFavorite(movieId, authFetch) {
   const result = await getFavorite(movieId, authFetch);
 

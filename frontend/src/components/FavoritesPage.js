@@ -1,20 +1,24 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "../context/login";
-import { getFavorites, removeFavorite } from "../api/favorites";
+import { getFavorites, getFavoritesPublic, removeFavorite } from "../api/favorites";
 import { fetchMovieDetails } from "../api/movies";
 import MovieCard from "../components/MovieCard";
 import "../style/FavoritesPage.css";
 
-const API = process.env.REACT_APP_API_URL || "http://localhost:3001";
-
-export default function FavoritesPage() {
+export default function FavoritesPage({ targetUserId }) {
   const { user, authFetch } = useAuth();
   const [movies, setMovies] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const viewUserId = useMemo(() => targetUserId || user?.id || null, [targetUserId, user]);
+  const isOwnFavorites = useMemo(() => {
+    if (!targetUserId && user) return true;
+    if (targetUserId && user) return String(user.id) === String(targetUserId);
+    return false;
+  }, [targetUserId, user]);
 
   const handleRemove = async (movieId) => {
-    if (!user) {
+    if (!user || !isOwnFavorites) {
       alert("Log in to remove favorites.");
       return;
     }
@@ -36,8 +40,33 @@ export default function FavoritesPage() {
     }
   };
 
+  const shareLink = async () => {
+    if (!isOwnFavorites || !user) return;
+    const url = `${window.location.origin}/favorites/${user.id}`;
+
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(url);
+        alert("Link copied to clipboard");
+      } else {
+        const textarea = document.createElement("textarea");
+        textarea.value = url;
+        textarea.style.position = "fixed";
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+        alert("Link copied to clipboard");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Could not copy link");
+    }
+  };
+
   async function loadFavorites() {
-    if (!user) {
+    if (!viewUserId) {
       setMovies([]);
       setError("Log in to view favorites.");
       return;
@@ -47,7 +76,9 @@ export default function FavoritesPage() {
       setLoading(true);
       setError("");
 
-      const favorites = await getFavorites(authFetch);
+      const favorites = isOwnFavorites && authFetch
+        ? await getFavorites(authFetch)
+        : await getFavoritesPublic(viewUserId);
 
       if (!Array.isArray(favorites) || favorites.length === 0) {
         setMovies([]);
@@ -68,7 +99,7 @@ export default function FavoritesPage() {
 
       setMovies(data);
 
-      console.log("Favorites movies:", data);
+      //console.log("Favorites movies:", data);
     } catch (err) {
       console.error(err);
       setError("Failed to load favorites.");
@@ -79,27 +110,34 @@ export default function FavoritesPage() {
   }
 
   useEffect(() => {
-    if (user) {
+    if (viewUserId) {
       loadFavorites();
     } else {
       setMovies([]);
     }
-  }, [user]);
+  }, [user, viewUserId]);
 
   return (
     <div className="favorites-page">
       <div className="favorites-header">
-        <h2>Your Favorites</h2>
+        <h2>{isOwnFavorites ? "Your Favorites" : "Shared Favorites"}</h2>
         <button className="btn-primary" onClick={loadFavorites}>
           Refresh Favorites
         </button>
+        {isOwnFavorites && user && (
+          <button className="btn-secondary" onClick={shareLink}>
+            Share Favorites
+          </button>
+        )}
       </div>
 
-      {!user && <p className="favorites-message">Log in to view favorites.</p>}
+      {!viewUserId && <p className="favorites-message">Log in to view favorites.</p>}
       {loading && <p className="favorites-message">Loading...</p>}
       {error && <p className="favorites-error">{error}</p>}
 
-      {!loading && user && movies.length === 0 && <p className="favorites-message">No favorites yet.</p>}
+      {!loading && movies.length === 0 && viewUserId && (
+        <p className="favorites-message">No favorites yet.</p>
+      )}
 
       <div className="favorites-container">
         <div className="favorites-grid">
@@ -128,13 +166,15 @@ export default function FavoritesPage() {
                   }}
                 />
 
-                <button
-                  type="button"
-                  className="btn-remove-favorite"
-                  onClick={() => handleRemove(movie.movie_id)}
-                >
-                  Remove
-                </button>
+                {isOwnFavorites && (
+                  <button
+                    type="button"
+                    className="btn-remove-favorite"
+                    onClick={() => handleRemove(movie.movie_id)}
+                  >
+                    Remove
+                  </button>
+                )}
               </div>
             );
           })}
