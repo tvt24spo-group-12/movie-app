@@ -12,6 +12,7 @@ import {
   deleteGroup,
   updateDescription,
   updateSettings
+
 } from "../api/group";
 import "../style/GroupPage.css";
 import "../style/global.css";
@@ -218,9 +219,14 @@ async function saveGroupSettings() {
       authFetch
     );
 
+    const newSettings = {
+      ...selectedGroup.settings,
+      suggestedMovies: suggested
+    };
+
     await updateSettings(
       selectedGroup.group_id,
-      selectedGroup.settings,
+      newSettings,
       authFetch
     );
 
