@@ -5,7 +5,7 @@ import { expect } from "chai";
 describe("Testing user management", () => {
   const user = {
     identifier: "foo@test.com",
-    password: "password123",
+    password: "Password123",
   };
   let id = -1;
   let accessToken = null;
@@ -17,7 +17,7 @@ describe("Testing user management", () => {
     const newUser = {
       email: "foo@test.com",
       username: "fooTest",
-      password: "password123",
+      password: "Password123",
     };
     const response = await fetch("http://localhost:3002/user/signup", {
       method: "post",
@@ -30,12 +30,53 @@ describe("Testing user management", () => {
     expect(data.email).to.equal(newUser.email);
   });
 
-  
+  it("should reject signup when password has no uppercase letter", async () => {
+    const res = await fetch("http://localhost:3002/user/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user: {
+          email: "noupcase@test.com",
+          username: "noUppercase",
+          password: "password123",
+        },
+      }),
+    });
+
+    const body = await res.json();
+
+    expect(res.status).to.equal(400);
+    expect(body).to.have.property("error");
+  });
+
+  it("should reject signup when password has no number", async () => {
+    const res = await fetch("http://localhost:3002/user/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user: {
+          email: "nonumber@test.com",
+          username: "noNumber",
+          password: "PasswordOnly",
+        },
+      }),
+    });
+
+    const body = await res.json();
+
+    expect(res.status).to.equal(400);
+    expect(body).to.have.property("error");
+  });
+
   it("should not sign up with existing email", async () => {
     const existingUser = {
       email: "foo@test.com",
       username: "fooTest2",
-      password: "password1234",
+      password: "Password1234",
     };
     const response = await fetch("http://localhost:3002/user/signup", {
       method: "post",
@@ -44,8 +85,6 @@ describe("Testing user management", () => {
     });
     expect(response.status).to.equal(409);
   });
-
-  
 
   it("should log in", async () => {
     const response = await fetch("http://localhost:3002/user/signin", {
@@ -73,7 +112,6 @@ describe("Testing user management", () => {
     expect(response.status).to.equal(401);
   });
 
-  
   it("should log out", async () => {
     const response = await fetch("http://localhost:3002/user/logout", {
       method: "post",
@@ -85,7 +123,6 @@ describe("Testing user management", () => {
     expect(response.status).to.equal(200);
   });
 
-
   it("should not delete user without authentication token", async () => {
     const response = await fetch(`http://localhost:3002/user/delete/${id}`, {
       method: "delete",
@@ -95,7 +132,7 @@ describe("Testing user management", () => {
     });
     expect(response.status).to.equal(401);
   });
-  
+
   //delete user
   it("should delete user", async () => {
     const response = await fetch(`http://localhost:3002/user/delete/${id}`, {
@@ -111,8 +148,6 @@ describe("Testing user management", () => {
   });
 });
 
-
-
 // describe("Other features", () => {
 //   const user = { email: "foo2@test.com", password: "password123" };
 //   // browse ratings
@@ -123,14 +158,13 @@ describe("Testing rating system", () => {
   const testUser = {
     email: `ratertest+${unique}@example.com`,
     username: `rater${unique}`,
-    password: "password123",
+    password: "Password123",
   };
 
   let accessToken = null;
-  const movieId = 550; 
+  const movieId = 550;
 
   it("should sign up and log in", async () => {
-    
     const signupRes = await fetch("http://localhost:3002/user/signup", {
       method: "post",
       headers: { "Content-Type": "application/json" },
@@ -138,11 +172,12 @@ describe("Testing rating system", () => {
     });
     expect([201, 409]).to.include(signupRes.status);
 
-    
     const loginRes = await fetch("http://localhost:3002/user/signin", {
       method: "post",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ user: { identifier: testUser.email, password: testUser.password } }),
+      body: JSON.stringify({
+        user: { identifier: testUser.email, password: testUser.password },
+      }),
     });
     const loginData = await loginRes.json();
     expect(loginRes.status).to.equal(200);
@@ -154,7 +189,10 @@ describe("Testing rating system", () => {
     const body = { score: 4, review: "great", public: true };
     const res = await fetch(`http://localhost:3002/movie/${movieId}/rating`, {
       method: "post",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${accessToken}` },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
       body: JSON.stringify(body),
     });
     const data = await res.json();
@@ -168,7 +206,12 @@ describe("Testing rating system", () => {
     const res = await fetch(`http://localhost:3002/movie/${movieId}/ratings`);
     const data = await res.json();
     expect(res.status).to.equal(200);
-    expect(data).to.include.all.keys(["movie_id", "average_rating", "rating_count", "ratings"]);
+    expect(data).to.include.all.keys([
+      "movie_id",
+      "average_rating",
+      "rating_count",
+      "ratings",
+    ]);
     expect(data.movie_id).to.equal(movieId);
     expect(Array.isArray(data.ratings)).to.be.true;
     expect(data.rating_count).to.be.at.least(1);
@@ -207,7 +250,10 @@ describe("Testing rating system", () => {
     const body = { score: 0, review: "bad score", public: true };
     const res = await fetch(`http://localhost:3002/movie/${movieId}/rating`, {
       method: "post",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${accessToken}` },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
       body: JSON.stringify(body),
     });
     expect(res.status).to.equal(400);

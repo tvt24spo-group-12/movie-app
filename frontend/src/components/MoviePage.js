@@ -40,8 +40,20 @@ function MoviePage({ movie_id }) {
       alert("You must be logged in to add movies to favorites.");
       return;
     }
-    const newState = await handleFavorite(movie_id, authFetch);
-    setFavorited(newState);
+
+    // Optimistically toggle favorite
+    setFavorited((prev) => !prev);
+
+    try {
+      const newState = await handleFavorite(movie_id, authFetch);
+
+      // Sync with backend result in case of mismatch
+      setFavorited(newState);
+    } catch (err) {
+      console.error("Failed to toggle favorite:", err);
+      // Revert state on error
+      setFavorited((prev) => !prev);
+    }
   }
 
   useEffect(() => {

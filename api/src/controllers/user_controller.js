@@ -13,6 +13,18 @@ import { verifyRefreshToken } from "../utils/jwt.js";
 import { compare as bcryptCompare } from "bcrypt";
 import jwt from "jsonwebtoken";
 
+function isValidPassword(password) {
+  if (typeof password !== "string" || password.length < 8) return false;
+
+  const chars = [...password];
+
+  const hasLower = chars.some((c) => c >= "a" && c <= "z");
+  const hasUpper = chars.some((c) => c >= "A" && c <= "Z");
+  const hasNumber = chars.some((c) => c >= "0" && c <= "9");
+
+  return hasLower && hasUpper && hasNumber;
+}
+
 export async function login(req, res, next) {
   try {
     //Haetaan bodyssa oleva user
@@ -53,14 +65,14 @@ export async function login(req, res, next) {
     const accessToken = jwt.sign(
       { user_id: dbUser.user_id },
       process.env.JWT_SECRET,
-      { expiresIn: "15min" },
+      { expiresIn: "15min" }
     );
 
     //Luodaan refresh token joka voimassa 7 päivää
     const refreshToken = jwt.sign(
       { user_id: dbUser.user_id },
       process.env.REFRESH_SECRET,
-      { expiresIn: "7d" },
+      { expiresIn: "7d" }
     );
 
     //tallenna refresh token kantaan
@@ -96,6 +108,15 @@ export async function signUp(req, res, next) {
       const err = new Error("Email, username and password are required");
       err.status = 400;
       return next(err);
+    }
+
+    if (!isValidPassword(user.password)) {
+      return res
+        .status(400)
+        .json({
+          error:
+            "Password must be at least 8 characters long and include at least one uppercase letter and a number",
+        });
     }
 
     const existing = await findUserByEmail(user.email);
@@ -138,7 +159,7 @@ export async function refreshAccessToken(req, res, next) {
     const accessToken = jwt.sign(
       { user_id: user.user_id },
       process.env.JWT_SECRET,
-      { expiresIn: "15min" },
+      { expiresIn: "15min" }
     );
 
     res.json({
@@ -207,10 +228,19 @@ export async function changePassword(req, res, next) {
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
+
+    if (!isValidPassword(newPassword)) {
+      return res
+        .status(400)
+        .json({
+          error:
+            "Password must be at least 8 characters long and include at least one uppercase letter and a number.",
+        });
+    }
     const dbUser = user.rows[0];
     const match = await bcryptCompare(oldPassword, dbUser.password);
     if (!match) {
-      return res.status(401).json({ error: "Old password is incorrect" });
+      return res.status(400).json({ error: "Old password is incorrect" });
     }
     await changeUserPassword(userId, newPassword);
     res.json({ message: "Password changed successfully" });
@@ -218,4 +248,3 @@ export async function changePassword(req, res, next) {
     next(err);
   }
 }
-
