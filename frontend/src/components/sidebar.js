@@ -11,7 +11,7 @@ import SettingsPage from './SettingsPage'
 
 
 export default function SideBar({sidebar,setsidebar}){
-  const url = process.env.REACT_APP_FRONTEND_URL || 'http://localhost:3001'
+  const url = process.env.REACT_APP_API_URL || 'http://localhost:3001'
   const { navigate } = useRouter()
   const [sideBarOpen, setSideBarOpen] = useState(() => {
     // Read from localStorage, default to true
