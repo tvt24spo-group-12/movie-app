@@ -1,4 +1,4 @@
-const URL = process.env.REACT_APP_API_URL || "http://localhost:3001/"
+const URL = process.env.REACT_APP_API_URL || "http://localhost:3001"
 
 
 
@@ -13,7 +13,7 @@ const URL = process.env.REACT_APP_API_URL || "http://localhost:3001/"
      
 
   try {
-        const response = await authFetch(`${URL}user/profilePicture/${userId}`, {
+        const response = await authFetch(`${URL}/user/profilePicture/${userId}`, {
             method: 'POST',
 
           body : formData,
@@ -34,7 +34,7 @@ const URL = process.env.REACT_APP_API_URL || "http://localhost:3001/"
   
     const userId = user.id
     try {
-        const response = await authFetch(`${URL}user/profilePicture/${userId}`, {
+        const response = await authFetch(`${URL}/user/profilePicture/${userId}`, {
             method: 'GET',
            
         });
