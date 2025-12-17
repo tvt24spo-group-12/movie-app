@@ -34,6 +34,13 @@ export const routes = [
     component: FavoritesPage,
   },
   {
+    path: "/favorites/:userId",
+    component: FavoritesPage,
+    paramMap: {
+      userId: "targetUserId",
+    },
+  },
+  {
     path: "/reviews",
     component: UserMovieReviews,
     props: {

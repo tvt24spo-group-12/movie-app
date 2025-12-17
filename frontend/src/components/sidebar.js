@@ -7,6 +7,7 @@ import { useAuth } from '../context/login'
 import { useRouter } from '../routes/RouterContext'
 import {uploadProfilePicture, getProfilePicture} from '../api/profilepicture'
 import SettingsPage from './SettingsPage'
+import { useTheme } from '../context/theme'
 
 
 
@@ -23,6 +24,7 @@ export default function SideBar({sidebar,setsidebar}){
     const[popupOpen, setPopupOpen] = useState(false)
     const{user, logout, loading, authFetch} = useAuth();
     const [settingsOpen, setSettingsOpen] = useState(false);
+    const { theme, toggleTheme } = useTheme();
   const[picture, setpicture] = useState(null)
   const[preview, setPreview] = useState('')
 
@@ -146,6 +148,9 @@ useEffect(() => {
           <button onClick={() => handleNav('/favorites')} className='btn-primary Btn'>Favorites</button>
           
           <br></br>
+          <button onClick={toggleTheme} className='btn-secondary Btn'>
+            {theme === 'dark' ? 'Light mode' : 'Dark mode'}
+          </button>
           <button onClick={() => setSettingsOpen(true)} className='btn-primary Btn'>Settings</button>
           <button onClick={()=>{ 
             logout()
@@ -163,6 +168,9 @@ useEffect(() => {
           <button onClick={() => navigate('/')} className='btn-primary Btn'>Home</button>
           <button onClick={() => navigate('/movies')} className='btn-primary Btn'>Movies</button>
           <br></br>
+          <button onClick={toggleTheme} className='btn-secondary Btn'>
+            {theme === 'dark' ? 'Light mode' : 'Dark mode'}
+          </button>
           <button onClick={() => { 
             setLoginOpenForm(true)
             setPopupOpen(true)

@@ -23,6 +23,7 @@ import {
   getAllFavorite,
   removeFavorite,
   getFavoriteById,
+  getFavoritesByUserIdPublic,
 } from "../controllers/favoriteMovies_controller.js";
 const userRouter = Router();
 
@@ -43,6 +44,9 @@ userRouter.delete(
 );
 userRouter.get("/favoriteMovies", authenticateToken, getAllFavorite);
 userRouter.get("/favoriteMovies/:movieId", authenticateToken, getFavoriteById);
+
+// Public sharing endpoint - placed before param routes to avoid conflicts
+userRouter.get("/:userId/favoriteMovies", getFavoritesByUserIdPublic);
 
 userRouter.get(
   "/profilePicture/:userId",
