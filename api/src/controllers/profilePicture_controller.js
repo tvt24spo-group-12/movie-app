@@ -21,11 +21,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 
+
 const uploadProfilePicture = async(req,res) => {
 
  const userId = parseInt(req.params.userId, 10)
     const storagePath = path.join(__dirname, '../../public/ProfilePictures');
-
+  
 
  const storage = multer.diskStorage({
      destination: storagePath, 
