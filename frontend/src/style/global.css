@@ -24,6 +24,7 @@
 /* Käyttöjärjestelmän vakio värin valitseminen */
 @media (prefers-color-scheme: dark) {
     :root{
+        overflow-x: hidden;
         --bg: #0b1220;
         --surface: #0f1724;
         --text: #e6eef8;
